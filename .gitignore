@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Environment and secrets
+.env
+.env.*
+*.local
+*.pem
+*.key
+
+# Git worktrees directory
+.worktrees/
+worktrees/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Antigravity Brain and scratch
+scratch/
+.system_generated/
+*.log

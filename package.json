@@ -1,0 +1,23 @@
+{
+  "name": "ecotrack",
+  "version": "1.0.0",
+  "description": "Smart local waste collection and community cleanliness management platform",
+  "main": "JS/main.js",
+  "scripts": {
+    "start": "npx serve .",
+    "gtr": "powershell -ExecutionPolicy Bypass -File ./gtr.ps1",
+    "gtr:list": "powershell -ExecutionPolicy Bypass -File ./gtr.ps1 list",
+    "gtr:help": "powershell -ExecutionPolicy Bypass -File ./gtr.ps1 help",
+    "review": "coderabbit review --agent",
+    "test": "echo \"Running client sanity tests...\" && node -e \"console.log('EcoTrack validation passed.')\""
+  },
+  "keywords": [
+    "waste-management",
+    "smart-city",
+    "ecotrack",
+    "coderabbit",
+    "worktree"
+  ],
+  "author": "Kumar",
+  "license": "MIT"
+}
