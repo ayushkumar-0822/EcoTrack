@@ -3215,3 +3215,94 @@ img {
 .full-width {
     width: 100%;
 }
+
+
+/* =========================================
+   LIVE PHOTO UPLOAD & PREVIEW STYLES
+========================================= */
+
+.file-upload-box {
+    border: 1.5px dashed #cbd5e1;
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    text-align: center;
+    background: #f8fafc;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.file-upload-box:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.photo-file-input {
+    display: none;
+}
+
+.file-upload-label {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.file-upload-label i {
+    font-size: 1.6rem;
+    color: var(--primary);
+}
+
+.photo-preview {
+    margin-top: 0.85rem;
+    max-height: 160px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    position: relative;
+}
+
+.photo-preview img {
+    max-height: 160px;
+    width: auto;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.live-badge-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #dcfce7;
+    color: #15803d;
+    padding: 0.25rem 0.65rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+.advance-step-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 0.55rem 1.1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.advance-step-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}

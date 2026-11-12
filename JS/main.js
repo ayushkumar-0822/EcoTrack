@@ -571,21 +571,173 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // -------------------------------------------------------------
+    // Live REST API, Photo Upload & Sync Engine
+    // -------------------------------------------------------------
+    const API_BASE = window.location.protocol.startsWith("http") ? "" : "http://localhost:5000";
+
+    async function apiFetch(endpoint, options = {}) {
+        try {
+            const res = await fetch(`${API_BASE}${endpoint}`, {
+                headers: { "Content-Type": "application/json" },
+                ...options
+            });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
+        } catch (err) {
+            return null;
+        }
+    }
+
+    const uploadedPhotos = {
+        missed: "",
+        bin: "",
+        general: ""
+    };
+
+    function setupPhotoInput(inputId, previewId, key) {
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (!input || !preview) return;
+
+        input.addEventListener("change", () => {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedPhotos[key] = e.target.result;
+                preview.style.display = "inline-block";
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview thumbnail">
+                    <button type="button" class="btn-text-link" style="display:block;margin:6px auto 0;color:#dc2626;font-size:0.75rem;">
+                        Remove Photo
+                    </button>
+                `;
+                const rmBtn = preview.querySelector("button");
+                if (rmBtn) {
+                    rmBtn.addEventListener("click", () => {
+                        input.value = "";
+                        uploadedPhotos[key] = "";
+                        preview.style.display = "none";
+                        preview.innerHTML = "";
+                    });
+                }
+                showToast("Photo evidence attached!", "info");
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    setupPhotoInput("missedPhotoInput", "missedPhotoPreview", "missed");
+    setupPhotoInput("binPhotoInput", "binPhotoPreview", "bin");
+    setupPhotoInput("generalPhotoInput", "generalPhotoPreview", "general");
+
+    async function syncDashboard() {
+        const data = await apiFetch("/api/dashboard");
+        if (!data) return;
+
+        const kpiRoute = document.getElementById("kpiRouteCompletion");
+        if (kpiRoute && data.route_completion) kpiRoute.textContent = data.route_completion;
+
+        const kpiFleet = document.getElementById("kpiActiveFleet");
+        if (kpiFleet && data.active_trucks) kpiFleet.textContent = data.active_trucks;
+
+        const kpiRes = document.getElementById("kpiResolutionRate");
+        if (kpiRes && data.resolution_rate) kpiRes.textContent = data.resolution_rate;
+
+        const kpiClean = document.getElementById("kpiCleanlinessIndex");
+        if (kpiClean && data.cleanliness_score) kpiClean.textContent = data.cleanliness_score;
+
+        const tbody = document.getElementById("fleetTableBody");
+        if (tbody && data.fleet && data.fleet.length > 0) {
+            tbody.innerHTML = "";
+            data.fleet.forEach(item => {
+                const tr = document.createElement("tr");
+                const tagClass = item.waste_stream.toLowerCase().includes("organic") ? "tag-organic" : (item.waste_stream.toLowerCase().includes("recycl") ? "tag-recyclable" : "tag-hazardous");
+                const statusClass = item.status.toLowerCase().includes("complete") ? "status-done" : "status-active";
+                tr.innerHTML = `
+                    <td><strong>${item.id}</strong></td>
+                    <td>${item.sector}</td>
+                    <td><span class="tag ${tagClass}">${item.waste_stream}</span></td>
+                    <td>${item.driver}</td>
+                    <td>
+                        <div class="table-progress">
+                            <div class="bar" style="width: ${item.progress}%;"></div>
+                            <span>${item.progress}%</span>
+                        </div>
+                    </td>
+                    <td><span class="status-pill ${statusClass}">${item.status}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+    }
+
+    async function syncNotifications() {
+        const notifs = await apiFetch("/api/notifications");
+        if (!notifs) return;
+
+        const list = document.getElementById("notifList");
+        const badge = document.getElementById("notifBadge");
+        if (!list) return;
+
+        let unreadCount = 0;
+        list.innerHTML = "";
+
+        notifs.forEach(n => {
+            if (n.is_unread) unreadCount++;
+            const item = document.createElement("div");
+            item.className = `notif-item ${n.is_unread ? "unread" : ""}`;
+            const iconClass = n.type === "green" ? "fa-truck-fast" : (n.type === "orange" ? "fa-clock" : "fa-cloud-sun");
+            item.innerHTML = `
+                <span class="notif-type-icon ${n.type}"><i class="fa-solid ${iconClass}"></i></span>
+                <div class="notif-body">
+                    <p><strong>${n.title}</strong>: ${n.message}</p>
+                    <span class="notif-time">${n.time_str} • ${n.zone || "Zone A"}</span>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+
+        if (badge) {
+            badge.textContent = unreadCount;
+            badge.style.display = unreadCount > 0 ? "flex" : "none";
+        }
+    }
+
     // Form: Missed Pickup Report
     const formMissed = document.getElementById("formMissedPickup");
     if (formMissed) {
-        formMissed.addEventListener("submit", e => {
+        formMissed.addEventListener("submit", async e => {
             e.preventDefault();
             const addr = document.getElementById("missedAddress").value;
             const wasteType = document.getElementById("missedWasteType").value;
             const area = document.getElementById("missedArea").value;
-            const ticketId = `ECO-2026-MP-${Math.floor(100 + Math.random() * 900)}`;
+            const notes = document.getElementById("missedNotes").value;
+            const photoUrl = uploadedPhotos.missed;
 
-            const newRecord = {
-                id: ticketId,
+            const payload = {
                 category: "Missed Pickup",
                 title: `${wasteType} Left Behind`,
                 location: `${addr} • ${area}`,
+                urgency: "High",
+                description: notes,
+                photo_url: photoUrl
+            };
+
+            const res = await apiFetch("/api/tickets", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-MP-${Math.floor(100 + Math.random() * 900)}`;
+
+            const newRecord = {
+                id: ticketId,
+                category: payload.category,
+                title: payload.title,
+                location: payload.location,
+                photo_url: photoUrl,
                 submittedAt: "Just now",
                 resolvedAt: "Guaranteed within 4 hours",
                 status: "Triaged",
@@ -600,8 +752,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             saveReport(newRecord);
             formMissed.reset();
-            showToast(`Missed Pickup Ticket Generated: ${ticketId}`, "success");
-            renderTrackingView(ticketId);
+            const preview = document.getElementById("missedPhotoPreview");
+            if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+            uploadedPhotos.missed = "";
+
+            showToast(`Missed Pickup Ticket #${ticketId} saved to database!`, "success");
+            await renderTrackingView(ticketId);
+            await syncDashboard();
+            await syncNotifications();
             document.getElementById("track").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
         });
     }
@@ -609,17 +767,36 @@ document.addEventListener("DOMContentLoaded", () => {
     // Form: Bin Issue Report
     const formBin = document.getElementById("formBinIssue");
     if (formBin) {
-        formBin.addEventListener("submit", e => {
+        formBin.addEventListener("submit", async e => {
             e.preventDefault();
             const prob = document.getElementById("binIssueType").value;
             const loc = document.getElementById("binLocation").value;
-            const ticketId = `ECO-2026-BN-${Math.floor(100 + Math.random() * 900)}`;
+            const urgency = document.getElementById("binUrgency").value;
+            const details = document.getElementById("binDetails").value;
+            const photoUrl = uploadedPhotos.bin;
 
-            const newRecord = {
-                id: ticketId,
+            const payload = {
                 category: "Bin Issue",
                 title: prob,
                 location: loc,
+                urgency: urgency,
+                description: details,
+                photo_url: photoUrl
+            };
+
+            const res = await apiFetch("/api/tickets", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-BN-${Math.floor(100 + Math.random() * 900)}`;
+
+            const newRecord = {
+                id: ticketId,
+                category: payload.category,
+                title: payload.title,
+                location: payload.location,
+                photo_url: photoUrl,
                 submittedAt: "Just now",
                 resolvedAt: "Expected within 24-48 hours",
                 status: "In Progress",
@@ -634,8 +811,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             saveReport(newRecord);
             formBin.reset();
-            showToast(`Bin Issue Ticket Generated: ${ticketId}`, "success");
-            renderTrackingView(ticketId);
+            const preview = document.getElementById("binPhotoPreview");
+            if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+            uploadedPhotos.bin = "";
+
+            showToast(`Bin Issue Ticket #${ticketId} saved to database!`, "success");
+            await renderTrackingView(ticketId);
+            await syncDashboard();
+            await syncNotifications();
             document.getElementById("track").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
         });
     }
@@ -643,17 +826,35 @@ document.addEventListener("DOMContentLoaded", () => {
     // Form: General Issue
     const formGeneral = document.getElementById("formGeneralIssue");
     if (formGeneral) {
-        formGeneral.addEventListener("submit", e => {
+        formGeneral.addEventListener("submit", async e => {
             e.preventDefault();
             const cat = document.getElementById("generalCategory").value;
             const loc = document.getElementById("generalLocation").value;
-            const ticketId = `ECO-2026-ID-${Math.floor(100 + Math.random() * 900)}`;
+            const desc = document.getElementById("generalDescription").value;
+            const photoUrl = uploadedPhotos.general;
+
+            const payload = {
+                category: "Illegal Dumping",
+                title: cat,
+                location: loc,
+                urgency: "High",
+                description: desc,
+                photo_url: photoUrl
+            };
+
+            const res = await apiFetch("/api/tickets", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-ID-${Math.floor(100 + Math.random() * 900)}`;
 
             const newRecord = {
                 id: ticketId,
-                category: "General Dumping",
-                title: cat,
-                location: loc,
+                category: payload.category,
+                title: payload.title,
+                location: payload.location,
+                photo_url: photoUrl,
                 submittedAt: "Just now",
                 resolvedAt: "Inspector dispatch queued",
                 status: "Dispatched",
@@ -668,8 +869,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             saveReport(newRecord);
             formGeneral.reset();
-            showToast(`Environmental Ticket Logged: ${ticketId}`, "success");
-            renderTrackingView(ticketId);
+            const preview = document.getElementById("generalPhotoPreview");
+            if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
+            uploadedPhotos.general = "";
+
+            showToast(`Environmental Ticket #${ticketId} saved to database!`, "success");
+            await renderTrackingView(ticketId);
+            await syncDashboard();
+            await syncNotifications();
             document.getElementById("track").scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
         });
     }
@@ -677,16 +884,32 @@ document.addEventListener("DOMContentLoaded", () => {
     // Quick Modal Report Form
     const reportIssueForm = document.getElementById("reportIssueForm");
     if (reportIssueForm) {
-        reportIssueForm.addEventListener("submit", e => {
+        reportIssueForm.addEventListener("submit", async e => {
             e.preventDefault();
             const cat = document.getElementById("quickCategory").value;
             const loc = document.getElementById("quickLocation").value;
-            const ticketId = `ECO-2026-QR-${Math.floor(100 + Math.random() * 900)}`;
+            const urg = document.getElementById("quickUrgency").value;
+            const notes = document.getElementById("quickNotes").value;
+
+            const payload = {
+                category: cat,
+                title: `Citizen Report: ${cat}`,
+                location: loc,
+                urgency: urg,
+                description: notes
+            };
+
+            const res = await apiFetch("/api/tickets", {
+                method: "POST",
+                body: JSON.stringify(payload)
+            });
+
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-QR-${Math.floor(100 + Math.random() * 900)}`;
 
             const newRecord = {
                 id: ticketId,
                 category: cat,
-                title: `Citizen Report: ${cat}`,
+                title: payload.title,
                 location: loc,
                 submittedAt: "Just now",
                 resolvedAt: "Active triage in progress",
@@ -703,8 +926,10 @@ document.addEventListener("DOMContentLoaded", () => {
             saveReport(newRecord);
             reportIssueForm.reset();
             closeModal();
-            showToast(`Report logged! Reference: ${ticketId}`, "success");
-            renderTrackingView(ticketId);
+            showToast(`Ticket #${ticketId} logged into live database!`, "success");
+            await renderTrackingView(ticketId);
+            await syncDashboard();
+            await syncNotifications();
         });
     }
 
@@ -719,15 +944,135 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -------------------------------------------------------------
-    // 9. Status & Tracking Stepper View
+    // 9. Status & Tracking Stepper View (With Live Progression)
     // -------------------------------------------------------------
     const pageTrackerForm = document.getElementById("pageTrackerForm");
     const pageTrackingInput = document.getElementById("pageTrackingInput");
     const pageTrackingResult = document.getElementById("pageTrackingResult");
 
-    function renderTrackingView(ticketId) {
+    async function renderTrackingView(ticketId) {
         if (!pageTrackingResult) return;
         const normalizedId = ticketId.trim().toUpperCase();
+
+        if (pageTrackingInput) pageTrackingInput.value = normalizedId;
+
+        // Try live server API first
+        let ticket = await apiFetch(`/api/tickets/${normalizedId}`);
+
+        if (!ticket) {
+            let stored = {};
+            try {
+                stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+            } catch (e) {}
+            ticket = stored[normalizedId] || SAMPLE_REPORTS[normalizedId];
+        }
+
+        if (!ticket) {
+            pageTrackingResult.innerHTML = `
+                <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 1.5rem; border-radius: var(--radius-sm); color: #991b1b;">
+                    <strong><i class="fa-solid fa-circle-exclamation"></i> Ticket ID "${normalizedId}" not found.</strong>
+                    <p style="font-size: 0.85rem; margin-top: 0.35rem; color: #7f1d1d;">
+                        Please verify your tracking code or select one of the sample tickets above.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
+        const isResolved = ticket.status.toLowerCase().includes("resolved");
+        const statusClass = isResolved ? "status-done" : "status-active";
+        const currentStep = ticket.current_step || ticket.currentStep || 1;
+
+        let stepperHtml = `
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.75rem; box-shadow: 0 4px 14px rgba(15,23,42,0.06);">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
+                    <div>
+                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-light); letter-spacing: 0.05em; text-transform: uppercase;">
+                            ${ticket.category} • REF #${ticket.id}
+                        </span>
+                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); margin-top: 0.2rem;">
+                            ${ticket.title}
+                        </h3>
+                        <p style="font-size: 0.85rem; color: var(--text-light); margin: 0;">
+                            <i class="fa-solid fa-location-dot"></i> ${ticket.location} • Submitted: ${ticket.created_at || ticket.submittedAt || "Recently"}
+                        </p>
+                    </div>
+                    <div>
+                        <span class="status-pill ${statusClass}" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+                            ${isResolved ? '<i class="fa-solid fa-check"></i> ' : '<span class="pulse-dot"></span> '}
+                            ${ticket.status}
+                        </span>
+                    </div>
+                </div>
+
+                ${ticket.photo_url ? `
+                <div style="margin-bottom: 1.25rem;">
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-light); display: block; margin-bottom: 0.35rem;">ATTACHED PHOTO EVIDENCE:</span>
+                    <img src="${ticket.photo_url}" alt="Report Photo Evidence" style="max-height: 180px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                </div>` : ''}
+
+                <!-- Stepper Progress Bar -->
+                <div class="stepper-container">
+        `;
+
+        const steps = ticket.steps || [];
+        steps.forEach(step => {
+            const isCompleted = step.is_done || step.done;
+            const stepNum = step.step_num || step.num;
+            const isCurrent = stepNum === currentStep;
+            const stateClass = isCompleted ? "completed" : (isCurrent ? "active" : "");
+
+            stepperHtml += `
+                <div class="stepper-item ${stateClass}">
+                    <div class="stepper-circle">
+                        ${isCompleted ? '<i class="fa-solid fa-check"></i>' : stepNum}
+                    </div>
+                    <span class="stepper-title">${step.name}</span>
+                    <span class="stepper-subtitle">${step.description || step.desc}</span>
+                </div>
+            `;
+        });
+
+        stepperHtml += `
+                </div>
+
+                <div style="background: #f8fafc; border-radius: var(--radius-sm); padding: 0.95rem 1.25rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
+                    <span><strong>Resolution Status:</strong> ${ticket.resolved_at || ticket.resolvedAt || "Under Review"}</span>
+                    <div style="display: flex; gap: 0.65rem; align-items: center;">
+                        ${currentStep < 4 ? `
+                        <button type="button" class="advance-step-btn" id="btnAdvanceStep">
+                            <i class="fa-solid fa-truck-fast"></i> Advance Workflow Step (Live Server Action)
+                        </button>` : `
+                        <span style="color: var(--primary); font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Ticket Fully Resolved & Closed</span>`}
+                    </div>
+                </div>
+            </div>
+        `;
+
+        pageTrackingResult.innerHTML = stepperHtml;
+
+        const advanceBtn = document.getElementById("btnAdvanceStep");
+        if (advanceBtn) {
+            advanceBtn.addEventListener("click", async () => {
+                advanceBtn.disabled = true;
+                advanceBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating Server...';
+                
+                const res = await apiFetch(`/api/tickets/${ticket.id}/advance`, { method: "POST" });
+                if (res && res.success) {
+                    showToast(`Status updated in live SQLite DB: ${res.status}`, "success");
+                    await renderTrackingView(ticket.id);
+                    await syncDashboard();
+                    await syncNotifications();
+                } else {
+                    ticket.currentStep = Math.min(4, (ticket.currentStep || 1) + 1);
+                    if (ticket.currentStep === 4) ticket.status = "Resolved";
+                    saveReport(ticket);
+                    showToast("Status advanced locally", "info");
+                    renderTrackingView(ticket.id);
+                }
+            });
+        }
+    }
 
         let stored = {};
         try {
@@ -993,6 +1338,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initial Boots
     updateActiveZone(AppState.currentZone);
     renderTrackingView("ECO-2026-MP-101");
+    syncDashboard();
+    syncNotifications();
 
     console.log(
         "%cEcoTrack Local Waste Coordination App initialized with v0 UI & CMS Bridge!",

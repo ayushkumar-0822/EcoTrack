@@ -677,6 +677,18 @@
                                 <textarea id="missedNotes" class="form-textarea" placeholder="e.g. Bins were curbside since 6:30 AM; gate code #4192."></textarea>
                             </div>
 
+                            <div class="form-group full-width">
+                                <label class="form-label">Attach Photo Evidence (Optional)</label>
+                                <div class="file-upload-box">
+                                    <input type="file" id="missedPhotoInput" class="photo-file-input" accept="image/*">
+                                    <label for="missedPhotoInput" class="file-upload-label">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>Click to attach photo of curbside / missed bins</span>
+                                    </label>
+                                    <div class="photo-preview" id="missedPhotoPreview" style="display:none;"></div>
+                                </div>
+                            </div>
+
                             <div class="form-footer full-width">
                                 <div class="response-pledge">
                                     <i class="fa-solid fa-clock-rotate-left"></i>
@@ -736,6 +748,18 @@
                                 <textarea id="binDetails" class="form-textarea" placeholder="Describe the condition of the bin or replacement requirements..."></textarea>
                             </div>
 
+                            <div class="form-group full-width">
+                                <label class="form-label">Attach Photo of Damaged Bin / Serial (Optional)</label>
+                                <div class="file-upload-box">
+                                    <input type="file" id="binPhotoInput" class="photo-file-input" accept="image/*">
+                                    <label for="binPhotoInput" class="file-upload-label">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>Click to attach photo showing bin damage or serial stamp</span>
+                                    </label>
+                                    <div class="photo-preview" id="binPhotoPreview" style="display:none;"></div>
+                                </div>
+                            </div>
+
                             <div class="form-footer full-width">
                                 <div class="response-pledge">
                                     <i class="fa-solid fa-truck-pickup"></i>
@@ -774,6 +798,18 @@
                             <div class="form-group full-width">
                                 <label for="generalDescription" class="form-label">Description of Dumping / Spill</label>
                                 <textarea id="generalDescription" class="form-textarea" placeholder="Approximate volume of waste, type of materials observed, vehicle plates if known..."></textarea>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Attach Site Photo of Waste / Dumping (Optional)</label>
+                                <div class="file-upload-box">
+                                    <input type="file" id="generalPhotoInput" class="photo-file-input" accept="image/*">
+                                    <label for="generalPhotoInput" class="file-upload-label">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>Click to attach photo showing dumping extent or hazard</span>
+                                    </label>
+                                    <div class="photo-preview" id="generalPhotoPreview" style="display:none;"></div>
+                                </div>
                             </div>
 
                             <div class="form-footer full-width">

@@ -2,6 +2,13 @@
 node_modules/
 package-lock.json
 
+# Python & Databases
+__pycache__/
+*.pyc
+*.db
+ecotrack.db
+uploads/
+
 # Environment and secrets
 .env
 .env.*
