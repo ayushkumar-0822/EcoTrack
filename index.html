@@ -40,10 +40,12 @@
                     </span>
                     EcoTrack<span class="logo-dot">.</span>
                 </a>
+            </div>
 
-                <!-- Area Selection Dropdown (Navbar) -->
+            <div class="nav-actions">
+                <!-- 1. Area Selection (Boxed in Square) -->
                 <div class="area-pill-dropdown" id="navAreaDropdown">
-                    <button type="button" class="area-pill-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your neighborhood area">
+                    <button type="button" class="nav-square-btn area-square-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your neighborhood area">
                         <i class="fa-solid fa-location-dot"></i>
                         <span id="navAreaLabel">Green Valley (Zone A)</span>
                         <i class="fa-solid fa-chevron-down pill-chevron"></i>
@@ -67,27 +69,10 @@
                         </li>
                     </ul>
                 </div>
-            </div>
 
-            <!-- Navigation Links -->
-            <nav class="nav-links" id="navLinks" aria-label="Primary Navigation">
-                <a href="#home" class="nav-link active">Home</a>
-                <a href="#calendar" class="nav-link">Calendar</a>
-                <a href="#dashboard" class="nav-link">Service Dashboard</a>
-                <a href="#report" class="nav-link">Report Issue</a>
-                <a href="#track" class="nav-link">Track Status</a>
-                <a href="#community" class="nav-link">Community</a>
-
-                <a href="#report" class="mobile-cta" data-modal-open="reportModal">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                    Quick Report
-                </a>
-            </nav>
-
-            <div class="nav-actions">
-                <!-- Notifications Bell & Menu -->
+                <!-- 2. Notifications Bell (Boxed in Square) -->
                 <div class="notif-wrapper" id="notifWrapper">
-                    <button type="button" class="icon-btn notif-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false">
+                    <button type="button" class="nav-square-btn notif-square-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false" title="Service Alerts">
                         <i class="fa-regular fa-bell"></i>
                         <span class="notif-badge" id="notifBadge">2</span>
                     </button>
@@ -125,19 +110,95 @@
                     </div>
                 </div>
 
+                <!-- 3. Report an Issue CTA -->
                 <a href="#report" class="btn btn-primary nav-cta" data-modal-open="reportModal">
                     Report an issue
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
 
-                <button class="menu-toggle"
+                <!-- 4. 3-Line Menu Button (Boxed in Square) -->
+                <button class="nav-square-btn menu-toggle-square"
                         id="menuToggle"
-                        aria-label="Toggle navigation"
-                        aria-controls="navLinks"
-                        aria-expanded="false">
+                        aria-label="Open navigation sidebar"
+                        aria-controls="appSidebar"
+                        aria-expanded="false"
+                        title="Open Menu">
                     <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
+
+        </div>
+    </header>
+
+    <!-- =========================================
+         EXPANDABLE SIDEBAR DRAWER
+    ========================================= -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+    <aside class="app-sidebar" id="appSidebar" role="dialog" aria-modal="true" aria-label="Navigation Menu" aria-hidden="true">
+        <div class="sidebar-header">
+            <a href="#home" class="logo" aria-label="EcoTrack Home">
+                <span class="logo-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </span>
+                EcoTrack<span class="logo-dot">.</span>
+            </a>
+            <button type="button" class="nav-square-btn sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Sidebar Current Zone Card -->
+        <div class="sidebar-zone-card">
+            <div class="sidebar-zone-icon">
+                <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div>
+                <span class="sidebar-zone-sub">CURRENT ZONE</span>
+                <strong id="sidebarZoneLabel">Green Valley (Zone A)</strong>
+            </div>
+        </div>
+
+        <!-- Sidebar Navigation List -->
+        <nav class="sidebar-nav-list" aria-label="Sidebar Navigation">
+            <a href="#home" class="sidebar-link active">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-house"></i></span>
+                <span class="sidebar-link-text">Home</span>
+            </a>
+            <a href="#calendar" class="sidebar-link">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
+                <span class="sidebar-link-text">Collection Calendar</span>
+            </a>
+            <a href="#dashboard" class="sidebar-link">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-chart-line"></i></span>
+                <span class="sidebar-link-text">Service Dashboard</span>
+            </a>
+            <a href="#report" class="sidebar-link">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                <span class="sidebar-link-text">Report Local Issue</span>
+            </a>
+            <a href="#track" class="sidebar-link">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-location-crosshairs"></i></span>
+                <span class="sidebar-link-text">Track Status</span>
+            </a>
+            <a href="#community" class="sidebar-link">
+                <span class="sidebar-link-icon"><i class="fa-solid fa-users"></i></span>
+                <span class="sidebar-link-text">Community Impact</span>
+            </a>
+        </nav>
+
+        <!-- Sidebar Actions & Status -->
+        <div class="sidebar-footer-group">
+            <button type="button" class="btn btn-outline full-width" data-modal-open="reminderModal">
+                <i class="fa-regular fa-bell"></i> Pickup Reminders
+            </button>
+            <button type="button" class="btn btn-primary full-width" data-modal-open="reportModal">
+                <i class="fa-solid fa-triangle-exclamation"></i> Quick Report Issue
+            </button>
+            <div class="sidebar-status-note">
+                <span class="pulse-dot"></span> 14 Municipal Trucks Active
+            </div>
+        </div>
+    </aside>
 
         </div>
     </header>

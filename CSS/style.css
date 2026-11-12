@@ -2973,3 +2973,245 @@ img {
         gap: 2rem;
     }
 }
+
+
+/* =========================================
+   SQUARE BUTTON BOXES & EXPANDABLE SIDEBAR
+========================================= */
+
+/* Base Square Nav Button */
+.nav-square-btn {
+    height: 44px;
+    background: #ffffff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); /* Sleek square with 10px rounded corners */
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    font-family: var(--font-body);
+}
+
+.nav-square-btn:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(23, 107, 69, 0.12);
+}
+
+/* 1. Location Selector (Boxed in Square) */
+.area-square-btn {
+    padding: 0 1rem;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.area-square-btn i.fa-location-dot {
+    color: var(--primary);
+    font-size: 0.95rem;
+}
+
+.area-square-btn .pill-chevron {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    transition: transform 0.2s ease;
+}
+
+.area-pill-dropdown.open .area-square-btn .pill-chevron {
+    transform: rotate(180deg);
+}
+
+/* 2. Notifications Bell (Boxed in Square) */
+.notif-square-btn {
+    width: 44px;
+    font-size: 1.1rem;
+    position: relative;
+}
+
+/* 3. 3-Line Menu Toggle (Boxed in Square) */
+.menu-toggle-square {
+    width: 44px;
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+}
+
+.menu-toggle-square:hover {
+    color: var(--primary);
+}
+
+/* =========================================
+   EXPANDABLE SIDEBAR (OFF-CANVAS DRAWER)
+========================================= */
+
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(16, 77, 50, 0.35);
+    backdrop-filter: blur(4px);
+    z-index: 1200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-backdrop.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.app-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(350px, 86vw);
+    height: 100%;
+    background: #ffffff;
+    z-index: 1210;
+    box-shadow: -10px 0 35px rgba(15, 23, 42, 0.12);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    transform: translateX(100%);
+    transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+}
+
+.app-sidebar.open {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-close-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+}
+
+/* Active Zone Card inside Sidebar */
+.sidebar-zone-card {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    background: var(--primary-light);
+    border: 1px solid rgba(23, 107, 69, 0.2);
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    margin: 1.25rem 0 1.5rem;
+}
+
+.sidebar-zone-icon {
+    width: 36px;
+    height: 36px;
+    background: #ffffff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.sidebar-zone-sub {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+}
+
+.sidebar-zone-card strong {
+    font-size: 0.92rem;
+    color: var(--primary-dark);
+}
+
+/* Navigation List inside Sidebar */
+.sidebar-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    flex-grow: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.95rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sidebar-link-icon {
+    width: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-light);
+    font-size: 1.05rem;
+    transition: color 0.18s ease;
+}
+
+.sidebar-link:hover {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateX(4px);
+}
+
+.sidebar-link:hover .sidebar-link-icon {
+    color: var(--primary);
+}
+
+.sidebar-link.active {
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    border-left: 3px solid var(--primary);
+    font-weight: 700;
+}
+
+.sidebar-link.active .sidebar-link-icon {
+    color: var(--primary);
+}
+
+/* Sidebar Footer Actions */
+.sidebar-footer-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1.5rem;
+}
+
+.sidebar-status-note {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.full-width {
+    width: 100%;
+}

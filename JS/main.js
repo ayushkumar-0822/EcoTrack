@@ -212,6 +212,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "Escape") {
             if (activeModal) closeModal();
             closeDropdowns();
+            closeSidebar();
         }
     });
 
@@ -234,6 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const zone = ZONES[zoneKey];
 
         if (navAreaLabel) navAreaLabel.textContent = zone.shortName;
+        const sidebarZoneLabel = document.getElementById("sidebarZoneLabel");
+        if (sidebarZoneLabel) sidebarZoneLabel.textContent = zone.shortName;
         if (heroCurrentZoneName) heroCurrentZoneName.textContent = zone.name;
         if (heroNextPickup) heroNextPickup.textContent = zone.nextPickup;
         if (calendarAreaSelect) calendarAreaSelect.value = zoneKey;
@@ -909,25 +912,54 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -------------------------------------------------------------
-    // 12. Animated Counters & Mobile Navigation
+    // 12. Expandable Sidebar Controller & Animated Counters
     // -------------------------------------------------------------
     const menuToggle = document.getElementById("menuToggle");
-    const navLinks = document.getElementById("navLinks");
-    if (menuToggle && navLinks) {
-        menuToggle.addEventListener("click", () => {
-            const isOpen = navLinks.classList.toggle("open");
-            menuToggle.setAttribute("aria-expanded", String(isOpen));
-            menuToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
-        });
+    const appSidebar = document.getElementById("appSidebar");
+    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+    const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
 
-        navLinks.querySelectorAll("a").forEach(a => {
-            a.addEventListener("click", () => {
-                navLinks.classList.remove("open");
-                menuToggle.setAttribute("aria-expanded", "false");
-                menuToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
-            });
+    function openSidebar() {
+        if (!appSidebar) return;
+        appSidebar.classList.add("open");
+        if (sidebarBackdrop) sidebarBackdrop.classList.add("open");
+        appSidebar.setAttribute("aria-hidden", "false");
+        if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+    }
+
+    function closeSidebar() {
+        if (!appSidebar) return;
+        appSidebar.classList.remove("open");
+        if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
+        appSidebar.setAttribute("aria-hidden", "true");
+        if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener("click", () => {
+            const isOpen = appSidebar && appSidebar.classList.contains("open");
+            if (isOpen) closeSidebar();
+            else openSidebar();
         });
     }
+
+    if (sidebarCloseBtn) {
+        sidebarCloseBtn.addEventListener("click", () => closeSidebar());
+    }
+
+    if (sidebarBackdrop) {
+        sidebarBackdrop.addEventListener("click", () => closeSidebar());
+    }
+
+    document.querySelectorAll(".sidebar-link").forEach(link => {
+        link.addEventListener("click", () => {
+            closeSidebar();
+            document.querySelectorAll(".sidebar-link").forEach(l => l.classList.remove("active"));
+            link.classList.add("active");
+        });
+    });
 
     const counters = document.querySelectorAll("[data-count]");
     if ("IntersectionObserver" in window && counters.length > 0) {
