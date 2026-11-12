@@ -48,14 +48,14 @@
                 <a href="#how-it-works" class="nav-link">How it works</a>
                 <a href="#community" class="nav-link">Community</a>
 
-                <a href="#report" class="mobile-cta">
+                <a href="#report" class="mobile-cta" data-modal-open="reportModal">
                     Report an issue
                     <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </nav>
 
             <div class="nav-actions">
-                <a href="#report" class="btn btn-primary nav-cta">
+                <a href="#report" class="btn btn-primary nav-cta" data-modal-open="reportModal">
                     Report an issue
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 </a>
@@ -63,6 +63,7 @@
                 <button class="menu-toggle"
                         id="menuToggle"
                         aria-label="Toggle navigation"
+                        aria-controls="navLinks"
                         aria-expanded="false">
                     <i class="fa-solid fa-bars"></i>
                 </button>
@@ -103,7 +104,7 @@
 
                     <div class="hero-buttons">
 
-                        <a href="#report" class="btn btn-primary btn-large">
+                        <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
                             Report an issue
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -155,7 +156,11 @@
                         <img
                             src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
                             alt="Clean green environment and sustainable waste management"
-                            class="hero-image">
+                            class="hero-image"
+                            loading="eager"
+                            decoding="async"
+                            width="1000"
+                            height="667">
 
                         <div class="image-overlay"></div>
 
@@ -282,7 +287,7 @@
                             arrives in your area.
                         </p>
 
-                        <a href="#schedule" class="service-link">
+                        <a href="#schedule" class="service-link" data-modal-open="scheduleModal">
                             View schedules
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -305,7 +310,7 @@
                             and other waste-related problems.
                         </p>
 
-                        <a href="#report" class="service-link">
+                        <a href="#report" class="service-link" data-modal-open="reportModal">
                             Report an issue
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -328,7 +333,7 @@
                             and its resolution status.
                         </p>
 
-                        <a href="#track" class="service-link">
+                        <a href="#track" class="service-link" data-modal-open="trackModal">
                             Track complaint
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
@@ -393,7 +398,7 @@
 
                     </div>
 
-                    <a href="#report" class="btn btn-primary btn-large">
+                    <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
                         Get started
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
@@ -407,7 +412,11 @@
 
                         <img
                             src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=900&q=85"
-                            alt="Sustainable waste management and recycling">
+                            alt="Sustainable waste management and recycling"
+                            loading="lazy"
+                            decoding="async"
+                            width="900"
+                            height="600">
 
                     </div>
 
@@ -450,10 +459,10 @@
                     </p>
                 </div>
 
-                <a href="#home" class="btn btn-light btn-large">
-                    Get started
+                <button type="button" class="btn btn-light btn-large" data-modal-open="reportModal">
+                    Report an issue now
                     <i class="fa-solid fa-arrow-right"></i>
-                </a>
+                </button>
 
             </div>
 
@@ -485,6 +494,143 @@
         </div>
 
     </footer>
+
+    <!-- =========================================
+         MODALS & INTERACTIVE OVERLAYS
+    ========================================= -->
+
+    <!-- 1. REPORT AN ISSUE MODAL -->
+    <div class="modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="reportModalTitle">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i>
+                    Report a Local Issue
+                </h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <form id="reportIssueForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="issueCategory" class="form-label">Issue Category *</label>
+                        <select id="issueCategory" class="form-select" required>
+                            <option value="">Select category...</option>
+                            <option value="Overflowing Bin">Overflowing Public Bin</option>
+                            <option value="Illegal Dumping">Illegal Garbage Dumping</option>
+                            <option value="Missed Collection">Missed Household Pickup</option>
+                            <option value="Hazardous Waste">Hazardous / Chemical Waste</option>
+                            <option value="Damaged Facility">Damaged Waste Receptacle</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueLocation" class="form-label">Location / Landmark *</label>
+                        <div class="input-with-action">
+                            <input type="text" id="issueLocation" class="form-control" placeholder="e.g. 5th Avenue, near Central Park Gate" required>
+                            <button type="button" class="btn-geo" id="btnDetectLocation" title="Auto-detect location">
+                                <i class="fa-solid fa-location-crosshairs"></i> Auto
+                            </button>
+                        </div>
+                        <span class="form-hint" id="geoStatus">Click Auto to use device GPS coordinates</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueUrgency" class="form-label">Urgency Level</label>
+                        <select id="issueUrgency" class="form-select">
+                            <option value="Normal">Normal — Standard response (24-48 hrs)</option>
+                            <option value="High">High — Obstructing traffic / sanitation hazard</option>
+                            <option value="Critical">Critical — Immediate biohazard / safety risk</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="issueDescription" class="form-label">Description & Details</label>
+                        <textarea id="issueDescription" class="form-textarea" placeholder="Please describe the issue or attach notable details..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-paper-plane"></i> Submit Report
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. COLLECTION SCHEDULES MODAL -->
+    <div class="modal" id="scheduleModal" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="scheduleModalTitle">
+                    <i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i>
+                    Waste Collection Schedules
+                </h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="scheduleZoneSelect" class="form-label">Select Your Neighborhood Zone</label>
+                    <select id="scheduleZoneSelect" class="form-select">
+                        <option value="zone-green-valley">Green Valley & Eco Heights (Zone A)</option>
+                        <option value="zone-north-ridge">North Ridge Residential (Zone B)</option>
+                        <option value="zone-downtown">Central Commercial & Downtown (Zone C)</option>
+                        <option value="zone-south-harbor">South Harbor & Waterfront (Zone D)</option>
+                    </select>
+                </div>
+                <div id="scheduleResults" class="schedule-card-list">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. TRACK COMPLAINT MODAL -->
+    <div class="modal" id="trackModal" role="dialog" aria-modal="true" aria-labelledby="trackModalTitle" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <h3 class="modal-title" id="trackModalTitle">
+                    <i class="fa-solid fa-location-crosshairs" style="color: #2563eb;"></i>
+                    Track Issue Resolution
+                </h3>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="trackForm">
+                    <div class="form-group">
+                        <label for="trackingInput" class="form-label">Report Reference / Tracking ID</label>
+                        <div class="input-with-action">
+                            <input type="text" id="trackingInput" class="form-control" placeholder="e.g. ECO-2026-101" required>
+                            <button type="submit" class="btn btn-primary">Track</button>
+                        </div>
+                        <span class="form-hint">Try demo IDs: <strong>ECO-2026-101</strong>, <strong>ECO-2026-102</strong>, or submit a new report.</span>
+                    </div>
+                </form>
+
+                <div id="trackingDetails" aria-live="polite">
+                    <!-- Dynamic tracking progress populated here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCESSIBLE TOAST REGION -->
+    <div class="toast-container" id="toastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
 
 </body>
 </html>

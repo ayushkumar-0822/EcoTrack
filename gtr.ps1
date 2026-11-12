@@ -111,7 +111,7 @@ switch ($Command.ToLower()) {
         Push-Location $targetDir
         try {
             $cmdLine = ($ExtraArgs -join " ")
-            Write-Host "==> Running in $targetDir: $cmdLine" -ForegroundColor DarkGray
+            Write-Host "==> Running in ${targetDir}: $cmdLine" -ForegroundColor DarkGray
             Invoke-Expression $cmdLine
         } finally {
             Pop-Location
