@@ -273,9 +273,9 @@ img {
     display: grid;
     grid-template-columns: 1fr 0.92fr;
 
-    align-items: center;
+    align-items: start;
 
-    gap: 75px;
+    gap: 48px;
 }
 
 .hero-content {
@@ -319,13 +319,13 @@ img {
 .hero h1 {
     font-family: var(--font-heading);
 
-    font-size: clamp(43px, 5.3vw, 70px);
+    font-size: clamp(26px, 2.7vw, 37px);
 
     font-weight: 800;
 
-    letter-spacing: -3.5px;
+    letter-spacing: -1.2px;
 
-    line-height: 1.12;
+    line-height: 1.22;
 }
 
 .heading-highlight {
@@ -333,15 +333,15 @@ img {
 }
 
 .hero-description {
-    max-width: 470px;
+    max-width: 440px;
 
-    margin-top: 25px;
+    margin-top: 12px;
 
     color: var(--text-light);
 
-    font-size: 16px;
+    font-size: 14.5px;
 
-    line-height: 1.9;
+    line-height: 1.55;
 }
 
 .hero-buttons {
@@ -349,7 +349,7 @@ img {
     flex-wrap: wrap;
     gap: 13px;
 
-    margin-top: 33px;
+    margin-top: 1.15rem;
 }
 
 .hero-trust {
@@ -357,7 +357,7 @@ img {
     align-items: center;
     gap: 15px;
 
-    margin-top: 45px;
+    margin-top: 1.25rem;
 }
 
 .trust-avatars {
@@ -428,6 +428,8 @@ img {
     min-width: 0;
 
     animation: fadeUp 1s ease 0.15s both;
+
+    margin-top: -12px;
 }
 
 .visual-glow {
@@ -451,9 +453,9 @@ img {
 .hero-image-wrapper {
     position: relative;
 
-    height: 470px;
+    height: 380px;
 
-    border-radius: 150px 150px 32px 32px;
+    border-radius: 110px 110px 24px 24px;
 
     overflow: hidden;
 
@@ -562,13 +564,13 @@ img {
 }
 
 .tag-top {
-    top: 45px;
-    left: -45px;
+    top: 25px;
+    left: -25px;
 }
 
 .tag-bottom {
-    right: -25px;
-    bottom: 40px;
+    right: -15px;
+    bottom: 25px;
 
     animation-delay: 1s;
 }
@@ -2066,7 +2068,7 @@ img {
     padding: 0.85rem 1.25rem;
     border-radius: var(--radius-md);
     box-shadow: 0 4px 14px rgba(23, 65, 43, 0.05);
-    margin: 1.5rem 0 2rem;
+    margin: 1.1rem 0 1.35rem;
 }
 
 .zone-badge-left {
