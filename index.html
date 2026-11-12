@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,55 +5,126 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="description"
-          content="EcoTrack - Smart local waste collection and community cleanliness management.">
+          content="EcoTrack — Smart local waste collection coordination platform. Interactive calendars, automated reminders, missed pickup & bin issue reporting, and live municipal service dashboard.">
 
-    <title>EcoTrack — A Cleaner Tomorrow</title>
+    <title>EcoTrack — Local Waste Collection Coordination & Service Dashboard</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
           rel="stylesheet">
 
-    <!-- Icons -->
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-    <!-- CSS -->
+    <!-- Design System CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- JavaScript -->
+    <!-- Application Script -->
     <script src="js/main.js" defer></script>
 </head>
 
 <body>
-    
-
-    <!-- NAVBAR -->
-    <header class="navbar">
+    <!-- =========================================
+         NAVBAR & NOTIFICATIONS
+    ========================================= -->
+    <header class="navbar" id="topNavbar">
         <div class="container nav-container">
 
-            <a href="#" class="logo">
-                <span class="logo-icon">
-                    <i class="fa-solid fa-leaf"></i>
-                </span>
-                EcoTrack<span class="logo-dot">.</span>
-            </a>
+            <div class="nav-brand-group">
+                <a href="#home" class="logo" aria-label="EcoTrack Home">
+                    <span class="logo-icon">
+                        <i class="fa-solid fa-leaf"></i>
+                    </span>
+                    EcoTrack<span class="logo-dot">.</span>
+                </a>
 
-            <nav class="nav-links" id="navLinks">
+                <!-- Area Selection Dropdown (Navbar) -->
+                <div class="area-pill-dropdown" id="navAreaDropdown">
+                    <button type="button" class="area-pill-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your neighborhood area">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span id="navAreaLabel">Green Valley (Zone A)</span>
+                        <i class="fa-solid fa-chevron-down pill-chevron"></i>
+                    </button>
+                    <ul class="area-menu" id="navAreaMenu" role="listbox" tabindex="-1">
+                        <li role="option" aria-selected="true" data-zone="zone-green-valley" class="active">
+                            <strong>Green Valley & Eco Heights</strong>
+                            <span>Zone A • Residential & Parks</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-north-ridge">
+                            <strong>North Ridge Residential</strong>
+                            <span>Zone B • High-density housing</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-downtown">
+                            <strong>Central Commercial & Downtown</strong>
+                            <span>Zone C • Business & Retail</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-south-harbor">
+                            <strong>South Harbor & Waterfront</strong>
+                            <span>Zone D • Coastal & Mixed</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="nav-links" id="navLinks" aria-label="Primary Navigation">
                 <a href="#home" class="nav-link active">Home</a>
-                <a href="#services" class="nav-link">Services</a>
-                <a href="#how-it-works" class="nav-link">How it works</a>
+                <a href="#calendar" class="nav-link">Calendar</a>
+                <a href="#dashboard" class="nav-link">Service Dashboard</a>
+                <a href="#report" class="nav-link">Report Issue</a>
+                <a href="#track" class="nav-link">Track Status</a>
                 <a href="#community" class="nav-link">Community</a>
 
                 <a href="#report" class="mobile-cta" data-modal-open="reportModal">
-                    Report an issue
-                    <i class="fa-solid fa-arrow-right"></i>
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    Quick Report
                 </a>
             </nav>
 
             <div class="nav-actions">
+                <!-- Notifications Bell & Menu -->
+                <div class="notif-wrapper" id="notifWrapper">
+                    <button type="button" class="icon-btn notif-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notif-badge" id="notifBadge">2</span>
+                    </button>
+                    <div class="notif-dropdown" id="notifDropdown" aria-hidden="true">
+                        <div class="notif-header">
+                            <div>
+                                <h4>Service Alerts</h4>
+                                <span class="notif-count-text">2 new notices</span>
+                            </div>
+                            <button type="button" class="btn-text-link" id="btnMarkAllRead">Mark all read</button>
+                        </div>
+                        <div class="notif-list" id="notifList">
+                            <div class="notif-item unread">
+                                <span class="notif-type-icon green"><i class="fa-solid fa-truck-fast"></i></span>
+                                <div class="notif-body">
+                                    <p><strong>Route #4 Completed</strong>: Organic waste pickup on Maple St finished early.</p>
+                                    <span class="notif-time">22 mins ago • Zone A</span>
+                                </div>
+                            </div>
+                            <div class="notif-item unread">
+                                <span class="notif-type-icon orange"><i class="fa-solid fa-clock"></i></span>
+                                <div class="notif-body">
+                                    <p><strong>Upcoming Pickup</strong>: Dry Recyclables collection tomorrow morning at 08:00 AM.</p>
+                                    <span class="notif-time">1 hr ago • Reminder</span>
+                                </div>
+                            </div>
+                            <div class="notif-item">
+                                <span class="notif-type-icon blue"><i class="fa-solid fa-cloud-sun"></i></span>
+                                <div class="notif-body">
+                                    <p><strong>Weather Advisory</strong>: Normal collection schedules unaffected by light rain.</p>
+                                    <span class="notif-time">Yesterday</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="#report" class="btn btn-primary nav-cta" data-modal-open="reportModal">
                     Report an issue
                     <i class="fa-solid fa-arrow-up-right-from-square"></i>
@@ -73,89 +143,99 @@
     </header>
 
 
-    <!-- HERO SECTION -->
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================= -->
     <main>
 
+        <!-- 1. HERO SECTION -->
         <section class="hero" id="home">
-
             <div class="hero-background-shape"></div>
 
             <div class="container hero-grid">
 
                 <!-- LEFT CONTENT -->
                 <div class="hero-content">
-
                     <div class="eyebrow">
                         <span class="status-dot"></span>
-                        SMARTER CITIES. CLEANER COMMUNITIES.
+                        LOCAL WASTE-SERVICE COORDINATION PLATFORM
                     </div>
 
                     <h1>
-                        A cleaner<br>
-                        tomorrow starts<br>
-                        <span class="heading-highlight">right here.</span>
+                        Clean neighborhoods.<br>
+                        Coordinated schedules.<br>
+                        <span class="heading-highlight">Zero missed pickups.</span>
                     </h1>
 
                     <p class="hero-description">
-                        Your neighborhood, your responsibility.
-                        Track waste collection, report local issues,
-                        and make your community a better place to live.
+                        Empowering citizens and municipal sanitation crews to synchronize collection schedules, automate pickup reminders, report missed bins, and monitor live city cleanliness metrics.
                     </p>
 
+                    <!-- Active Zone Overview Banner -->
+                    <div class="hero-zone-badge">
+                        <div class="zone-badge-left">
+                            <i class="fa-solid fa-bullseye"></i>
+                            <div>
+                                <span class="label">CURRENTLY VIEWING</span>
+                                <strong id="heroCurrentZoneName">Green Valley (Zone A)</strong>
+                            </div>
+                        </div>
+                        <div class="zone-badge-right">
+                            <span class="next-label">NEXT COLLECTION</span>
+                            <strong id="heroNextPickup">Tomorrow, 7:00 AM · Organic</strong>
+                        </div>
+                    </div>
+
                     <div class="hero-buttons">
-
                         <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
                             Report an issue
-                            <i class="fa-solid fa-arrow-right"></i>
                         </a>
 
-                        <a href="#services" class="btn btn-secondary btn-large">
-                            Explore services
+                        <a href="#calendar" class="btn btn-secondary btn-large">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            View calendar
                         </a>
 
+                        <button type="button" class="btn btn-outline btn-large" data-modal-open="reminderModal">
+                            <i class="fa-solid fa-bell"></i>
+                            Set reminders
+                        </button>
                     </div>
 
                     <div class="hero-trust">
-
                         <div class="trust-avatars">
-                            <span>R</span>
-                            <span>A</span>
-                            <span>S</span>
-                            <span><i class="fa-solid fa-plus"></i></span>
+                            <span><i class="fa-solid fa-recycle"></i></span>
+                            <span><i class="fa-solid fa-truck"></i></span>
+                            <span><i class="fa-solid fa-shield-heart"></i></span>
+                            <span><i class="fa-solid fa-check"></i></span>
                         </div>
 
                         <div class="trust-text">
-                            <strong>Making communities cleaner</strong>
-                            <span>One neighborhood at a time</span>
+                            <strong>Live Municipal Coordination Active</strong>
+                            <span>14 Service Trucks on Route • 96.2% On-Time Pickup</span>
                         </div>
-
                     </div>
-
                 </div>
-
 
                 <!-- RIGHT VISUAL -->
                 <div class="hero-visual">
-
                     <div class="visual-glow"></div>
 
                     <div class="floating-tag tag-top">
                         <span class="tag-icon">
-                            <i class="fa-solid fa-check"></i>
+                            <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
                         </span>
-
                         <div>
-                            <strong>Collection scheduled</strong>
-                            <span>Tomorrow · 7:00 AM</span>
+                            <strong>Route #04 In Progress</strong>
+                            <span>Maple St & 4th Cross · 82% Completed</span>
                         </div>
                     </div>
 
-
                     <div class="hero-image-wrapper">
-
                         <img
                             src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
-                            alt="Clean green environment and sustainable waste management"
+                            alt="Clean neighborhood and sustainable municipal recycling coordination"
                             class="hero-image"
                             loading="eager"
                             decoding="async"
@@ -168,54 +248,554 @@
                             <span class="label-icon">
                                 <i class="fa-solid fa-location-dot"></i>
                             </span>
-
                             <div>
-                                <span>YOUR NEIGHBORHOOD</span>
-                                <strong>Cleaner. Greener. Better.</strong>
+                                <span>SMART CITY WASTE SYSTEM</span>
+                                <strong>EcoTrack Connected Zone A</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="floating-tag tag-bottom">
+                        <div class="progress-circle">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                        <div>
+                            <strong>Reminders Activated</strong>
+                            <span>Never forget collection morning</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 2. COLLECTION CALENDAR & REMINDERS SECTION -->
+        <section class="calendar-section section-padding" id="calendar">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">SYNCHRONIZED SCHEDULES</span>
+                        <h2>Collection Calendar & Pickups</h2>
+                    </div>
+                    <p>
+                        View scheduled collection dates for your zone, filter by waste type, and set automated alerts before collection crews arrive.
+                    </p>
+                </div>
+
+                <!-- Calendar Main Component Card -->
+                <div class="v0-card calendar-card-shell">
+                    <div class="calendar-toolbar">
+                        <div class="calendar-zone-picker">
+                            <label for="calendarAreaSelect" class="toolbar-label">
+                                <i class="fa-solid fa-map-pin"></i> Neighborhood Zone:
+                            </label>
+                            <select id="calendarAreaSelect" class="form-select inline-select">
+                                <option value="zone-green-valley" selected>Green Valley & Eco Heights (Zone A)</option>
+                                <option value="zone-north-ridge">North Ridge Residential (Zone B)</option>
+                                <option value="zone-downtown">Central Commercial & Downtown (Zone C)</option>
+                                <option value="zone-south-harbor">South Harbor & Waterfront (Zone D)</option>
+                            </select>
+                        </div>
+
+                        <!-- Month Navigator -->
+                        <div class="month-navigator">
+                            <button type="button" class="btn-icon" id="btnPrevMonth" aria-label="Previous month">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <span class="current-month-display" id="calendarMonthTitle">November 2026</span>
+                            <button type="button" class="btn-icon" id="btnNextMonth" aria-label="Next month">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Reminders Shortcut Button -->
+                        <button type="button" class="btn btn-outline" data-modal-open="reminderModal">
+                            <i class="fa-regular fa-bell"></i>
+                            Notification Settings
+                        </button>
+                    </div>
+
+                    <!-- Category Filter Chips -->
+                    <div class="filter-chips" id="calendarFilters" role="tablist">
+                        <button type="button" class="chip active" data-filter="all">All Pickups</button>
+                        <button type="button" class="chip chip-organic" data-filter="organic">
+                            <span class="chip-dot dot-organic"></span> Organic / Wet
+                        </button>
+                        <button type="button" class="chip chip-recyclable" data-filter="recyclable">
+                            <span class="chip-dot dot-recyclable"></span> Dry Recyclables
+                        </button>
+                        <button type="button" class="chip chip-hazardous" data-filter="hazardous">
+                            <span class="chip-dot dot-hazardous"></span> Hazardous / E-Waste
+                        </button>
+                    </div>
+
+                    <!-- Calendar Layout Grid: Days + Inspection Panel -->
+                    <div class="calendar-split-view">
+                        <!-- Calendar Days Grid -->
+                        <div class="calendar-grid-container">
+                            <div class="calendar-weekdays">
+                                <span>Mon</span>
+                                <span>Tue</span>
+                                <span>Wed</span>
+                                <span>Thu</span>
+                                <span>Fri</span>
+                                <span>Sat</span>
+                                <span>Sun</span>
+                            </div>
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Generated Dynamically via JS -->
                             </div>
                         </div>
 
+                        <!-- Selected Date Detail Card -->
+                        <div class="calendar-detail-panel">
+                            <div class="detail-card-header">
+                                <span class="badge" id="selectedDateBadge">Selected Day</span>
+                                <h3 id="selectedDateHeading">Wednesday, Nov 18</h3>
+                                <p class="detail-desc" id="selectedDateDesc">Regular neighborhood collection schedule</p>
+                            </div>
+
+                            <div class="detail-pickups-list" id="selectedDatePickups">
+                                <!-- Populated dynamically -->
+                            </div>
+
+                            <div class="detail-card-footer">
+                                <div class="reminder-quick-box">
+                                    <div>
+                                        <strong>Get Day-Before Alert</strong>
+                                        <p>Receive SMS/Email notification at 8:00 PM</p>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="btnQuickReminder">
+                                        <i class="fa-solid fa-bell"></i> Remind Me
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 3. SERVICE DASHBOARD SECTION -->
+        <section class="dashboard-section section-padding" id="dashboard">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">LIVE OPERATIONS</span>
+                        <h2>Municipal Service Dashboard</h2>
+                    </div>
+                    <p>
+                        Real-time tracking of waste collection trucks, route completion rates, and municipal responsiveness across all zones.
+                    </p>
+                </div>
+
+                <!-- 4 Top KPI Metric Cards -->
+                <div class="kpi-grid">
+                    <div class="v0-card kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-icon icon-green"><i class="fa-solid fa-route"></i></span>
+                            <span class="kpi-trend trend-up"><i class="fa-solid fa-arrow-up"></i> +4.1%</span>
+                        </div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiRouteCompletion">82%</div>
+                            <div class="kpi-label">Today's Route Completion</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 82%;"></div>
+                            </div>
+                            <span class="kpi-footnote">18 of 22 sectors collected</span>
+                        </div>
                     </div>
 
-
-                    <div class="floating-tag tag-bottom">
-
-                        <div class="progress-circle">
-                            <i class="fa-solid fa-leaf"></i>
+                    <div class="v0-card kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-icon icon-blue"><i class="fa-solid fa-truck-moving"></i></span>
+                            <span class="kpi-status-live"><span class="pulse-dot"></span> Live GPS</span>
                         </div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiActiveFleet">14 / 16</div>
+                            <div class="kpi-label">Active Collection Trucks</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 88%; background: #2563eb;"></div>
+                            </div>
+                            <span class="kpi-footnote">2 trucks in depot maintenance</span>
+                        </div>
+                    </div>
 
+                    <div class="v0-card kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-icon icon-purple"><i class="fa-solid fa-stopwatch"></i></span>
+                            <span class="kpi-trend trend-up"><i class="fa-solid fa-check"></i> Target met</span>
+                        </div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiResolutionRate">96.2%</div>
+                            <div class="kpi-label">Issue Resolution Rate</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 96%; background: #7c3aed;"></div>
+                            </div>
+                            <span class="kpi-footnote">Avg. response under 3.5 hrs</span>
+                        </div>
+                    </div>
+
+                    <div class="v0-card kpi-card">
+                        <div class="kpi-top">
+                            <span class="kpi-icon icon-orange"><i class="fa-solid fa-leaf"></i></span>
+                            <span class="kpi-badge-gold">Grade A+</span>
+                        </div>
+                        <div class="kpi-body">
+                            <div class="kpi-value" id="kpiCleanlinessIndex">98 / 100</div>
+                            <div class="kpi-label">Neighborhood Cleanliness Index</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" style="width: 98%; background: var(--primary);"></div>
+                            </div>
+                            <span class="kpi-footnote">Rated by resident audit</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Municipal Activity Feed & Fleet Log -->
+                <div class="v0-card dashboard-log-card">
+                    <div class="card-header-row">
                         <div>
-                            <strong>Small actions.</strong>
-                            <span>Big environmental impact.</span>
+                            <h3>Active Route Operations & Dispatches</h3>
+                            <p>Live status stream directly from municipal dispatch coordinators</p>
                         </div>
+                        <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshDashboard">
+                            <i class="fa-solid fa-rotate"></i> Live Refresh
+                        </button>
+                    </div>
 
+                    <div class="table-responsive">
+                        <table class="fleet-table" aria-label="Active Fleet Operations Table">
+                            <thead>
+                                <tr>
+                                    <th>Truck #</th>
+                                    <th>Assigned Sector</th>
+                                    <th>Waste Stream</th>
+                                    <th>Driver / Crew</th>
+                                    <th>Route Progress</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fleetTableBody">
+                                <tr>
+                                    <td><strong>Truck-04</strong></td>
+                                    <td>Green Valley (Sector 1–4)</td>
+                                    <td><span class="tag tag-organic">Organic Wet</span></td>
+                                    <td>R. Patel & Team</td>
+                                    <td>
+                                        <div class="table-progress">
+                                            <div class="bar" style="width: 92%;"></div>
+                                            <span>92%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-active">On Route</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Truck-09</strong></td>
+                                    <td>Green Valley (Sector 5–8)</td>
+                                    <td><span class="tag tag-recyclable">Recyclables</span></td>
+                                    <td>M. Jenkins</td>
+                                    <td>
+                                        <div class="table-progress">
+                                            <div class="bar" style="width: 78%;"></div>
+                                            <span>78%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-active">On Route</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Truck-12</strong></td>
+                                    <td>North Ridge (Main Blvd)</td>
+                                    <td><span class="tag tag-organic">Organic Wet</span></td>
+                                    <td>S. Kumar & Team</td>
+                                    <td>
+                                        <div class="table-progress">
+                                            <div class="bar" style="width: 100%;"></div>
+                                            <span>100%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-done">Completed</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Truck-02</strong></td>
+                                    <td>Downtown Commercial</td>
+                                    <td><span class="tag tag-hazardous">Cardboard & Dry</span></td>
+                                    <td>A. Gomez</td>
+                                    <td>
+                                        <div class="table-progress">
+                                            <div class="bar" style="width: 64%;"></div>
+                                            <span>64%</span>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-pill status-active">On Route</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 4. ISSUE REPORTING HUB SECTION (MISSED PICKUPS & BIN ISSUES) -->
+        <section class="report-section section-padding" id="report">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">ISSUE RESOLUTION CENTER</span>
+                        <h2>Report an Issue or Request Service</h2>
+                    </div>
+                    <p>
+                        Did the collection truck miss your street? Is your public or domestic bin broken or overflowing? Submit below for immediate dispatch.
+                    </p>
+                </div>
+
+                <div class="v0-card report-hub-card">
+                    <!-- Segmented Tabs Navigation -->
+                    <div class="v0-segmented-tabs" role="tablist" aria-label="Report Issue Categories">
+                        <button type="button" class="tab-btn active" role="tab" id="tabMissedBtn" aria-selected="true" aria-controls="paneMissed" data-tab="missed">
+                            <i class="fa-solid fa-truck-ramp-box"></i>
+                            <span>Missed Pickup Report</span>
+                        </button>
+
+                        <button type="button" class="tab-btn" role="tab" id="tabBinBtn" aria-selected="false" aria-controls="paneBin" data-tab="bin">
+                            <i class="fa-solid fa-trash-can"></i>
+                            <span>Bin Issue Report</span>
+                        </button>
+
+                        <button type="button" class="tab-btn" role="tab" id="tabGeneralBtn" aria-selected="false" aria-controls="paneGeneral" data-tab="general">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <span>Illegal Dumping / Other</span>
+                        </button>
+                    </div>
+
+                    <!-- TAB 1: MISSED PICKUP FORM -->
+                    <div class="tab-pane active" id="paneMissed" role="tabpanel" aria-labelledby="tabMissedBtn">
+                        <form id="formMissedPickup" class="report-form-grid">
+                            <div class="form-group">
+                                <label for="missedArea" class="form-label">Neighborhood Area *</label>
+                                <select id="missedArea" class="form-select" required>
+                                    <option value="Green Valley (Zone A)">Green Valley & Eco Heights (Zone A)</option>
+                                    <option value="North Ridge (Zone B)">North Ridge Residential (Zone B)</option>
+                                    <option value="Central Downtown (Zone C)">Central Commercial & Downtown (Zone C)</option>
+                                    <option value="South Harbor (Zone D)">South Harbor & Waterfront (Zone D)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="missedAddress" class="form-label">Street Address & House / Apt # *</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="missedAddress" class="form-control" placeholder="e.g. 142 Elm Street, Apt 3B" required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location via GPS">
+                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="missedDate" class="form-label">Scheduled Date That Was Missed *</label>
+                                <input type="date" id="missedDate" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="missedWasteType" class="form-label">Waste Type Left Behind *</label>
+                                <select id="missedWasteType" class="form-select" required>
+                                    <option value="Organic Wet Waste">Organic / Wet Household Waste (Green Bin)</option>
+                                    <option value="Dry Recyclables">Dry Recyclables - Paper & Plastics (Blue Bin)</option>
+                                    <option value="Hazardous / Bulk Waste">Hazardous / Electronics / Bulk Items</option>
+                                    <option value="All Scheduled Bins">All Scheduled Bins Were Missed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="missedNotes" class="form-label">Additional Instructions / Placement Details</label>
+                                <textarea id="missedNotes" class="form-textarea" placeholder="e.g. Bins were curbside since 6:30 AM; gate code #4192."></textarea>
+                            </div>
+
+                            <div class="form-footer full-width">
+                                <div class="response-pledge">
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                    <span>Guaranteed recovery truck dispatch within 4 hours.</span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-large">
+                                    <i class="fa-solid fa-paper-plane"></i> Submit Missed Pickup Ticket
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TAB 2: BIN ISSUE FORM -->
+                    <div class="tab-pane" id="paneBin" role="tabpanel" aria-labelledby="tabBinBtn" hidden>
+                        <form id="formBinIssue" class="report-form-grid">
+                            <div class="form-group">
+                                <label for="binIssueType" class="form-label">Bin Problem Type *</label>
+                                <select id="binIssueType" class="form-select" required>
+                                    <option value="Damaged Bin (Wheels / Lid Cracked)">Damaged Bin (Wheels / Lid Cracked)</option>
+                                    <option value="Overflowing Public Bin">Overflowing Public Street Bin</option>
+                                    <option value="Missing / Stolen Bin">Missing or Stolen Receptacle</option>
+                                    <option value="Request New / Additional Bin">Request Additional / Larger Bin</option>
+                                    <option value="Smell / Sanitation Hazard">Sanitation / Cleaning Required</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="binSize" class="form-label">Bin Receptacle Size</label>
+                                <select id="binSize" class="form-select">
+                                    <option value="120 Litres Standard">120L Standard Domestic Bin</option>
+                                    <option value="240 Litres Large">240L Large Family / Commercial Bin</option>
+                                    <option value="Public Street Bin">Public Street / Park Bin</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="binLocation" class="form-label">Location / Bin Serial (If known) *</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="binLocation" class="form-control" placeholder="e.g. Near Bus Stand 4, or Serial #BN-892" required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Use GPS Location">
+                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="binUrgency" class="form-label">Urgency Level</label>
+                                <select id="binUrgency" class="form-select">
+                                    <option value="Standard">Standard (Within 2 business days)</option>
+                                    <option value="High">High (Spill risk / pedestrian obstruction)</option>
+                                    <option value="Urgent">Urgent (Biohazard / completely blocked walkway)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="binDetails" class="form-label">Description & Specific Damage</label>
+                                <textarea id="binDetails" class="form-textarea" placeholder="Describe the condition of the bin or replacement requirements..."></textarea>
+                            </div>
+
+                            <div class="form-footer full-width">
+                                <div class="response-pledge">
+                                    <i class="fa-solid fa-truck-pickup"></i>
+                                    <span>Replacement bins delivered free of municipal charge.</span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-large">
+                                    <i class="fa-solid fa-paper-plane"></i> Submit Bin Issue Ticket
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- TAB 3: GENERAL / ILLEGAL DUMPING FORM -->
+                    <div class="tab-pane" id="paneGeneral" role="tabpanel" aria-labelledby="tabGeneralBtn" hidden>
+                        <form id="formGeneralIssue" class="report-form-grid">
+                            <div class="form-group">
+                                <label for="generalCategory" class="form-label">Category *</label>
+                                <select id="generalCategory" class="form-select" required>
+                                    <option value="Illegal Dumping Site">Illegal Garbage Dumping Site</option>
+                                    <option value="Construction Debris">Construction / Remodeling Debris</option>
+                                    <option value="Hazardous Chemical Spill">Chemical / Oil / Hazardous Spill</option>
+                                    <option value="Dead Animal Sanitation">Dead Animal Removal Needed</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="generalLocation" class="form-label">Exact Location / Landmark *</label>
+                                <div class="input-with-action">
+                                    <input type="text" id="generalLocation" class="form-control" placeholder="e.g. Empty plot behind Green Valley Mall" required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location">
+                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="generalDescription" class="form-label">Description of Dumping / Spill</label>
+                                <textarea id="generalDescription" class="form-textarea" placeholder="Approximate volume of waste, type of materials observed, vehicle plates if known..."></textarea>
+                            </div>
+
+                            <div class="form-footer full-width">
+                                <div class="response-pledge">
+                                    <i class="fa-solid fa-shield-halved"></i>
+                                    <span>Reviewed directly by environmental protection inspectors.</span>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-large">
+                                    <i class="fa-solid fa-paper-plane"></i> Dispatch Environmental Crew
+                                </button>
+                            </div>
+                        </form>
                     </div>
 
                 </div>
 
             </div>
-
         </section>
 
 
-        <!-- STATS SECTION -->
+        <!-- 5. STATUS TRACKER SECTION -->
+        <section class="track-section section-padding" id="track">
+            <div class="container">
+                <div class="section-heading">
+                    <div>
+                        <span class="section-label">REAL-TIME RESOLUTION</span>
+                        <h2>Track Complaint & Service Status</h2>
+                    </div>
+                    <p>
+                        Enter your report tracking ID to view live officer assignment, crew dispatch updates, and photo verification of resolution.
+                    </p>
+                </div>
+
+                <div class="v0-card tracker-shell">
+                    <form id="pageTrackerForm" class="tracker-input-row">
+                        <div class="input-icon-group">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="pageTrackingInput" class="form-control tracker-input" placeholder="Enter Tracking ID (e.g. ECO-2026-MP-101)..." required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fa-solid fa-location-crosshairs"></i> Track Status
+                        </button>
+                    </form>
+
+                    <!-- Quick Demo Ticket Pills -->
+                    <div class="demo-pills-row">
+                        <span>Try Sample Tickets:</span>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-MP-101">
+                            ECO-2026-MP-101 (Missed Pickup - Resolved)
+                        </button>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-BN-204">
+                            ECO-2026-BN-204 (Damaged Bin - In Progress)
+                        </button>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-ID-308">
+                            ECO-2026-ID-308 (Illegal Dump - Dispatched)
+                        </button>
+                    </div>
+
+                    <!-- Live Dynamic Stepper & Result Card -->
+                    <div id="pageTrackingResult" class="tracker-result-area" aria-live="polite">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- 6. COMMUNITY STATS SECTION -->
         <section class="stats-section" id="community">
-
             <div class="container stats-grid">
-
                 <div class="stats-intro">
-                    <span class="section-label">OUR COMMUNITY</span>
-                    <h2>Better together.</h2>
+                    <span class="section-label">OUR COLLECTIVE IMPACT</span>
+                    <h2>Measurable progress every single day.</h2>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fa-solid fa-house"></i>
+                        <i class="fa-solid fa-house-chimney"></i>
                     </div>
-
                     <div>
                         <h3 data-count="12">0</h3>
-                        <span>Service areas</span>
+                        <span>Coordinated Zones</span>
                     </div>
                 </div>
 
@@ -223,10 +803,9 @@
                     <div class="stat-icon">
                         <i class="fa-solid fa-truck"></i>
                     </div>
-
                     <div>
                         <h3 data-count="240">0</h3>
-                        <span>Monthly collections</span>
+                        <span>Monthly Route Cycles</span>
                     </div>
                 </div>
 
@@ -234,279 +813,89 @@
                     <div class="stat-icon">
                         <i class="fa-solid fa-users"></i>
                     </div>
-
                     <div>
                         <h3 data-count="850">0</h3>
-                        <span>Community members</span>
+                        <span>Registered Citizens</span>
                     </div>
                 </div>
 
-            </div>
-
-        </section>
-
-
-        <!-- SERVICES SECTION -->
-        <section class="services-section section-padding" id="services">
-
-            <div class="container">
-
-                <div class="section-heading">
-
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-recycle"></i>
+                    </div>
                     <div>
-                        <span class="section-label">WHAT WE DO</span>
-
-                        <h2>
-                            Everything your<br>
-                            neighborhood needs.
-                        </h2>
+                        <h3 data-count="1250">0</h3>
+                        <span>Tons Recycled</span>
                     </div>
-
-                    <p>
-                        Simple tools that help residents and
-                        local waste services work together.
-                    </p>
-
                 </div>
-
-
-                <div class="services-grid">
-
-                    <article class="service-card">
-
-                        <div class="service-icon green-icon">
-                            <i class="fa-solid fa-calendar-days"></i>
-                        </div>
-
-                        <span class="service-number">01</span>
-
-                        <h3>Collection schedules</h3>
-
-                        <p>
-                            Know exactly when waste collection
-                            arrives in your area.
-                        </p>
-
-                        <a href="#schedule" class="service-link" data-modal-open="scheduleModal">
-                            View schedules
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-
-                    </article>
-
-
-                    <article class="service-card">
-
-                        <div class="service-icon orange-icon">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                        </div>
-
-                        <span class="service-number">02</span>
-
-                        <h3>Report local issues</h3>
-
-                        <p>
-                            Missed pickups, overflowing bins,
-                            and other waste-related problems.
-                        </p>
-
-                        <a href="#report" class="service-link" data-modal-open="reportModal">
-                            Report an issue
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-
-                    </article>
-
-
-                    <article class="service-card">
-
-                        <div class="service-icon blue-icon">
-                            <i class="fa-solid fa-location-crosshairs"></i>
-                        </div>
-
-                        <span class="service-number">03</span>
-
-                        <h3>Track your reports</h3>
-
-                        <p>
-                            Stay informed about your complaint
-                            and its resolution status.
-                        </p>
-
-                        <a href="#track" class="service-link" data-modal-open="trackModal">
-                            Track complaint
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </a>
-
-                    </article>
-
-                </div>
-
             </div>
-
-        </section>
-
-
-        <!-- HOW IT WORKS -->
-        <section class="how-section section-padding" id="how-it-works">
-
-            <div class="container how-grid">
-
-                <div class="how-content">
-
-                    <span class="section-label">SIMPLE BY DESIGN</span>
-
-                    <h2>
-                        Making waste<br>
-                        management<br>
-                        <span class="heading-highlight">effortless.</span>
-                    </h2>
-
-                    <p>
-                        A few simple steps are all it takes to
-                        keep your neighborhood clean and organized.
-                    </p>
-
-                    <div class="steps-list">
-
-                        <div class="step-item">
-                            <span class="step-number">01</span>
-
-                            <div>
-                                <h3>Select your area</h3>
-                                <p>Choose your neighborhood to see local services.</p>
-                            </div>
-                        </div>
-
-                        <div class="step-item">
-                            <span class="step-number">02</span>
-
-                            <div>
-                                <h3>Stay informed</h3>
-                                <p>Check collection schedules and upcoming pickups.</p>
-                            </div>
-                        </div>
-
-                        <div class="step-item">
-                            <span class="step-number">03</span>
-
-                            <div>
-                                <h3>Report and track</h3>
-                                <p>Submit an issue and follow its progress.</p>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
-                        Get started
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-
-                </div>
-
-
-                <div class="how-visual">
-
-                    <div class="how-image-card">
-
-                        <img
-                            src="https://images.unsplash.com/photo-1611284446314-60a58ac0deb9?auto=format&fit=crop&w=900&q=85"
-                            alt="Sustainable waste management and recycling"
-                            loading="lazy"
-                            decoding="async"
-                            width="900"
-                            height="600">
-
-                    </div>
-
-                    <div class="impact-card">
-                        <div class="impact-icon">
-                            <i class="fa-solid fa-earth-americas"></i>
-                        </div>
-
-                        <div>
-                            <strong>Every action counts.</strong>
-                            <span>Let's build a cleaner future.</span>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- CTA SECTION -->
-        <section class="cta-section" id="report">
-
-            <div class="container cta-container">
-
-                <div>
-                    <span class="section-label cta-label">
-                        YOUR COMMUNITY NEEDS YOU
-                    </span>
-
-                    <h2>
-                        Let's make your<br>
-                        neighborhood better.
-                    </h2>
-
-                    <p>
-                        Be part of the change.
-                        Start with one small action today.
-                    </p>
-                </div>
-
-                <button type="button" class="btn btn-light btn-large" data-modal-open="reportModal">
-                    Report an issue now
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-
-            </div>
-
         </section>
 
     </main>
 
 
-    <!-- FOOTER -->
+    <!-- =========================================
+         FOOTER
+    ========================================= -->
     <footer class="footer">
-
         <div class="container footer-content">
+            <div class="footer-top-grid">
+                <div>
+                    <a href="#home" class="logo footer-logo">
+                        <span class="logo-icon">
+                            <i class="fa-solid fa-leaf"></i>
+                        </span>
+                        EcoTrack<span class="logo-dot">.</span>
+                    </a>
+                    <p class="footer-tagline">
+                        Smart local waste-service coordination application for schedules, reminders, and municipal issue tracking.
+                    </p>
+                </div>
+                <div class="footer-links-group">
+                    <strong>Quick Coordination</strong>
+                    <ul>
+                        <li><a href="#calendar">Collection Calendar</a></li>
+                        <li><a href="#dashboard">Municipal Dashboard</a></li>
+                        <li><a href="#report">Report Missed Pickup</a></li>
+                        <li><a href="#report">Report Bin Damage</a></li>
+                        <li><a href="#track">Live Ticket Tracking</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <strong>Developer & Architecture</strong>
+                    <ul>
+                        <li><a href="#home" id="btnExportDesignTokens">Export Figma Tokens</a></li>
+                        <li><a href="#home" id="btnExportCMSConfig">UiChemy / CMS Bridge API</a></li>
+                        <li><a href="https://github.com/coderabbitai/git-worktree-runner" target="_blank" rel="noopener">Git Worktree Runner (gtr)</a></li>
+                        <li><a href="https://coderabbit.ai" target="_blank" rel="noopener">CodeRabbit Review Rules</a></li>
+                    </ul>
+                </div>
+            </div>
 
-            <a href="#home" class="logo footer-logo">
-                <span class="logo-icon">
-                    <i class="fa-solid fa-leaf"></i>
+            <div class="footer-bottom-bar">
+                <span class="footer-copy">
+                    © 2026 EcoTrack Municipal Coordination Platform. Engineered with Senior WCAG 2.1 AA & CodeRabbit Standards.
                 </span>
-                EcoTrack<span class="logo-dot">.</span>
-            </a>
-
-            <p>
-                A cleaner community begins with you.
-            </p>
-
-            <span class="footer-copy">
-                © 2026 EcoTrack. Built for a greener tomorrow.
-            </span>
-
+                <div class="footer-status-pill">
+                    <span class="pulse-dot"></span> System Operational • All APIs Connected
+                </div>
+            </div>
         </div>
-
     </footer>
 
+
     <!-- =========================================
-         MODALS & INTERACTIVE OVERLAYS
+         MODALS & DIALOGS
     ========================================= -->
 
-    <!-- 1. REPORT AN ISSUE MODAL -->
+    <!-- 1. QUICK REPORT MODAL (Triggered by Navbar CTA) -->
     <div class="modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle" aria-hidden="true">
         <div class="modal-backdrop" data-modal-close></div>
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="reportModalTitle">
                     <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i>
-                    Report a Local Issue
+                    Quick Issue Report
                 </h3>
                 <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
                     <i class="fa-solid fa-xmark"></i>
@@ -515,121 +904,116 @@
             <form id="reportIssueForm">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="issueCategory" class="form-label">Issue Category *</label>
-                        <select id="issueCategory" class="form-select" required>
-                            <option value="">Select category...</option>
-                            <option value="Overflowing Bin">Overflowing Public Bin</option>
-                            <option value="Illegal Dumping">Illegal Garbage Dumping</option>
-                            <option value="Missed Collection">Missed Household Pickup</option>
-                            <option value="Hazardous Waste">Hazardous / Chemical Waste</option>
-                            <option value="Damaged Facility">Damaged Waste Receptacle</option>
+                        <label for="quickCategory" class="form-label">Issue Category *</label>
+                        <select id="quickCategory" class="form-select" required>
+                            <option value="Missed Household Pickup">Missed Household Pickup</option>
+                            <option value="Overflowing Public Bin">Overflowing Public Street Bin</option>
+                            <option value="Damaged / Broken Bin">Damaged / Broken Bin Receptacle</option>
+                            <option value="Illegal Waste Dumping">Illegal Garbage Dumping</option>
+                            <option value="Hazardous / Chemical Spill">Hazardous Waste / Chemical Spill</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="issueLocation" class="form-label">Location / Landmark *</label>
+                        <label for="quickLocation" class="form-label">Street Location / Landmark *</label>
                         <div class="input-with-action">
-                            <input type="text" id="issueLocation" class="form-control" placeholder="e.g. 5th Avenue, near Central Park Gate" required>
-                            <button type="button" class="btn-geo" id="btnDetectLocation" title="Auto-detect location">
-                                <i class="fa-solid fa-location-crosshairs"></i> Auto
+                            <input type="text" id="quickLocation" class="form-control" placeholder="e.g. 5th Avenue, near Park Entrance" required>
+                            <button type="button" class="btn-geo btnGeoDetect" title="Use GPS Location">
+                                <i class="fa-solid fa-location-crosshairs"></i> GPS
                             </button>
                         </div>
-                        <span class="form-hint" id="geoStatus">Click Auto to use device GPS coordinates</span>
                     </div>
 
                     <div class="form-group">
-                        <label for="issueUrgency" class="form-label">Urgency Level</label>
-                        <select id="issueUrgency" class="form-select">
-                            <option value="Normal">Normal — Standard response (24-48 hrs)</option>
-                            <option value="High">High — Obstructing traffic / sanitation hazard</option>
-                            <option value="Critical">Critical — Immediate biohazard / safety risk</option>
+                        <label for="quickUrgency" class="form-label">Urgency Level</label>
+                        <select id="quickUrgency" class="form-select">
+                            <option value="Standard">Standard Response (24-48 hrs)</option>
+                            <option value="High Priority">High Priority (Within 4 hrs)</option>
+                            <option value="Emergency">Emergency (Immediate Biohazard)</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="issueDescription" class="form-label">Description & Details</label>
-                        <textarea id="issueDescription" class="form-textarea" placeholder="Please describe the issue or attach notable details..."></textarea>
+                        <label for="quickNotes" class="form-label">Description / Details</label>
+                        <textarea id="quickNotes" class="form-textarea" placeholder="Provide any additional landmarks, gate codes, or details..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-paper-plane"></i> Submit Report
+                        <i class="fa-solid fa-paper-plane"></i> Submit Ticket
                     </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 2. COLLECTION SCHEDULES MODAL -->
-    <div class="modal" id="scheduleModal" role="dialog" aria-modal="true" aria-labelledby="scheduleModalTitle" aria-hidden="true">
+    <!-- 2. SMART REMINDERS CONFIGURATION MODAL -->
+    <div class="modal" id="reminderModal" role="dialog" aria-modal="true" aria-labelledby="reminderModalTitle" aria-hidden="true">
         <div class="modal-backdrop" data-modal-close></div>
         <div class="modal-dialog">
             <div class="modal-header">
-                <h3 class="modal-title" id="scheduleModalTitle">
-                    <i class="fa-solid fa-calendar-days" style="color: var(--primary);"></i>
-                    Waste Collection Schedules
+                <h3 class="modal-title" id="reminderModalTitle">
+                    <i class="fa-solid fa-bell" style="color: var(--primary);"></i>
+                    Pickup Reminders & Alerts
                 </h3>
                 <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="scheduleZoneSelect" class="form-label">Select Your Neighborhood Zone</label>
-                    <select id="scheduleZoneSelect" class="form-select">
-                        <option value="zone-green-valley">Green Valley & Eco Heights (Zone A)</option>
-                        <option value="zone-north-ridge">North Ridge Residential (Zone B)</option>
-                        <option value="zone-downtown">Central Commercial & Downtown (Zone C)</option>
-                        <option value="zone-south-harbor">South Harbor & Waterfront (Zone D)</option>
-                    </select>
-                </div>
-                <div id="scheduleResults" class="schedule-card-list">
-                    <!-- Populated dynamically via JS -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
-            </div>
-        </div>
-    </div>
+            <form id="reminderForm">
+                <div class="modal-body">
+                    <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 1.25rem;">
+                        Never miss bin collection day. Configure automated reminders for your neighborhood zone.
+                    </p>
 
-    <!-- 3. TRACK COMPLAINT MODAL -->
-    <div class="modal" id="trackModal" role="dialog" aria-modal="true" aria-labelledby="trackModalTitle" aria-hidden="true">
-        <div class="modal-backdrop" data-modal-close></div>
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h3 class="modal-title" id="trackModalTitle">
-                    <i class="fa-solid fa-location-crosshairs" style="color: #2563eb;"></i>
-                    Track Issue Resolution
-                </h3>
-                <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="trackForm">
-                    <div class="form-group">
-                        <label for="trackingInput" class="form-label">Report Reference / Tracking ID</label>
-                        <div class="input-with-action">
-                            <input type="text" id="trackingInput" class="form-control" placeholder="e.g. ECO-2026-101" required>
-                            <button type="submit" class="btn btn-primary">Track</button>
+                    <div class="reminder-switch-row">
+                        <div>
+                            <strong>Evening-Before Reminder (08:00 PM)</strong>
+                            <p>Get notified the night before so you can place bins curbside.</p>
                         </div>
-                        <span class="form-hint">Try demo IDs: <strong>ECO-2026-101</strong>, <strong>ECO-2026-102</strong>, or submit a new report.</span>
+                        <input type="checkbox" id="checkEveningReminder" class="v0-switch" checked>
                     </div>
-                </form>
 
-                <div id="trackingDetails" aria-live="polite">
-                    <!-- Dynamic tracking progress populated here -->
+                    <div class="reminder-switch-row">
+                        <div>
+                            <strong>Morning-Of Reminder (06:30 AM)</strong>
+                            <p>Last-minute alert 30 minutes before truck route begins.</p>
+                        </div>
+                        <input type="checkbox" id="checkMorningReminder" class="v0-switch" checked>
+                    </div>
+
+                    <div class="reminder-switch-row">
+                        <div>
+                            <strong>Severe Weather & Schedule Delay Alerts</strong>
+                            <p>Instant SMS/Push if trucks are rerouted or delayed.</p>
+                        </div>
+                        <input type="checkbox" id="checkWeatherAlerts" class="v0-switch" checked>
+                    </div>
+
+                    <hr style="margin: 1.25rem 0; border: none; border-top: 1px solid var(--border);">
+
+                    <div class="form-group">
+                        <label for="reminderEmail" class="form-label">Email Address for Notifications</label>
+                        <input type="email" id="reminderEmail" class="form-control" placeholder="resident@neighborhood.com" value="citizen@ecotrack.local">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reminderPhone" class="form-label">SMS Phone Number (Optional)</label>
+                        <input type="tel" id="reminderPhone" class="form-control" placeholder="+91 98765 43210">
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa-solid fa-check"></i> Save Preferences
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <!-- ACCESSIBLE TOAST REGION -->
+    <!-- ACCESSIBLE TOAST NOTIFICATION CONTAINER -->
     <div class="toast-container" id="toastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
 
 </body>
