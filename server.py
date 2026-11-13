@@ -335,6 +335,33 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
 
             return self.send_json({"success": True, "ticket_id": ticket_id, "new_step": next_step, "status": new_status})
 
+        elif path.startswith("/api/tickets/") and path.endswith("/update"):
+            ticket_id = path.replace("/api/tickets/", "").replace("/update", "").strip().upper()
+            try:
+                data = json.loads(post_body.decode("utf-8"))
+            except Exception:
+                data = {}
+            new_status = data.get("status")
+            now_str = datetime.datetime.now().strftime("%I:%M %p")
+            with get_db() as conn:
+                cursor = conn.cursor()
+                if new_status == "Resolved":
+                    cursor.execute("UPDATE tickets SET status = 'Resolved', current_step = 4, resolved_at = ? WHERE id = ?", (f"Completed at {now_str}", ticket_id))
+                    cursor.execute("UPDATE ticket_steps SET is_done = 1 WHERE ticket_id = ?", (ticket_id,))
+                elif new_status == "Dispatched":
+                    cursor.execute("UPDATE tickets SET status = 'Dispatched', current_step = 3 WHERE id = ?", (ticket_id,))
+                    cursor.execute("UPDATE ticket_steps SET is_done = 1 WHERE ticket_id = ? AND step_num <= 3", (ticket_id,))
+                elif new_status == "Triaged" or new_status == "Pending":
+                    cursor.execute("UPDATE tickets SET status = 'Triaged', current_step = 2 WHERE id = ?", (ticket_id,))
+                    cursor.execute("UPDATE ticket_steps SET is_done = 1 WHERE ticket_id = ? AND step_num <= 2", (ticket_id,))
+
+                cursor.execute("""
+                    INSERT INTO notifications (title, message, type, zone, time_str, is_unread)
+                    VALUES (?, ?, 'green', 'Authority', 'Just now', 1)
+                """, (f"Authority Action: {ticket_id}", f"Officer set status to {new_status}"))
+                conn.commit()
+            return self.send_json({"success": True, "ticket_id": ticket_id, "status": new_status})
+
         elif path == "/api/reminders":
             try:
                 data = json.loads(post_body.decode("utf-8"))

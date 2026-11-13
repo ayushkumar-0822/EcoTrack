@@ -81,6 +81,34 @@
             </div>
 
             <div class="nav-actions">
+                <!-- 0. Role Switcher (Citizen vs Authority / Officer) -->
+                <div class="role-switcher-dropdown" id="roleSwitcherDropdown">
+                    <button type="button" class="nav-square-btn role-square-btn" id="roleSwitcherBtn" aria-expanded="false" aria-haspopup="listbox" title="Switch Portal Mode (Citizen / Authority)">
+                        <span class="role-badge-dot"></span>
+                        <i class="fa-solid fa-user-check role-icon" id="roleIcon"></i>
+                        <span id="roleLabel">Citizen</span>
+                        <i class="fa-solid fa-chevron-down pill-chevron"></i>
+                    </button>
+                    <ul class="role-menu" id="roleMenu" role="listbox" tabindex="-1">
+                        <li role="option" aria-selected="true" data-role="citizen" class="active">
+                            <div class="role-item-icon citizen"><i class="fa-solid fa-user"></i></div>
+                            <div class="role-item-text">
+                                <strong>Citizen Mode</strong>
+                                <span>Report Issues & View Schedules</span>
+                            </div>
+                            <i class="fa-solid fa-check role-check"></i>
+                        </li>
+                        <li role="option" aria-selected="false" data-role="authority">
+                            <div class="role-item-icon authority"><i class="fa-solid fa-shield-halved"></i></div>
+                            <div class="role-item-text">
+                                <strong>Authority / Officer</strong>
+                                <span>Municipal Command & Dispatch View</span>
+                            </div>
+                            <i class="fa-solid fa-check role-check"></i>
+                        </li>
+                    </ul>
+                </div>
+
                 <!-- 1. Area Selection (Boxed in Square) -->
                 <div class="area-pill-dropdown" id="navAreaDropdown">
                     <button type="button" class="nav-square-btn area-square-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your local area or university zone">
@@ -250,6 +278,11 @@
          MAIN CONTENT
     ========================================= -->
     <main>
+
+        <!-- =========================================
+             CITIZEN VIEW CONTAINER
+        ========================================= -->
+        <div id="citizenView">
 
         <!-- 1. HERO SECTION -->
         <section class="hero" id="home">
@@ -1006,6 +1039,153 @@
             </div>
         </section>
 
+        </div>
+        <!-- END CITIZEN VIEW -->
+
+
+        <!-- =========================================
+             AUTHORITY / MUNICIPAL DISPATCH VIEW
+        ========================================= -->
+        <div id="authorityView" style="display: none;">
+            <section class="authority-portal-section">
+                <div class="container">
+                    
+                    <!-- Authority Command Header -->
+                    <div class="authority-header-card">
+                        <div class="authority-title-group">
+                            <div class="authority-badge">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>OFFICIAL MUNICIPAL AUTHORITY & DISPATCH PORTAL</span>
+                            </div>
+                            <h1>Sanitation Incident Command & Fleet Dispatch</h1>
+                            <p>Live incoming citizen complaints triage, fleet truck routing, and resolution telemetry across LPU Campus, Law Gate, Phagwara, Jalandhar & Green Valley.</p>
+                        </div>
+                        <div class="authority-header-actions">
+                            <button type="button" class="btn btn-outline btn-sm" id="btnExportAuthorityCSV">
+                                <i class="fa-solid fa-file-csv"></i> Export Complaints CSV
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm" id="btnSwitchToCitizen">
+                                <i class="fa-solid fa-user"></i> Switch to Citizen View
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Authority KPI Metrics Row -->
+                    <div class="authority-kpi-row">
+                        <div class="auth-kpi-card">
+                            <span class="auth-kpi-icon total"><i class="fa-solid fa-clipboard-list"></i></span>
+                            <div>
+                                <span class="auth-kpi-num" id="authKpiTotal">0</span>
+                                <span class="auth-kpi-label">Total Complaints</span>
+                            </div>
+                        </div>
+                        <div class="auth-kpi-card">
+                            <span class="auth-kpi-icon pending"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                            <div>
+                                <span class="auth-kpi-num" id="authKpiPending">0</span>
+                                <span class="auth-kpi-label">Due / Pending Triage</span>
+                            </div>
+                        </div>
+                        <div class="auth-kpi-card">
+                            <span class="auth-kpi-icon dispatched"><i class="fa-solid fa-truck-fast"></i></span>
+                            <div>
+                                <span class="auth-kpi-num" id="authKpiDispatched">0</span>
+                                <span class="auth-kpi-label">In Progress / Dispatched</span>
+                            </div>
+                        </div>
+                        <div class="auth-kpi-card">
+                            <span class="auth-kpi-icon resolved"><i class="fa-solid fa-circle-check"></i></span>
+                            <div>
+                                <span class="auth-kpi-num" id="authKpiResolved">0</span>
+                                <span class="auth-kpi-label">Resolved & Cleaned</span>
+                            </div>
+                        </div>
+                        <div class="auth-kpi-card">
+                            <span class="auth-kpi-icon rate"><i class="fa-solid fa-chart-line"></i></span>
+                            <div>
+                                <span class="auth-kpi-num" id="authKpiRate">100%</span>
+                                <span class="auth-kpi-label">Municipal SLA Rate</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Authority Tabular Shell -->
+                    <div class="authority-table-shell">
+                        <div class="authority-table-toolbar">
+                            <!-- Tab Navigation Bar (All, Due/Pending, In Progress, Resolved) -->
+                            <div class="authority-filter-tabs" id="authorityFilterTabs" role="tablist">
+                                <button type="button" class="auth-tab-btn active" data-tab="all">
+                                    <i class="fa-solid fa-list-check"></i> All Complaints
+                                    <span class="auth-tab-count" id="countAll">0</span>
+                                </button>
+                                <button type="button" class="auth-tab-btn" data-tab="pending">
+                                    <i class="fa-solid fa-clock"></i> Due / Pending
+                                    <span class="auth-tab-count pending-badge" id="countPending">0</span>
+                                </button>
+                                <button type="button" class="auth-tab-btn" data-tab="dispatched">
+                                    <i class="fa-solid fa-truck"></i> In Progress / Dispatched
+                                    <span class="auth-tab-count dispatched-badge" id="countDispatched">0</span>
+                                </button>
+                                <button type="button" class="auth-tab-btn" data-tab="resolved">
+                                    <i class="fa-solid fa-check-double"></i> Resolved
+                                    <span class="auth-tab-count resolved-badge" id="countResolved">0</span>
+                                </button>
+                            </div>
+
+                            <!-- Table Action & Search Toolbar -->
+                            <div class="authority-table-actions">
+                                <div class="auth-search-box">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <input type="text" id="authTableSearchInput" placeholder="Filter by Ref #, Location, Street..." autocomplete="off">
+                                </div>
+                                <select id="authZoneFilterSelect" class="form-select inline-select" style="min-width: 160px; height: 38px; font-size: 0.82rem;">
+                                    <option value="all">All Locations</option>
+                                    <option value="LPU">LPU Campus</option>
+                                    <option value="Law Gate">Law Gate</option>
+                                    <option value="Phagwara">Phagwara</option>
+                                    <option value="Jalandhar">Jalandhar</option>
+                                    <option value="Green Valley">Green Valley</option>
+                                </select>
+                                <button type="button" class="btn-icon" id="btnRefreshAuthorityData" title="Refresh Live Authority Data">
+                                    <i class="fa-solid fa-rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabular View Table -->
+                        <div class="authority-table-responsive">
+                            <table class="authority-table" id="authorityComplaintsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Ref ID</th>
+                                        <th>Category & Title</th>
+                                        <th>Location / Area</th>
+                                        <th>Reported Time</th>
+                                        <th>Urgency</th>
+                                        <th>Workflow Progress</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="authorityTableBody">
+                                    <!-- Populated dynamically by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div class="auth-table-empty" id="authTableEmpty" style="display: none;">
+                            <i class="fa-solid fa-inbox"></i>
+                            <h4>No complaints match the current filter.</h4>
+                            <p>All citizen complaints in this view are processed or resolved.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+        <!-- END AUTHORITY VIEW -->
+
     </main>
 
 
@@ -1062,6 +1242,35 @@
     <!-- =========================================
          MODALS & DIALOGS
     ========================================= -->
+
+        <!-- 4. AUTHORITY COMPLAINT DETAIL & ACTION MODAL -->
+    <div class="modal" id="authorityDetailModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" aria-hidden="true">
+        <div class="modal-backdrop" data-modal-close></div>
+        <div class="modal-dialog" style="max-width: 680px;">
+            <div class="modal-header">
+                <div>
+                    <span style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;">
+                        Official Incident Dossier & Action Console
+                    </span>
+                    <h3 class="modal-title" id="authModalTitle" style="margin-top: 0.2rem;">
+                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Complaint Details
+                    </h3>
+                </div>
+                <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="authModalBody">
+                <!-- Populated dynamically by JS -->
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
+                <button type="button" class="btn btn-secondary" data-modal-close>Close</button>
+                <div style="display: flex; gap: 0.5rem; align-items: center;" id="authModalActionBtns">
+                    <!-- Dynamic Action Buttons -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- 1. QUICK REPORT MODAL (Triggered by Navbar CTA) -->
     <div class="modal" id="reportModal" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle" aria-hidden="true">

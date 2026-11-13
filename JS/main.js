@@ -468,6 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function closeDropdowns() {
         if (navAreaDropdown) navAreaDropdown.classList.remove("open");
         if (notifDropdown) notifDropdown.classList.remove("open");
+        if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
     }
 
     document.addEventListener("click", () => closeDropdowns());
@@ -1517,6 +1518,487 @@ document.addEventListener("DOMContentLoaded", () => {
         }, { threshold: 0.4 });
         counters.forEach(c => obs.observe(c));
     }
+
+
+    // -------------------------------------------------------------
+    // 13. Authority & Municipal Command Portal Controller
+    // -------------------------------------------------------------
+    const roleSwitcherDropdown = document.getElementById("roleSwitcherDropdown");
+    const roleSwitcherBtn = document.getElementById("roleSwitcherBtn");
+    const roleMenu = document.getElementById("roleMenu");
+    const roleLabel = document.getElementById("roleLabel");
+    const roleIcon = document.getElementById("roleIcon");
+    const citizenView = document.getElementById("citizenView");
+    const authorityView = document.getElementById("authorityView");
+    const btnSwitchToCitizen = document.getElementById("btnSwitchToCitizen");
+    const authTableSearchInput = document.getElementById("authTableSearchInput");
+    const authZoneFilterSelect = document.getElementById("authZoneFilterSelect");
+    const btnRefreshAuthorityData = document.getElementById("btnRefreshAuthorityData");
+    const btnExportAuthorityCSV = document.getElementById("btnExportAuthorityCSV");
+    const authorityTableBody = document.getElementById("authorityTableBody");
+    const authTableEmpty = document.getElementById("authTableEmpty");
+
+    let currentAuthorityTab = "all";
+    let cachedAuthorityTickets = [];
+
+    function switchRole(newRole) {
+        AppState.currentRole = newRole;
+        localStorage.setItem("ecotrack_role", newRole);
+
+        if (roleMenu) {
+            roleMenu.querySelectorAll("li").forEach(li => {
+                const isMatch = li.getAttribute("data-role") === newRole;
+                li.classList.toggle("active", isMatch);
+                li.setAttribute("aria-selected", String(isMatch));
+            });
+        }
+
+        if (newRole === "authority") {
+            if (citizenView) citizenView.style.display = "none";
+            if (authorityView) authorityView.style.display = "block";
+            if (roleLabel) roleLabel.textContent = "Authority";
+            if (roleIcon) roleIcon.className = "fa-solid fa-shield-halved role-icon";
+            if (roleSwitcherBtn) roleSwitcherBtn.classList.add("authority-mode");
+            loadAuthorityData();
+            showToast("Switched to Municipal Authority & Dispatch Command Portal", "info");
+        } else {
+            if (authorityView) authorityView.style.display = "none";
+            if (citizenView) citizenView.style.display = "block";
+            if (roleLabel) roleLabel.textContent = "Citizen";
+            if (roleIcon) roleIcon.className = "fa-solid fa-user-check role-icon";
+            if (roleSwitcherBtn) roleSwitcherBtn.classList.remove("authority-mode");
+            showToast("Switched to Citizen Mode", "info");
+        }
+
+        if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
+    }
+
+    if (roleSwitcherBtn && roleSwitcherDropdown) {
+        roleSwitcherBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = roleSwitcherDropdown.classList.toggle("open");
+            roleSwitcherBtn.setAttribute("aria-expanded", String(isOpen));
+        });
+    }
+
+    if (roleMenu) {
+        roleMenu.querySelectorAll("li").forEach(item => {
+            item.addEventListener("click", () => {
+                const role = item.getAttribute("data-role");
+                switchRole(role);
+            });
+        });
+    }
+
+    if (btnSwitchToCitizen) {
+        btnSwitchToCitizen.addEventListener("click", () => switchRole("citizen"));
+    }
+
+    // Tab Filter Buttons (All, Due/Pending, In Progress, Resolved)
+    document.querySelectorAll(".auth-tab-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            document.querySelectorAll(".auth-tab-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentAuthorityTab = btn.getAttribute("data-tab");
+            renderAuthorityTable();
+        });
+    });
+
+    if (authTableSearchInput) {
+        authTableSearchInput.addEventListener("input", () => renderAuthorityTable());
+    }
+
+    if (authZoneFilterSelect) {
+        authZoneFilterSelect.addEventListener("change", () => renderAuthorityTable());
+    }
+
+    if (btnRefreshAuthorityData) {
+        btnRefreshAuthorityData.addEventListener("click", async () => {
+            btnRefreshAuthorityData.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+            await loadAuthorityData();
+            btnRefreshAuthorityData.innerHTML = '<i class="fa-solid fa-rotate"></i>';
+            showToast("Authority complaints database synchronized with live fleet", "success");
+        });
+    }
+
+    async function loadAuthorityData() {
+        // Fetch tickets from live server first
+        let tickets = await apiFetch("/api/tickets");
+
+        if (!Array.isArray(tickets) || tickets.length === 0) {
+            let stored = {};
+            try {
+                stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+            } catch (e) {}
+            tickets = Object.values({ ...SAMPLE_REPORTS, ...stored });
+        }
+
+        cachedAuthorityTickets = tickets;
+
+        // Calculate KPI Metrics
+        let total = tickets.length;
+        let pending = 0;
+        let dispatched = 0;
+        let resolved = 0;
+
+        tickets.forEach(t => {
+            const st = (t.status || "").toLowerCase();
+            const step = t.current_step || t.currentStep || 1;
+            if (st.includes("resolved") || step >= 4) {
+                resolved++;
+            } else if (st.includes("dispatch") || step === 3) {
+                dispatched++;
+            } else {
+                pending++;
+            }
+        });
+
+        const rate = total > 0 ? Math.round((resolved / total) * 100) : 100;
+
+        // Update KPI Counters
+        const kpiTotal = document.getElementById("authKpiTotal");
+        const kpiPending = document.getElementById("authKpiPending");
+        const kpiDispatched = document.getElementById("authKpiDispatched");
+        const kpiResolved = document.getElementById("authKpiResolved");
+        const kpiRate = document.getElementById("authKpiRate");
+
+        if (kpiTotal) kpiTotal.textContent = total;
+        if (kpiPending) kpiPending.textContent = pending;
+        if (kpiDispatched) kpiDispatched.textContent = dispatched;
+        if (kpiResolved) kpiResolved.textContent = resolved;
+        if (kpiRate) kpiRate.textContent = `${rate}%`;
+
+        // Update Tab Count Badges
+        const countAll = document.getElementById("countAll");
+        const countPending = document.getElementById("countPending");
+        const countDispatched = document.getElementById("countDispatched");
+        const countResolved = document.getElementById("countResolved");
+
+        if (countAll) countAll.textContent = total;
+        if (countPending) countPending.textContent = pending;
+        if (countDispatched) countDispatched.textContent = dispatched;
+        if (countResolved) countResolved.textContent = resolved;
+
+        renderAuthorityTable();
+    }
+
+    function renderAuthorityTable() {
+        if (!authorityTableBody) return;
+
+        const searchTerm = (authTableSearchInput ? authTableSearchInput.value : "").toLowerCase().trim();
+        const selectedZone = (authZoneFilterSelect ? authZoneFilterSelect.value : "all");
+
+        // Filter tickets based on active tab, zone, and search
+        const filtered = cachedAuthorityTickets.filter(t => {
+            const st = (t.status || "").toLowerCase();
+            const step = t.current_step || t.currentStep || 1;
+            const isResolved = st.includes("resolved") || step >= 4;
+            const isDispatched = st.includes("dispatch") || step === 3;
+            const isPending = !isResolved && !isDispatched;
+
+            // Tab Filter
+            if (currentAuthorityTab === "pending" && !isPending) return false;
+            if (currentAuthorityTab === "dispatched" && !isDispatched) return false;
+            if (currentAuthorityTab === "resolved" && !isResolved) return false;
+
+            // Zone Filter
+            if (selectedZone !== "all") {
+                const loc = (t.location || "").toLowerCase();
+                if (!loc.includes(selectedZone.toLowerCase())) return false;
+            }
+
+            // Search Term
+            if (searchTerm) {
+                const id = (t.id || "").toLowerCase();
+                const loc = (t.location || "").toLowerCase();
+                const title = (t.title || "").toLowerCase();
+                const cat = (t.category || "").toLowerCase();
+                if (!id.includes(searchTerm) && !loc.includes(searchTerm) && !title.includes(searchTerm) && !cat.includes(searchTerm)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        if (filtered.length === 0) {
+            authorityTableBody.innerHTML = "";
+            if (authTableEmpty) authTableEmpty.style.display = "block";
+            return;
+        }
+
+        if (authTableEmpty) authTableEmpty.style.display = "none";
+
+        let rowsHtml = "";
+        filtered.forEach(t => {
+            const st = (t.status || "").toLowerCase();
+            const step = t.current_step || t.currentStep || 1;
+            const isResolved = st.includes("resolved") || step >= 4;
+            const isDispatched = st.includes("dispatch") || step === 3;
+            const statusClass = isResolved ? "resolved" : (isDispatched ? "dispatched" : "pending");
+            const statusLabel = isResolved ? "Resolved" : (isDispatched ? "Dispatched" : (t.status || "Pending"));
+
+            // Urgency
+            const urgency = t.urgency || "Standard";
+            const isHigh = urgency.toLowerCase().includes("high") || urgency.toLowerCase().includes("emergency");
+            const urgencyClass = isHigh ? "high" : "standard";
+
+            // Category Icon
+            let catIcon = "fa-triangle-exclamation";
+            if ((t.category || "").includes("Missed")) catIcon = "fa-calendar-xmark";
+            if ((t.category || "").includes("Bin")) catIcon = "fa-trash-can";
+            if ((t.category || "").includes("Dump")) catIcon = "fa-truck-ramp-box";
+
+            rowsHtml += `
+                <tr>
+                    <td>
+                        <span class="table-ref-badge">${t.id}</span>
+                    </td>
+                    <td>
+                        <span class="table-cat-pill">
+                            <i class="fa-solid ${catIcon}"></i> ${t.category || "Issue"}
+                        </span>
+                        <strong style="display:block; font-size:0.86rem; color:var(--text); margin-top:2px;">${t.title}</strong>
+                    </td>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:0.4rem;">
+                            <i class="fa-solid fa-location-dot" style="color:var(--primary); font-size:0.85rem;"></i>
+                            <span style="font-weight:600; color:var(--text);">${t.location}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-size:0.78rem; color:var(--text-light);">${t.created_at || t.submittedAt || "Today"}</span>
+                    </td>
+                    <td>
+                        <span class="urgency-badge ${urgencyClass}">${urgency}</span>
+                    </td>
+                    <td>
+                        <div class="mini-step-bar" title="Stage ${step} of 4">
+                            <span class="mini-step-dot done"></span>
+                            <span class="mini-step-dot ${step >= 2 ? "done" : ""}"></span>
+                            <span class="mini-step-dot ${step >= 3 ? "done" : ""}"></span>
+                            <span class="mini-step-dot ${step >= 4 ? "done" : ""}"></span>
+                        </div>
+                        <span style="font-size:0.72rem; color:var(--text-light); margin-top:2px; display:block;">Stage ${step}/4</span>
+                    </td>
+                    <td>
+                        <span class="status-badge-cell ${statusClass}">
+                            <i class="fa-solid ${isResolved ? "fa-circle-check" : (isDispatched ? "fa-truck-fast" : "fa-clock")}"></i>
+                            ${statusLabel}
+                        </span>
+                    </td>
+                    <td style="text-align: right;">
+                        <button type="button" class="btn btn-outline btn-sm btn-see-details" data-ticket-id="${t.id}" title="See full details and action controls">
+                            <i class="fa-solid fa-eye"></i> See Details
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        authorityTableBody.innerHTML = rowsHtml;
+
+        // Wire up See Details button clicks
+        authorityTableBody.querySelectorAll(".btn-see-details").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const id = btn.getAttribute("data-ticket-id");
+                openAuthorityDetailModal(id);
+            });
+        });
+    }
+
+    // Authority Detail Modal Controller
+    async function openAuthorityDetailModal(ticketId) {
+        let ticket = cachedAuthorityTickets.find(t => t.id === ticketId);
+        if (!ticket) {
+            ticket = await apiFetch(`/api/tickets/${ticketId}`);
+        }
+        if (!ticket) {
+            showToast(`Could not load details for ticket ${ticketId}`, "error");
+            return;
+        }
+
+        const authModalTitle = document.getElementById("authModalTitle");
+        const authModalBody = document.getElementById("authModalBody");
+        const authModalActionBtns = document.getElementById("authModalActionBtns");
+
+        if (authModalTitle) {
+            authModalTitle.innerHTML = `<i class="fa-solid fa-shield-halved" style="color:var(--primary);"></i> Complaint Ref #${ticket.id}`;
+        }
+
+        const isResolved = (ticket.status || "").toLowerCase().includes("resolved");
+        const currentStep = ticket.current_step || ticket.currentStep || 1;
+
+        if (authModalBody) {
+            authModalBody.innerHTML = `
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:var(--radius-sm); padding:1.25rem; margin-bottom:1.25rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.75rem;">
+                        <div>
+                            <span style="font-size:0.75rem; font-weight:700; color:var(--text-light); text-transform:uppercase;">${ticket.category}</span>
+                            <h3 style="font-size:1.25rem; font-weight:800; color:var(--primary-dark); margin:0.15rem 0;">${ticket.title}</h3>
+                        </div>
+                        <span class="status-badge-cell ${isResolved ? "resolved" : "pending"}" style="font-size:0.82rem; padding:0.35rem 0.8rem;">
+                            ${isResolved ? '<i class="fa-solid fa-circle-check"></i> Resolved' : '<span class="pulse-dot"></span> In Progress'}
+                        </span>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:0.75rem; font-size:0.85rem; border-top:1px solid #e2e8f0; padding-top:0.75rem;">
+                        <div>
+                            <span style="color:var(--text-light); display:block; font-size:0.75rem;">LOCATION & AREA:</span>
+                            <strong style="color:var(--text);"><i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> ${ticket.location}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-light); display:block; font-size:0.75rem;">SUBMITTED AT:</span>
+                            <strong>${ticket.created_at || ticket.submittedAt || "Recently"}</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-light); display:block; font-size:0.75rem;">URGENCY PRIORITY:</span>
+                            <span class="urgency-badge ${ticket.urgency && ticket.urgency.toLowerCase().includes("high") ? "high" : "standard"}">${ticket.urgency || "Standard"}</span>
+                        </div>
+                        <div>
+                            <span style="color:var(--text-light); display:block; font-size:0.75rem;">RESOLUTION TARGET:</span>
+                            <strong>${ticket.resolved_at || ticket.resolvedAt || "Under Review"}</strong>
+                        </div>
+                    </div>
+
+                    ${ticket.description ? `
+                    <div style="margin-top:0.95rem; padding-top:0.75rem; border-top:1px solid #e2e8f0;">
+                        <span style="color:var(--text-light); display:block; font-size:0.75rem; margin-bottom:0.25rem;">CITIZEN REMARKS / INSTRUCTIONS:</span>
+                        <p style="font-size:0.85rem; color:var(--text); line-height:1.5; margin:0; background:#ffffff; padding:0.65rem 0.85rem; border-radius:6px; border:1px solid #e2e8f0;">
+                            ${ticket.description}
+                        </p>
+                    </div>` : ""}
+
+                    ${ticket.photo_url ? `
+                    <div style="margin-top:0.95rem; padding-top:0.75rem; border-top:1px solid #e2e8f0;">
+                        <span style="color:var(--text-light); display:block; font-size:0.75rem; margin-bottom:0.35rem;">ATTACHED CITIZEN PHOTO EVIDENCE:</span>
+                        <img src="${ticket.photo_url}" alt="Evidence" style="max-height:160px; border-radius:8px; border:1px solid #cbd5e1; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+                    </div>` : ""}
+                </div>
+
+                <!-- Live Dispatch Action Box -->
+                <div style="background:#ffffff; border:1.5px solid rgba(23,107,69,0.2); border-radius:var(--radius-sm); padding:1.25rem;">
+                    <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.85rem;">
+                        <i class="fa-solid fa-truck-ramp-box" style="color:var(--primary); font-size:1.1rem;"></i>
+                        <h4 style="font-size:0.95rem; font-weight:700; color:var(--text); margin:0;">Sanitation Fleet Dispatch & Workflow Controller</h4>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1rem;">
+                        <div>
+                            <label class="form-label" style="font-size:0.78rem;">Assign Municipal Recovery Unit:</label>
+                            <select id="modalAssignTruck" class="form-select" style="font-size:0.82rem; padding:0.4rem 0.65rem;">
+                                <option value="Phagwara-MC-08">Phagwara-MC-08 (Law Gate Special)</option>
+                                <option value="LPU-EcoTruck-01">LPU-EcoTruck-01 (Hostel Route)</option>
+                                <option value="MC-Phagwara-04">MC-Phagwara-04 (GT Road Fleet)</option>
+                                <option value="MCJ-SmartTruck-11">MCJ-SmartTruck-11 (Jalandhar Cantt)</option>
+                                <option value="Truck-04">Truck-04 (Green Valley Sector 1–4)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" style="font-size:0.78rem;">Current Workflow Stage:</label>
+                            <div style="background:#f1f5f9; padding:0.45rem 0.75rem; border-radius:6px; font-size:0.84rem; font-weight:700; color:var(--primary-dark);">
+                                Stage ${currentStep} of 4 · ${ticket.status || "Pending"}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        if (authModalActionBtns) {
+            let btnsHtml = "";
+            if (!isResolved) {
+                btnsHtml += `
+                    <button type="button" class="btn btn-outline btn-sm" id="btnModalAdvance" style="color:var(--primary); border-color:var(--primary);">
+                        <i class="fa-solid fa-forward-step"></i> Advance Stage (${currentStep} ➔ ${Math.min(4, currentStep + 1)})
+                    </button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btnModalResolve">
+                        <i class="fa-solid fa-circle-check"></i> Mark Cleaned & Resolved
+                    </button>
+                `;
+            } else {
+                btnsHtml += `
+                    <span style="color:#15803d; font-weight:700; font-size:0.84rem;">
+                        <i class="fa-solid fa-circle-check"></i> This ticket is fully resolved and signed off.
+                    </span>
+                `;
+            }
+
+            authModalActionBtns.innerHTML = btnsHtml;
+
+            // Wire up Advance Button
+            const btnAdvance = document.getElementById("btnModalAdvance");
+            if (btnAdvance) {
+                btnAdvance.addEventListener("click", async () => {
+                    btnAdvance.disabled = true;
+                    btnAdvance.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Dispatching...';
+                    const res = await apiFetch(`/api/tickets/${ticket.id}/advance`, { method: "POST" });
+                    closeModal();
+                    await loadAuthorityData();
+                    showToast(`Ticket #${ticket.id} advanced to ${res && res.status ? res.status : "next stage"}!`, "success");
+                });
+            }
+
+            // Wire up Resolve Button
+            const btnResolve = document.getElementById("btnModalResolve");
+            if (btnResolve) {
+                btnResolve.addEventListener("click", async () => {
+                    btnResolve.disabled = true;
+                    btnResolve.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Resolving...';
+                    await apiFetch(`/api/tickets/${ticket.id}/update`, {
+                        method: "POST",
+                        body: JSON.stringify({ status: "Resolved" })
+                    });
+                    closeModal();
+                    await loadAuthorityData();
+                    showToast(`Ticket #${ticket.id} marked as fully resolved & certified clean!`, "success");
+                });
+            }
+        }
+
+        openModal("authorityDetailModal");
+    }
+
+    // CSV Export for Municipal Reports
+    if (btnExportAuthorityCSV) {
+        btnExportAuthorityCSV.addEventListener("click", () => {
+            if (cachedAuthorityTickets.length === 0) {
+                showToast("No complaint records to export.", "info");
+                return;
+            }
+
+            let csvContent = "Ticket ID,Category,Title,Location,Urgency,Status,Step,Submitted,Resolved\n";
+            cachedAuthorityTickets.forEach(t => {
+                const row = [
+                    t.id || "",
+                    `"${(t.category || "").replace(/"/g, '""')}"`,
+                    `"${(t.title || "").replace(/"/g, '""')}"`,
+                    `"${(t.location || "").replace(/"/g, '""')}"`,
+                    t.urgency || "Standard",
+                    t.status || "Pending",
+                    t.current_step || t.currentStep || 1,
+                    `"${t.created_at || t.submittedAt || ""}"`,
+                    `"${t.resolved_at || t.resolvedAt || ""}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `ecotrack-municipal-complaints-${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Exported Municipal Complaints CSV Log", "success");
+        });
+    }
+
+    // Check if initial role was authority
+    if (AppState.currentRole === "authority") {
+        switchRole("authority");
+    }
+
 
     // Initial Boots
     updateActiveZone(AppState.currentZone);
