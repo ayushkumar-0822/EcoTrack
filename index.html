@@ -20,7 +20,41 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Design System CSS -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="CSS/style.css?v=3.0">
+    <style>
+        /* Immediate visible natural greenery background & calendar styling */
+        body {
+            background-color: #ecf4ed !important;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(23, 107, 69, 0.18) 0px, transparent 48%),
+                radial-gradient(at 100% 0%, rgba(185, 231, 107, 0.32) 0px, transparent 45%),
+                radial-gradient(at 50% 30%, rgba(34, 139, 78, 0.10) 0px, transparent 55%),
+                radial-gradient(at 90% 70%, rgba(185, 231, 107, 0.25) 0px, transparent 45%),
+                radial-gradient(at 5% 95%, rgba(23, 107, 69, 0.16) 0px, transparent 50%) !important;
+            background-attachment: fixed !important;
+        }
+        .calendar-section {
+            background-color: #e2f0e5 !important;
+            background-image:
+                radial-gradient(at 12% 15%, rgba(185, 231, 107, 0.42) 0px, transparent 50%),
+                radial-gradient(at 88% 12%, rgba(23, 107, 69, 0.26) 0px, transparent 55%),
+                radial-gradient(at 50% 88%, rgba(34, 145, 85, 0.22) 0px, transparent 60%),
+                linear-gradient(180deg, #e4f2e7 0%, #d8ece0 50%, #e3f1e6 100%) !important;
+            border-top: 1.5px solid rgba(23, 107, 69, 0.16) !important;
+            border-bottom: 1.5px solid rgba(23, 107, 69, 0.16) !important;
+            padding: 42px 0 54px !important;
+        }
+        .calendar-card-shell {
+            background: #ffffff !important;
+            border: 1.5px solid rgba(23, 107, 69, 0.18) !important;
+            box-shadow: 0 16px 45px -10px rgba(23, 65, 43, 0.12) !important;
+        }
+        .calendar-day {
+            height: 52px !important;
+            min-height: 52px !important;
+            aspect-ratio: unset !important;
+        }
+    </style>
 
     <!-- Application Script -->
     <script src="js/main.js" defer></script>
