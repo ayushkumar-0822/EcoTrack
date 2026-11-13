@@ -1074,85 +1074,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-        let stored = {};
-        try {
-            stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
-        } catch (e) {}
-
-        const ticket = stored[normalizedId] || SAMPLE_REPORTS[normalizedId];
-
-        if (pageTrackingInput) pageTrackingInput.value = normalizedId;
-
-        if (!ticket) {
-            pageTrackingResult.innerHTML = `
-                <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 1.5rem; border-radius: var(--radius-sm); color: #991b1b;">
-                    <strong><i class="fa-solid fa-circle-exclamation"></i> Ticket ID "${normalizedId}" not found.</strong>
-                    <p style="font-size: 0.85rem; margin-top: 0.35rem; color: #7f1d1d;">
-                        Please verify your tracking code or select one of the sample tickets above.
-                    </p>
-                </div>
-            `;
-            return;
-        }
-
-        const isResolved = ticket.status.toLowerCase().includes("resolved");
-        const statusClass = isResolved ? "status-active" : "status-pill";
-
-        let stepperHtml = `
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-md); padding: 1.75rem; box-shadow: 0 4px 14px rgba(15,23,42,0.06);">
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.25rem;">
-                    <div>
-                        <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-light); letter-spacing: 0.05em; text-transform: uppercase;">
-                            ${ticket.category} • REF #${ticket.id}
-                        </span>
-                        <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--primary-dark); margin-top: 0.2rem;">
-                            ${ticket.title}
-                        </h3>
-                        <p style="font-size: 0.85rem; color: var(--text-light); margin: 0;">
-                            <i class="fa-solid fa-location-dot"></i> ${ticket.location} • Submitted: ${ticket.submittedAt}
-                        </p>
-                    </div>
-                    <div>
-                        <span class="status-pill ${isResolved ? "status-done" : "status-active"}" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">
-                            ${isResolved ? '<i class="fa-solid fa-check"></i> ' : '<span class="pulse-dot"></span> '}
-                            ${ticket.status}
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Stepper Progress Bar -->
-                <div class="stepper-container">
-        `;
-
-        ticket.steps.forEach(step => {
-            const isCompleted = step.done;
-            const isCurrent = step.num === ticket.currentStep;
-            const stateClass = isCompleted ? "completed" : (isCurrent ? "active" : "");
-
-            stepperHtml += `
-                <div class="stepper-item ${stateClass}">
-                    <div class="stepper-circle">
-                        ${isCompleted ? '<i class="fa-solid fa-check"></i>' : step.num}
-                    </div>
-                    <span class="stepper-title">${step.name}</span>
-                    <span class="stepper-subtitle">${step.desc}</span>
-                </div>
-            `;
-        });
-
-        stepperHtml += `
-                </div>
-
-                <div style="background: #f8fafc; border-radius: var(--radius-sm); padding: 0.95rem 1.25rem; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;">
-                    <span><strong>Resolution Target:</strong> ${ticket.resolvedAt}</span>
-                    <span style="color: var(--primary); font-weight: 600;"><i class="fa-solid fa-shield-check"></i> Municipal SLA Active</span>
-                </div>
-            </div>
-        `;
-
-        pageTrackingResult.innerHTML = stepperHtml;
-    }
-
     if (pageTrackerForm) {
         pageTrackerForm.addEventListener("submit", e => {
             e.preventDefault();
@@ -1271,6 +1192,7 @@ document.addEventListener("DOMContentLoaded", () => {
         appSidebar.setAttribute("aria-hidden", "false");
         if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
         document.body.style.overflow = "hidden";
+        if (sidebarCloseBtn) sidebarCloseBtn.focus();
     }
 
     function closeSidebar() {
@@ -1278,12 +1200,17 @@ document.addEventListener("DOMContentLoaded", () => {
         appSidebar.classList.remove("open");
         if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
         appSidebar.setAttribute("aria-hidden", "true");
-        if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+        if (menuToggle) {
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.focus();
+        }
         document.body.style.overflow = "";
     }
 
     if (menuToggle) {
-        menuToggle.addEventListener("click", () => {
+        menuToggle.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const isOpen = appSidebar && appSidebar.classList.contains("open");
             if (isOpen) closeSidebar();
             else openSidebar();
@@ -1291,11 +1218,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (sidebarCloseBtn) {
-        sidebarCloseBtn.addEventListener("click", () => closeSidebar());
+        sidebarCloseBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeSidebar();
+        });
     }
 
     if (sidebarBackdrop) {
-        sidebarBackdrop.addEventListener("click", () => closeSidebar());
+        sidebarBackdrop.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            closeSidebar();
+        });
+    }
+
+    if (appSidebar) {
+        appSidebar.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
     }
 
     document.querySelectorAll(".sidebar-link").forEach(link => {
