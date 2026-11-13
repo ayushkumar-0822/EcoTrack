@@ -3711,22 +3711,31 @@ img {
 ========================================= */
 
 .authority-portal-section {
-    padding: 35px 0 75px;
+    padding: 24px 0 70px;
     min-height: calc(100vh - 80px);
+    width: 100%;
+}
+
+.authority-portal-section .container,
+.authority-container {
+    width: min(1560px, 96%) !important;
+    max-width: 1560px !important;
+    margin-inline: auto !important;
+    padding-inline: 0.75rem !important;
 }
 
 .authority-header-card {
     background: linear-gradient(135deg, #104d32 0%, #176b45 100%);
     border-radius: var(--radius-md);
     color: #ffffff;
-    padding: 2rem 2.25rem;
+    padding: 1.5rem 1.85rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
     box-shadow: 0 16px 35px -8px rgba(16, 77, 50, 0.35);
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.35rem;
 }
 
 .authority-badge {
@@ -3958,29 +3967,31 @@ img {
 .authority-table-responsive {
     width: 100%;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .authority-table {
     width: 100%;
     border-collapse: collapse;
     text-align: left;
-    font-size: 0.84rem;
+    font-size: 0.82rem;
+    table-layout: auto;
 }
 
 .authority-table th {
     background: #f8fafc;
     color: var(--text-light);
     font-weight: 700;
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.85rem 1rem;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 0.65rem;
     border-bottom: 1.5px solid #e2e8f0;
     white-space: nowrap;
 }
 
 .authority-table td {
-    padding: 0.95rem 1rem;
+    padding: 0.75rem 0.65rem;
     border-bottom: 1px solid #f1f5f9;
     color: var(--text);
     vertical-align: middle;
@@ -3990,13 +4001,66 @@ img {
     background: #fbfdfa;
 }
 
+/* Specific column control to prevent cut-off and fit page */
+.authority-table th.col-ref,
+.authority-table td.col-ref {
+    width: 1%;
+    white-space: nowrap;
+    padding-left: 0.85rem;
+}
+
+.authority-table th.col-title,
+.authority-table td.col-title {
+    min-width: 170px;
+    max-width: 300px;
+}
+
+.authority-table th.col-location,
+.authority-table td.col-location {
+    min-width: 130px;
+    max-width: 210px;
+}
+
+.authority-table th.col-time,
+.authority-table td.col-time {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.authority-table th.col-urgency,
+.authority-table td.col-urgency {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+.authority-table th.col-progress,
+.authority-table td.col-progress {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.authority-table th.col-status,
+.authority-table td.col-status {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.authority-table th.col-action,
+.authority-table td.col-action {
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+    padding-right: 0.85rem;
+}
+
 .table-ref-badge {
     font-family: monospace;
     font-weight: 700;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     color: var(--primary-dark);
     background: var(--primary-light);
-    padding: 0.2rem 0.5rem;
+    padding: 0.18rem 0.45rem;
     border-radius: 6px;
     white-space: nowrap;
 }
@@ -4005,9 +4069,9 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.75rem;
+    font-size: 0.74rem;
     font-weight: 600;
-    padding: 0.18rem 0.55rem;
+    padding: 0.15rem 0.5rem;
     border-radius: 9999px;
     background: #f1f5f9;
     color: #334155;
@@ -4015,11 +4079,12 @@ img {
 }
 
 .urgency-badge {
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     font-weight: 700;
     padding: 0.15rem 0.45rem;
     border-radius: 4px;
     text-transform: uppercase;
+    white-space: nowrap;
 }
 
 .urgency-badge.high { background: #fee2e2; color: #b91c1c; }
@@ -4029,11 +4094,11 @@ img {
     display: flex;
     align-items: center;
     gap: 3px;
-    width: 80px;
+    width: 70px;
 }
 
 .mini-step-dot {
-    height: 5px;
+    height: 4.5px;
     flex-grow: 1;
     border-radius: 2px;
     background: #e2e8f0;
@@ -4047,9 +4112,9 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.76rem;
+    font-size: 0.74rem;
     font-weight: 700;
-    padding: 0.25rem 0.65rem;
+    padding: 0.22rem 0.6rem;
     border-radius: 9999px;
     white-space: nowrap;
 }
@@ -4059,10 +4124,15 @@ img {
 .status-badge-cell.pending { background: #fef3c7; color: #b45309; }
 
 .btn-see-details {
-    padding: 0.35rem 0.75rem;
+    padding: 0.35rem 0.65rem;
     font-size: 0.78rem;
+    font-weight: 600;
     border-radius: 6px;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-shrink: 0;
 }
 
 .auth-table-empty {

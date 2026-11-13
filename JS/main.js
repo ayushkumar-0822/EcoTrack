@@ -1751,43 +1751,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
             rowsHtml += `
                 <tr>
-                    <td>
+                    <td class="col-ref">
                         <span class="table-ref-badge">${t.id}</span>
                     </td>
-                    <td>
+                    <td class="col-title">
                         <span class="table-cat-pill">
                             <i class="fa-solid ${catIcon}"></i> ${t.category || "Issue"}
                         </span>
-                        <strong style="display:block; font-size:0.86rem; color:var(--text); margin-top:2px;">${t.title}</strong>
+                        <strong style="display:block; font-size:0.84rem; color:var(--text); margin-top:2px; line-height:1.35;">${t.title}</strong>
                     </td>
-                    <td>
-                        <div style="display:flex; align-items:center; gap:0.4rem;">
-                            <i class="fa-solid fa-location-dot" style="color:var(--primary); font-size:0.85rem;"></i>
-                            <span style="font-weight:600; color:var(--text);">${t.location}</span>
+                    <td class="col-location">
+                        <div style="display:flex; align-items:center; gap:0.35rem;">
+                            <i class="fa-solid fa-location-dot" style="color:var(--primary); font-size:0.8rem; flex-shrink:0;"></i>
+                            <span style="font-weight:600; color:var(--text); font-size:0.82rem;">${t.location}</span>
                         </div>
                     </td>
-                    <td>
-                        <span style="font-size:0.78rem; color:var(--text-light);">${t.created_at || t.submittedAt || "Today"}</span>
+                    <td class="col-time">
+                        <span style="font-size:0.76rem; color:var(--text-light); white-space:nowrap;">${t.created_at || t.submittedAt || "Today"}</span>
                     </td>
-                    <td>
+                    <td class="col-urgency" style="text-align: center;">
                         <span class="urgency-badge ${urgencyClass}">${urgency}</span>
                     </td>
-                    <td>
+                    <td class="col-progress">
                         <div class="mini-step-bar" title="Stage ${step} of 4">
                             <span class="mini-step-dot done"></span>
                             <span class="mini-step-dot ${step >= 2 ? "done" : ""}"></span>
                             <span class="mini-step-dot ${step >= 3 ? "done" : ""}"></span>
                             <span class="mini-step-dot ${step >= 4 ? "done" : ""}"></span>
                         </div>
-                        <span style="font-size:0.72rem; color:var(--text-light); margin-top:2px; display:block;">Stage ${step}/4</span>
+                        <span style="font-size:0.7rem; color:var(--text-light); margin-top:2px; display:block;">Stage ${step}/4</span>
                     </td>
-                    <td>
+                    <td class="col-status">
                         <span class="status-badge-cell ${statusClass}">
                             <i class="fa-solid ${isResolved ? "fa-circle-check" : (isDispatched ? "fa-truck-fast" : "fa-clock")}"></i>
                             ${statusLabel}
                         </span>
                     </td>
-                    <td style="text-align: right;">
+                    <td class="col-action" style="text-align: right;">
                         <button type="button" class="btn btn-outline btn-sm btn-see-details" data-ticket-id="${t.id}" title="See full details and action controls">
                             <i class="fa-solid fa-eye"></i> See Details
                         </button>
