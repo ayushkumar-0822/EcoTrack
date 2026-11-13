@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Current State
     const AppState = {
-        currentZone: localStorage.getItem("ecotrack_zone") || "zone-green-valley",
+        currentZone: localStorage.getItem("ecotrack_zone") || "zone-lpu",
         calendarYear: 2026,
         calendarMonth: 10, // 0-indexed: 10 is November
         selectedDay: 18,
@@ -25,70 +25,179 @@ document.addEventListener("DOMContentLoaded", () => {
         notificationsUnread: 2
     };
 
-    // Zone Definitions
+    // Zone Definitions — Punjab / Local Hubs (LPU, Law Gate, Phagwara, Jalandhar, Green Valley)
     const ZONES = {
+        "zone-lpu": {
+            name: "LPU Campus — Lovely Professional University",
+            shortName: "LPU Campus",
+            type: "University Campus, Hostels & Uni-Mall",
+            trucks: ["LPU-EcoTruck-01", "LPU-Clean-02"],
+            nextPickup: "Today, 4:00 PM · Student Mess Organic",
+            weeklySchedule: {
+                1: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01 (Harpreet S.)" }],
+                2: [{ type: "Dry Recyclables & Parcels", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "LPU-Fleet-03" }],
+                3: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }],
+                4: [{ type: "Hostel Plastics & Paper", time: "10:00 AM – 01:00 PM", cat: "recyclable", crew: "LPU-Fleet-03" }],
+                5: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }],
+                6: [
+                    { type: "Campus Recyclables & Uni-Mall", time: "08:00 AM – 11:00 AM", cat: "recyclable", crew: "LPU-Fleet-03" },
+                    { type: "Lab & E-Waste Special", time: "02:00 PM – 05:00 PM", cat: "hazardous", crew: "Campus Safety Team" }
+                ],
+                0: [{ type: "Hostel Weekend Deep Clearance", time: "07:00 AM – 10:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }]
+            }
+        },
+        "zone-law-gate": {
+            name: "Law Gate Student & Commercial Hub, LPU Phagwara",
+            shortName: "Law Gate",
+            type: "Food Streets, Cafes, PGs & Student Living",
+            trucks: ["Phagwara-MC-08 (Law Gate Special)"],
+            nextPickup: "Tonight, 10:00 PM · Commercial Eatery Waste",
+            weeklySchedule: {
+                1: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Phagwara-MC-08 (Gurdeep S.)" }],
+                2: [{ type: "PG & Delivery Carton Dry Waste", time: "11:00 AM – 01:30 PM", cat: "recyclable", crew: "Phagwara-MC-08" }],
+                3: [{ type: "Commercial Food Waste (Late Night)", time: "09:30 PM – 11:30 PM", cat: "organic", crew: "Night Route #02" }],
+                4: [{ type: "Street Bin Clearance & Plastics", time: "08:30 AM – 11:00 AM", cat: "recyclable", crew: "Phagwara-MC-08" }],
+                5: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Phagwara-MC-08" }],
+                6: [
+                    { type: "Weekend Market Clearance", time: "08:00 AM – 12:00 PM", cat: "recyclable", crew: "Phagwara-MC-08" },
+                    { type: "Special Sanitation & Disinfection", time: "03:00 PM – 06:00 PM", cat: "hazardous", crew: "Sanitation Squad" }
+                ],
+                0: [{ type: "Evening Food Street Wet Waste", time: "09:00 PM – 11:30 PM", cat: "organic", crew: "Night Route #02" }]
+            }
+        },
+        "zone-phagwara": {
+            name: "Phagwara City & GT Road Suburbs",
+            shortName: "Phagwara",
+            type: "Urban Estate, Main Markets & GT Road",
+            trucks: ["MC-Phagwara-04", "MC-Phagwara-07"],
+            nextPickup: "Tomorrow, 6:30 AM · Domestic Wet & Dry",
+            weeklySchedule: {
+                1: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04 (Rajesh K.)" }],
+                2: [{ type: "Dry Recyclables & Packaging", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "MC-Phagwara-07" }],
+                3: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04" }],
+                5: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04" }],
+                6: [
+                    { type: "Dry Recyclables & Commercial", time: "08:30 AM – 11:30 AM", cat: "recyclable", crew: "MC-Phagwara-07" },
+                    { type: "Hazardous & Battery Waste", time: "11:30 AM – 02:30 PM", cat: "hazardous", crew: "MC HazMat Team" }
+                ]
+            }
+        },
+        "zone-jalandhar": {
+            name: "Jalandhar Central, Model Town & Cantt",
+            shortName: "Jalandhar",
+            type: "Municipal Corporation Jalandhar (MCJ)",
+            trucks: ["MCJ-SmartTruck-11", "MCJ-Cantt-03"],
+            nextPickup: "Tomorrow, 7:00 AM · Municipal Collection",
+            weeklySchedule: {
+                1: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11 (Amit S.)" }],
+                2: [{ type: "Paper, Plastic & Cans", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "MCJ-Cantt-03" }],
+                3: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11" }],
+                4: [{ type: "Cantt & Commercial Dry Waste", time: "09:00 AM – 12:00 PM", cat: "recyclable", crew: "MCJ-Cantt-03" }],
+                5: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11" }],
+                6: [{ type: "Dry Recyclables & Glass", time: "08:30 AM – 11:00 AM", cat: "recyclable", crew: "MCJ-Cantt-03" }]
+            }
+        },
         "zone-green-valley": {
             name: "Green Valley & Eco Heights (Zone A)",
-            shortName: "Green Valley (Zone A)",
-            type: "Residential & Parks",
+            shortName: "Green Valley",
+            type: "Residential & Sustainable Parks",
             trucks: ["Truck-04", "Truck-09"],
             nextPickup: "Tomorrow, 7:00 AM · Organic",
             weeklySchedule: {
-                1: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }], // Mon
-                2: [{ type: "Dry Recyclables", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "Route #09 (M. Jenkins)" }], // Tue
-                3: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }], // Wed
-                5: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }], // Fri
+                1: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
+                2: [{ type: "Dry Recyclables", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "Route #09 (M. Jenkins)" }],
+                3: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
+                5: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
                 6: [
                     { type: "Dry Recyclables", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "Route #09 (M. Jenkins)" },
                     { type: "Hazardous & E-Waste", time: "10:00 AM – 02:00 PM", cat: "hazardous", crew: "HazMat Team #02" }
-                ] // Sat
-            }
-        },
-        "zone-north-ridge": {
-            name: "North Ridge Residential (Zone B)",
-            shortName: "North Ridge (Zone B)",
-            type: "High-density housing",
-            trucks: ["Truck-12"],
-            nextPickup: "Friday, 6:30 AM · Organic",
-            weeklySchedule: {
-                1: [{ type: "Organic", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "Route #12 (S. Kumar)" }],
-                3: [{ type: "Dry Recyclables", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "Route #09" }],
-                5: [{ type: "Organic", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "Route #12 (S. Kumar)" }],
-                0: [{ type: "Dry Recyclables", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "Route #09" }]
-            }
-        },
-        "zone-downtown": {
-            name: "Central Commercial & Downtown (Zone C)",
-            shortName: "Downtown (Zone C)",
-            type: "Business & Retail",
-            trucks: ["Truck-02"],
-            nextPickup: "Tonight, 9:00 PM · Commercial Wet",
-            weeklySchedule: {
-                1: [{ type: "Cardboard & Packaging", time: "10:00 AM – 12:00 PM", cat: "recyclable", crew: "Truck-02" }],
-                2: [{ type: "Commercial Wet", time: "09:00 PM – 11:00 PM", cat: "organic", crew: "Night Crew #01" }],
-                3: [{ type: "Sanitary Waste", time: "02:00 PM – 04:00 PM", cat: "hazardous", crew: "HazMat Team" }],
-                4: [{ type: "Cardboard & Packaging", time: "10:00 AM – 12:00 PM", cat: "recyclable", crew: "Truck-02" }],
-                5: [{ type: "Commercial Wet", time: "09:00 PM – 11:00 PM", cat: "organic", crew: "Night Crew #01" }]
-            }
-        },
-        "zone-south-harbor": {
-            name: "South Harbor & Waterfront (Zone D)",
-            shortName: "South Harbor (Zone D)",
-            type: "Coastal & Mixed",
-            trucks: ["Truck-07"],
-            nextPickup: "Saturday, 7:30 AM · General Domestic",
-            weeklySchedule: {
-                1: [{ type: "General Domestic", time: "07:30 AM – 10:00 AM", cat: "organic", crew: "Truck-07" }],
-                2: [{ type: "Marine & Plastics", time: "08:00 AM – 11:00 AM", cat: "recyclable", crew: "Eco-Fleet" }],
-                4: [{ type: "General Domestic", time: "07:30 AM – 10:00 AM", cat: "organic", crew: "Truck-07" }],
-                5: [{ type: "Marine & Plastics", time: "08:00 AM – 11:00 AM", cat: "recyclable", crew: "Eco-Fleet" }],
-                6: [{ type: "Hazardous Materials", time: "11:00 AM – 03:00 PM", cat: "hazardous", crew: "HazMat Team" }]
+                ]
             }
         }
     };
 
     // Preloaded Demo Tickets for Status Tracking
     const SAMPLE_REPORTS = {
+        "ECO-2026-LPU-101": {
+            id: "ECO-2026-LPU-101",
+            category: "Missed Pickup",
+            title: "Hostel Mess Organic Waste Overflow",
+            location: "LPU Boys Hostel 4 (BH-4), Main Campus",
+            submittedAt: "Today • 08:30 AM",
+            resolvedAt: "Today • 11:15 AM",
+            status: "Resolved",
+            currentStep: 4,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Student warden logged hostel mess overflow", time: "08:30 AM", done: true },
+                { num: 2, name: "Campus Dispatch", desc: "LPU Facility Manager verified route", time: "09:00 AM", done: true },
+                { num: 3, name: "EcoTruck Sent", desc: "LPU-EcoTruck-01 rerouted to BH-4", time: "09:45 AM", done: true },
+                { num: 4, name: "Bins Cleared", desc: "Mess food bins emptied & sanitized", time: "11:15 AM", done: true }
+            ]
+        },
+        "ECO-2026-LG-202": {
+            id: "ECO-2026-LG-202",
+            category: "Illegal Dumping",
+            title: "Commercial Food Delivery Packaging Overflow",
+            location: "Law Gate Main Street (Near Food Hub & Cafes)",
+            submittedAt: "Today • 09:15 AM",
+            resolvedAt: "Estimated Today 02:00 PM",
+            status: "In Progress",
+            currentStep: 3,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Citizen photo uploaded via EcoTrack", time: "09:15 AM", done: true },
+                { num: 2, name: "Triage & Order", desc: "Phagwara Municipal Squad assigned", time: "09:40 AM", done: true },
+                { num: 3, name: "Clearing Crew Active", desc: "Phagwara-MC-08 on site with clearing team", time: "10:30 AM", done: true },
+                { num: 4, name: "Site Restored", desc: "Litter removed & disinfectant spray applied", time: "Pending", done: false }
+            ]
+        },
+        "ECO-2026-PH-303": {
+            id: "ECO-2026-PH-303",
+            category: "Bin Issue",
+            title: "Public Curbside Dustbin Wheel Axle Broken",
+            location: "Phagwara GT Road Near Bus Stand",
+            submittedAt: "Today • 10:00 AM",
+            resolvedAt: "Estimated Today 04:30 PM",
+            status: "Dispatched",
+            currentStep: 2,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Damaged public bin reported", time: "10:00 AM", done: true },
+                { num: 2, name: "Replacement Dispatched", desc: "Maintenance truck dispatched with spare wheel", time: "10:35 AM", done: true },
+                { num: 3, name: "Curbside Repair", desc: "Technician repairing wheel bracket", time: "Pending", done: false },
+                { num: 4, name: "Certified Ready", desc: "Bin restored to upright position", time: "Pending", done: false }
+            ]
+        },
+        "ECO-2026-JL-404": {
+            id: "ECO-2026-JL-404",
+            category: "Missed Pickup",
+            title: "Model Town Curbside Recyclables Missed",
+            location: "Jalandhar Model Town Gol Market",
+            submittedAt: "Today • 07:45 AM",
+            resolvedAt: "Estimated Today 01:30 PM",
+            status: "In Progress",
+            currentStep: 3,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Model Town shop owner submitted pickup request", time: "07:45 AM", done: true },
+                { num: 2, name: "Route Rescheduled", desc: "MCJ Route Dispatcher scheduled recovery", time: "08:15 AM", done: true },
+                { num: 3, name: "Truck In Transit", desc: "MCJ-SmartTruck-11 approaching Gol Market", time: "09:20 AM", done: true },
+                { num: 4, name: "Cleared", desc: "Commercial packaging collected", time: "Pending", done: false }
+            ]
+        },
+        "ECO-2026-GV-505": {
+            id: "ECO-2026-GV-505",
+            category: "Bin Issue",
+            title: "Green Valley Central Park Organic Bin Exchange",
+            location: "Green Valley Central Park (Zone A)",
+            submittedAt: "Nov 12, 2026 • 09:00 AM",
+            resolvedAt: "Nov 12, 2026 • 01:20 PM",
+            status: "Resolved",
+            currentStep: 4,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Park supervisor requested bin lid replacement", time: "09:00 AM", done: true },
+                { num: 2, name: "Lid Allocated", desc: "240L Green Lid retrieved from central store", time: "10:10 AM", done: true },
+                { num: 3, name: "Delivered", desc: "Truck-04 delivered and installed new lid", time: "11:50 AM", done: true },
+                { num: 4, name: "Resolved", desc: "Exchange certified complete", time: "01:20 PM", done: true }
+            ]
+        },
         "ECO-2026-MP-101": {
             id: "ECO-2026-MP-101",
             category: "Missed Pickup",
@@ -103,38 +212,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 { num: 2, name: "Triaged & Approved", desc: "Sanitation Dispatcher verified route miss", time: "08:40 AM", done: true },
                 { num: 3, name: "Recovery Truck Sent", desc: "Truck-04 rerouted for recovery pickup", time: "09:55 AM", done: true },
                 { num: 4, name: "Pickup Completed", desc: "Bins emptied. Resident confirmed resolution", time: "11:42 AM", done: true }
-            ]
-        },
-        "ECO-2026-BN-204": {
-            id: "ECO-2026-BN-204",
-            category: "Bin Issue",
-            title: "Damaged Wheels & Split Lid",
-            location: "88 North Ridge Blvd, Bin #BN-892",
-            submittedAt: "Today at 07:30 AM",
-            resolvedAt: "Estimated Today 03:30 PM",
-            status: "In Progress",
-            currentStep: 3,
-            steps: [
-                { num: 1, name: "Report Logged", desc: "Photo and bin serial received", time: "07:30 AM", done: true },
-                { num: 2, name: "Replacement Order", desc: "240L Heavy-duty replacement bin allocated from depot", time: "08:10 AM", done: true },
-                { num: 3, name: "En Route for Delivery", desc: "Depot Maintenance Truck #02 dispatched", time: "10:15 AM", done: true },
-                { num: 4, name: "Installation & Exchange", desc: "Old bin retrieved & new bin placed curbside", time: "Pending", done: false }
-            ]
-        },
-        "ECO-2026-ID-308": {
-            id: "ECO-2026-ID-308",
-            category: "Illegal Dumping",
-            title: "Construction Debris & Dry Dumping",
-            location: "Empty lot behind Green Valley Central Park",
-            submittedAt: "Today at 09:00 AM",
-            resolvedAt: "Inspection within 2 hours",
-            status: "Dispatched",
-            currentStep: 2,
-            steps: [
-                { num: 1, name: "Report Logged", desc: "Citizen reported ~3 tons dry debris", time: "09:00 AM", done: true },
-                { num: 2, name: "Officer Dispatched", desc: "Sanitation Inspector assigned for assessment", time: "09:25 AM", done: true },
-                { num: 3, name: "Heavy Loader Scheduled", desc: "Municipal loader and dump truck assigned", time: "Pending", done: false },
-                { num: 4, name: "Site Cleared", desc: "Site sanitized and fenced", time: "Pending", done: false }
             ]
         }
     };
@@ -241,7 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (heroNextPickup) heroNextPickup.textContent = zone.nextPickup;
         if (calendarAreaSelect) calendarAreaSelect.value = zoneKey;
 
-        // Update active class in menu
+        // Update active class in dropdown menu
         if (navAreaMenu) {
             navAreaMenu.querySelectorAll("li").forEach(li => {
                 const isActive = li.getAttribute("data-zone") === zoneKey;
@@ -250,8 +327,18 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
+        // Update active chips in hero section
+        document.querySelectorAll(".loc-chip").forEach(chip => {
+            chip.classList.toggle("active", chip.getAttribute("data-zone") === zoneKey);
+        });
+
+        const globalSearch = document.getElementById("globalAreaSearch");
+        if (globalSearch && !globalSearch.matches(":focus")) {
+            globalSearch.value = zone.name;
+        }
+
         renderCalendar();
-        showToast(`Neighborhood area switched to ${zone.shortName}`, "info");
+        showToast(`Area switched to ${zone.shortName}`, "info");
     }
 
     if (navAreaBtn && navAreaDropdown) {
@@ -278,6 +365,79 @@ document.addEventListener("DOMContentLoaded", () => {
             updateActiveZone(calendarAreaSelect.value);
         });
     }
+
+    // Area Search inside Navbar Dropdown
+    const areaSearchInput = document.getElementById("areaSearchInput");
+    if (areaSearchInput && navAreaMenu) {
+        areaSearchInput.addEventListener("input", () => {
+            const term = areaSearchInput.value.toLowerCase().trim();
+            navAreaMenu.querySelectorAll("li").forEach(li => {
+                const text = li.textContent.toLowerCase();
+                li.style.display = text.includes(term) ? "block" : "none";
+            });
+        });
+        areaSearchInput.addEventListener("click", e => e.stopPropagation());
+    }
+
+    // Quick Location Chips & Global Hero Search
+    document.querySelectorAll(".loc-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+            const zKey = chip.getAttribute("data-zone");
+            updateActiveZone(zKey);
+        });
+    });
+
+    const globalAreaSearch = document.getElementById("globalAreaSearch");
+    const btnSearchArea = document.getElementById("btnSearchArea");
+
+    function executeAreaSearch() {
+        if (!globalAreaSearch) return;
+        const val = globalAreaSearch.value.trim().toLowerCase();
+        if (!val) return;
+
+        // Find best matching zone
+        let matchedZoneKey = null;
+        for (const [key, z] of Object.entries(ZONES)) {
+            if (z.name.toLowerCase().includes(val) || z.shortName.toLowerCase().includes(val) || key.toLowerCase().includes(val)) {
+                matchedZoneKey = key;
+                break;
+            }
+        }
+
+        // Also check keywords: "lpu", "law gate", "phagwara", "jalandhar", "green valley"
+        if (!matchedZoneKey) {
+            if (val.includes("lpu") || val.includes("university") || val.includes("hostel")) matchedZoneKey = "zone-lpu";
+            else if (val.includes("law") || val.includes("gate") || val.includes("food street")) matchedZoneKey = "zone-law-gate";
+            else if (val.includes("phagwara") || val.includes("gt road")) matchedZoneKey = "zone-phagwara";
+            else if (val.includes("jalandhar") || val.includes("cantt") || val.includes("model town")) matchedZoneKey = "zone-jalandhar";
+            else if (val.includes("green") || val.includes("valley")) matchedZoneKey = "zone-green-valley";
+        }
+
+        if (matchedZoneKey) {
+            updateActiveZone(matchedZoneKey);
+            showToast(`Found and switched to: ${ZONES[matchedZoneKey].shortName}`, "success");
+            const calSection = document.getElementById("calendar");
+            if (calSection) calSection.scrollIntoView({ behavior: "smooth" });
+        } else {
+            showToast(`Searching records for "${globalAreaSearch.value}"...`, "info");
+            renderTrackingView(globalAreaSearch.value);
+            const trackSection = document.getElementById("track");
+            if (trackSection) trackSection.scrollIntoView({ behavior: "smooth" });
+        }
+    }
+
+    if (btnSearchArea) {
+        btnSearchArea.addEventListener("click", executeAreaSearch);
+    }
+    if (globalAreaSearch) {
+        globalAreaSearch.addEventListener("keydown", e => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                executeAreaSearch();
+            }
+        });
+    }
+
 
     // -------------------------------------------------------------
     // 5. Notifications Dropdown Controller
@@ -950,13 +1110,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageTrackingInput = document.getElementById("pageTrackingInput");
     const pageTrackingResult = document.getElementById("pageTrackingResult");
 
-    async function renderTrackingView(ticketId) {
+    async function renderTrackingView(searchQuery) {
         if (!pageTrackingResult) return;
-        const normalizedId = ticketId.trim().toUpperCase();
+        const query = searchQuery.trim();
+        const normalizedId = query.toUpperCase();
 
-        if (pageTrackingInput) pageTrackingInput.value = normalizedId;
+        if (pageTrackingInput) pageTrackingInput.value = query;
 
-        // Try live server API first
+        // 1. Try exact Ticket ID match first
         let ticket = await apiFetch(`/api/tickets/${normalizedId}`);
 
         if (!ticket) {
@@ -967,13 +1128,94 @@ document.addEventListener("DOMContentLoaded", () => {
             ticket = stored[normalizedId] || SAMPLE_REPORTS[normalizedId];
         }
 
+        // 2. If no exact ticket ID match, search tickets by location or keyword!
         if (!ticket) {
+            let matchingTickets = [];
+            // Try server search
+            const serverResults = await apiFetch(`/api/tickets?q=${encodeURIComponent(query)}`);
+            if (Array.isArray(serverResults) && serverResults.length > 0) {
+                matchingTickets = serverResults;
+            } else {
+                // Search local storage and sample reports
+                let stored = {};
+                try {
+                    stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+                } catch (e) {}
+                const allLocal = Object.values({ ...SAMPLE_REPORTS, ...stored });
+                const qLower = query.toLowerCase();
+                matchingTickets = allLocal.filter(t => 
+                    (t.location && t.location.toLowerCase().includes(qLower)) ||
+                    (t.title && t.title.toLowerCase().includes(qLower)) ||
+                    (t.category && t.category.toLowerCase().includes(qLower)) ||
+                    (t.id && t.id.toLowerCase().includes(qLower))
+                );
+            }
+
+            if (matchingTickets.length > 0) {
+                let listHtml = `
+                    <div style="background: #ffffff; border: 1.5px solid rgba(23,107,69,0.2); border-radius: var(--radius-md); padding: 1.5rem; box-shadow: 0 10px 30px rgba(15,23,42,0.06);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem; margin-bottom:1.15rem; padding-bottom:0.85rem; border-bottom:1px solid #e2e8f0;">
+                            <div>
+                                <span style="font-size:0.75rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Local Area Search Results</span>
+                                <h3 style="font-size:1.15rem; font-weight:800; color:var(--primary-dark); margin-top:2px;">
+                                    Found ${matchingTickets.length} reports in "${query}"
+                                </h3>
+                            </div>
+                            <button type="button" class="btn btn-primary btn-sm" data-modal-open="reportModal">
+                                <i class="fa-solid fa-plus"></i> New Report For ${query}
+                            </button>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                `;
+
+                matchingTickets.forEach(t => {
+                    const isDone = (t.status || "").toLowerCase().includes("resolved");
+                    listHtml += `
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem 1.15rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.75rem;">
+                            <div>
+                                <div style="display:flex; align-items:center; gap:0.5rem;">
+                                    <strong style="color:var(--primary-dark); font-size:0.95rem;">${t.title}</strong>
+                                    <span style="font-size:0.72rem; padding:0.15rem 0.5rem; border-radius:9999px; background:${isDone ? "#dcfce7; color:#15803d" : "#fef3c7; color:#b45309"}; font-weight:700;">
+                                        ${t.status}
+                                    </span>
+                                </div>
+                                <p style="font-size:0.82rem; color:var(--text-light); margin:4px 0 0;">
+                                    <i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> ${t.location} • Ref: <strong>${t.id}</strong> • Step ${t.current_step || t.currentStep || 1}/4
+                                </p>
+                            </div>
+                            <button type="button" class="btn btn-outline btn-sm view-stepper-btn" data-ticket-id="${t.id}">
+                                Track Progress <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    `;
+                });
+
+                listHtml += `
+                        </div>
+                    </div>
+                `;
+
+                pageTrackingResult.innerHTML = listHtml;
+
+                // Wire up click on individual tickets
+                pageTrackingResult.querySelectorAll(".view-stepper-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const id = btn.getAttribute("data-ticket-id");
+                        renderTrackingView(id);
+                    });
+                });
+                return;
+            }
+
             pageTrackingResult.innerHTML = `
                 <div style="background: #fef2f2; border: 1px solid #fecaca; padding: 1.5rem; border-radius: var(--radius-sm); color: #991b1b;">
-                    <strong><i class="fa-solid fa-circle-exclamation"></i> Ticket ID "${normalizedId}" not found.</strong>
+                    <strong><i class="fa-solid fa-circle-exclamation"></i> No tickets found matching "${query}".</strong>
                     <p style="font-size: 0.85rem; margin-top: 0.35rem; color: #7f1d1d;">
-                        Please verify your tracking code or select one of the sample tickets above.
+                        Try searching by local area (e.g. <strong>Law Gate</strong>, <strong>LPU</strong>, <strong>Phagwara</strong>, <strong>Jalandhar</strong>) or enter a valid reference ID.
                     </p>
+                    <button type="button" class="btn btn-primary btn-sm" style="margin-top:0.75rem;" data-modal-open="reportModal">
+                        <i class="fa-solid fa-plus"></i> Submit New Report in ${query}
+                    </button>
                 </div>
             `;
             return;
@@ -1278,8 +1520,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial Boots
     updateActiveZone(AppState.currentZone);
-    renderTrackingView("ECO-2026-MP-101");
-    syncDashboard();
+    renderTrackingView("ECO-2026-LPU-101");
+        syncDashboard();
     syncNotifications();
 
     console.log(

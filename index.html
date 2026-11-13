@@ -79,27 +79,35 @@
             <div class="nav-actions">
                 <!-- 1. Area Selection (Boxed in Square) -->
                 <div class="area-pill-dropdown" id="navAreaDropdown">
-                    <button type="button" class="nav-square-btn area-square-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your neighborhood area">
+                    <button type="button" class="nav-square-btn area-square-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your local area or university zone">
                         <i class="fa-solid fa-location-dot"></i>
-                        <span id="navAreaLabel">Green Valley (Zone A)</span>
+                        <span id="navAreaLabel">LPU Campus</span>
                         <i class="fa-solid fa-chevron-down pill-chevron"></i>
                     </button>
                     <ul class="area-menu" id="navAreaMenu" role="listbox" tabindex="-1">
-                        <li role="option" aria-selected="true" data-zone="zone-green-valley" class="active">
+                        <div class="area-search-container">
+                            <i class="fa-solid fa-magnifying-glass area-search-icon"></i>
+                            <input type="text" id="areaSearchInput" class="area-search-input" placeholder="Search area (e.g. Law Gate, LPU...)" autocomplete="off">
+                        </div>
+                        <li role="option" aria-selected="true" data-zone="zone-lpu" class="active">
+                            <strong>LPU Main Campus</strong>
+                            <span>Hostels, Uni-Mall & Academic Blocks</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-law-gate">
+                            <strong>Law Gate Student Hub</strong>
+                            <span>Food Streets, PGs & Commercial Zone</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-phagwara">
+                            <strong>Phagwara City & GT Road</strong>
+                            <span>Urban Estate, Model Town & Suburbs</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-jalandhar">
+                            <strong>Jalandhar Cantt & Central</strong>
+                            <span>Model Town, Civil Lines & MCJ Zone</span>
+                        </li>
+                        <li role="option" aria-selected="false" data-zone="zone-green-valley">
                             <strong>Green Valley & Eco Heights</strong>
-                            <span>Zone A • Residential & Parks</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-north-ridge">
-                            <strong>North Ridge Residential</strong>
-                            <span>Zone B • High-density housing</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-downtown">
-                            <strong>Central Commercial & Downtown</strong>
-                            <span>Zone C • Business & Retail</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-south-harbor">
-                            <strong>South Harbor & Waterfront</strong>
-                            <span>Zone D • Coastal & Mixed</span>
+                            <span>Zone A • Residential & Sustainable Parks</span>
                         </li>
                     </ul>
                 </div>
@@ -263,12 +271,46 @@
                             <i class="fa-solid fa-bullseye"></i>
                             <div>
                                 <span class="label">CURRENTLY VIEWING</span>
-                                <strong id="heroCurrentZoneName">Green Valley (Zone A)</strong>
+                                <strong id="heroCurrentZoneName">LPU Campus — Lovely Professional University</strong>
                             </div>
                         </div>
                         <div class="zone-badge-right">
                             <span class="next-label">NEXT COLLECTION</span>
-                            <strong id="heroNextPickup">Tomorrow, 7:00 AM · Organic</strong>
+                            <strong id="heroNextPickup">Today, 4:00 PM · Student Mess Organic</strong>
+                        </div>
+                    </div>
+
+                    <!-- Live Location Search & Quick Area Selector -->
+                    <div class="hero-location-search-box">
+                        <div class="location-search-input-group">
+                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                            <input type="text"
+                                   id="globalAreaSearch"
+                                   list="localLocationsList"
+                                   class="location-search-input"
+                                   placeholder="Search area (e.g. Law Gate, LPU, Phagwara, Jalandhar)..."
+                                   autocomplete="off">
+                            <button type="button" class="btn btn-primary btn-sm" id="btnSearchArea">
+                                <i class="fa-solid fa-location-arrow"></i> Select Area
+                            </button>
+                        </div>
+                        <div class="quick-location-chips" id="quickLocationChips">
+                            <span class="chips-title"><i class="fa-solid fa-map-pin"></i> Quick Select:</span>
+                            <button type="button" class="loc-chip active" data-zone="zone-lpu">
+                                <i class="fa-solid fa-graduation-cap"></i> LPU Campus
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-law-gate">
+                                <i class="fa-solid fa-store"></i> Law Gate
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-phagwara">
+                                <i class="fa-solid fa-city"></i> Phagwara
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-jalandhar">
+                                <i class="fa-solid fa-landmark"></i> Jalandhar
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-green-valley">
+                                <i class="fa-solid fa-tree"></i> Green Valley
+                            </button>
                         </div>
                     </div>
 
@@ -377,10 +419,11 @@
                                 <i class="fa-solid fa-map-pin"></i> Neighborhood Zone:
                             </label>
                             <select id="calendarAreaSelect" class="form-select inline-select">
-                                <option value="zone-green-valley" selected>Green Valley & Eco Heights (Zone A)</option>
-                                <option value="zone-north-ridge">North Ridge Residential (Zone B)</option>
-                                <option value="zone-downtown">Central Commercial & Downtown (Zone C)</option>
-                                <option value="zone-south-harbor">South Harbor & Waterfront (Zone D)</option>
+                                <option value="zone-lpu" selected>LPU Main Campus (Hostels & Uni-Mall)</option>
+                                <option value="zone-law-gate">Law Gate Student & Commercial Hub</option>
+                                <option value="zone-phagwara">Phagwara City & GT Road</option>
+                                <option value="zone-jalandhar">Jalandhar Central & Cantt</option>
+                                <option value="zone-green-valley">Green Valley & Eco Heights (Zone A)</option>
                             </select>
                         </div>
 
@@ -675,7 +718,7 @@
                             <div class="form-group">
                                 <label for="missedAddress" class="form-label">Street Address & House / Apt # *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="missedAddress" class="form-control" placeholder="e.g. 142 Elm Street, Apt 3B" required>
+                                    <input type="text" id="missedAddress" list="localLocationsList" class="form-control" placeholder="e.g. Law Gate Main Street, LPU BH-4, Phagwara GT Road..." required>
                                     <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location via GPS">
                                         <i class="fa-solid fa-location-crosshairs"></i> GPS
                                     </button>
@@ -752,7 +795,7 @@
                             <div class="form-group">
                                 <label for="binLocation" class="form-label">Location / Bin Serial (If known) *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="binLocation" class="form-control" placeholder="e.g. Near Bus Stand 4, or Serial #BN-892" required>
+                                    <input type="text" id="binLocation" list="localLocationsList" class="form-control" placeholder="e.g. Law Gate Food Street, LPU Uni-Mall, Phagwara GT Road..." required>
                                     <button type="button" class="btn-geo btnGeoDetect" title="Use GPS Location">
                                         <i class="fa-solid fa-location-crosshairs"></i> GPS
                                     </button>
@@ -813,7 +856,7 @@
                             <div class="form-group">
                                 <label for="generalLocation" class="form-label">Exact Location / Landmark *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="generalLocation" class="form-control" placeholder="e.g. Empty plot behind Green Valley Mall" required>
+                                    <input type="text" id="generalLocation" list="localLocationsList" class="form-control" placeholder="e.g. Near Law Gate transformer, LPU Block 34, Jalandhar Model Town..." required>
                                     <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location">
                                         <i class="fa-solid fa-location-crosshairs"></i> GPS
                                     </button>
@@ -881,15 +924,21 @@
 
                     <!-- Quick Demo Ticket Pills -->
                     <div class="demo-pills-row">
-                        <span>Try Sample Tickets:</span>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-MP-101">
-                            ECO-2026-MP-101 (Missed Pickup - Resolved)
+                        <span>Try Sample Tickets or Search Areas:</span>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LPU-101">
+                            <i class="fa-solid fa-graduation-cap"></i> ECO-2026-LPU-101 (LPU Campus)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-BN-204">
-                            ECO-2026-BN-204 (Damaged Bin - In Progress)
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LG-202">
+                            <i class="fa-solid fa-store"></i> ECO-2026-LG-202 (Law Gate Food St)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-ID-308">
-                            ECO-2026-ID-308 (Illegal Dump - Dispatched)
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-PH-303">
+                            <i class="fa-solid fa-city"></i> ECO-2026-PH-303 (Phagwara GT Road)
+                        </button>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-JL-404">
+                            <i class="fa-solid fa-landmark"></i> ECO-2026-JL-404 (Jalandhar Model Town)
+                        </button>
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-GV-505">
+                            <i class="fa-solid fa-tree"></i> ECO-2026-GV-505 (Green Valley Park)
                         </button>
                     </div>
 
@@ -1137,6 +1186,31 @@
 
     <!-- ACCESSIBLE TOAST NOTIFICATION CONTAINER -->
     <div class="toast-container" id="toastContainer" role="region" aria-label="Notifications" aria-live="polite"></div>
+
+    <!-- Local Locations Datalist for Fast Autocomplete Entry -->
+    <datalist id="localLocationsList">
+        <option value="LPU Main Campus — Lovely Professional University">
+        <option value="LPU Uni-Mall & Central Food Court">
+        <option value="LPU Block 34 (Academic Building)">
+        <option value="LPU Boys Hostel BH-4 (Near Mess)">
+        <option value="LPU Boys Hostel BH-1">
+        <option value="LPU Girls Hostel GH-2">
+        <option value="LPU Service Gate Road">
+        <option value="Law Gate Main Street (Food Hub & Cafes)">
+        <option value="Law Gate Lane 1 (Student PGs & Rentals)">
+        <option value="Law Gate Lane 2 (Market & Grocery)">
+        <option value="Law Gate Outer Highway Link">
+        <option value="Phagwara GT Road Near Bus Stand">
+        <option value="Phagwara Urban Estate Phase 2">
+        <option value="Phagwara Model Town Market">
+        <option value="Phagwara Railway Station Road">
+        <option value="Jalandhar Model Town Gol Market">
+        <option value="Jalandhar Cantt Railway Station Road">
+        <option value="Jalandhar Civil Lines & BMC Chowk">
+        <option value="Jalandhar Rama Mandi">
+        <option value="Green Valley Central Park (Zone A)">
+        <option value="Green Valley Sector 4 Eco Heights">
+    </datalist>
 
 </body>
 </html>

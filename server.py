@@ -196,9 +196,14 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
             return self.send_json({"status": "healthy", "service": "EcoTrack Live Server", "time": datetime.datetime.now().isoformat()})
 
         elif path == "/api/tickets":
+            query = parse_qs(parsed.query).get("q", [""])[0].strip()
             with get_db() as conn:
                 cursor = conn.cursor()
-                cursor.execute("SELECT * FROM tickets ORDER BY rowid DESC")
+                if query:
+                    q_like = f"%{query}%"
+                    cursor.execute("SELECT * FROM tickets WHERE location LIKE ? OR title LIKE ? OR id LIKE ? OR category LIKE ? ORDER BY rowid DESC", (q_like, q_like, q_like, q_like))
+                else:
+                    cursor.execute("SELECT * FROM tickets ORDER BY rowid DESC")
                 tickets = [dict(row) for row in cursor.fetchall()]
                 # Attach steps to each ticket
                 for t in tickets:
