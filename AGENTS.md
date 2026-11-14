@@ -9,31 +9,14 @@ This file provides guidance to AI coding agents and human contributors working i
 ## Tech Stack & Architecture
 
 - **Frontend Core**: Semantic HTML5, CSS3 Custom Properties (Design System), Vanilla JavaScript (ES6+ Modules/Classes).
+- **Backend & Database**: Python 3 HTTP REST Server & SQLite (`ecotrack.db`).
 - **Tooling & Integrations**:
   - **CodeRabbit Antigravity Plugin** (`.agents/plugins/coderabbit`): Automated code reviews, severity preservation, quality gates, and autofix pipelines.
-  - **Git Worktree Runner** (`tools/git-worktree-runner` & `gtr.ps1`): Isolated parallel feature development, automated environment isolation, and multi-agent branches.
   - **Configuration**: `.coderabbit.yaml` for repository-wide CodeRabbit review instructions.
 
-## Development & Worktree Workflows
+## Development Workflows
 
-### 1. Using Git Worktree Runner (`gtr`)
-To work on isolated features without polluting the working tree:
-```powershell
-# Create an isolated worktree for a feature branch:
-.\gtr.ps1 new feature/report-issue
-
-# List active worktrees:
-.\gtr.ps1 list
-
-# Run command inside a worktree:
-.\gtr.ps1 run feature/report-issue git status
-
-# Remove worktree when merged:
-.\gtr.ps1 rm feature/report-issue
-```
-*(On Linux/macOS/Git Bash, use `tools/git-worktree-runner/bin/git-gtr <command>`)*
-
-### 2. CodeRabbit Review & Analysis
+### Code Reviews & Quality Analysis
 Code reviews run via CodeRabbit with native severity tracking (`critical`, `major`, `minor`, `trivial`, `info`):
 ```bash
 # Review uncommitted changes

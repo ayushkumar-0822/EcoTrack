@@ -1,0 +1,14 @@
+# GitHub Linguist Language Detection
+# Highlights core frontend & backend web technologies
+
+*.html linguist-detectable=true
+*.css linguist-detectable=true
+*.js linguist-detectable=true
+*.py linguist-detectable=true
+
+# Vendored files to exclude from language statistics
+*.bat linguist-vendored
+*.json linguist-vendored
+*.yaml linguist-vendored
+*.yml linguist-vendored
+.agents/** linguist-vendored
