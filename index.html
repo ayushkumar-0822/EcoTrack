@@ -1053,73 +1053,261 @@
         <!-- =========================================
              AUTHORITY / MUNICIPAL DISPATCH VIEW
         ========================================= -->
-        <div id="authorityView" style="display: none;">
-            <section class="authority-portal-section">
-                <div class="container authority-container">
+        <div id="authorityView" style="display: none;" class="saas-dashboard-wrapper">
+            
+            <!-- 1. LEFT ENTERPRISE SIDEBAR -->
+            <aside class="saas-sidebar" id="saasSidebar">
+                <div class="saas-sidebar-brand">
+                    <div class="saas-brand-icon">
+                        <i class="fa-solid fa-leaf"></i>
+                    </div>
+                    <div class="saas-brand-text">
+                        <div class="saas-brand-title">EcoTrack <span class="saas-version-badge">v2.0</span></div>
+                        <span class="saas-brand-subtitle">Municipal Waste Platform</span>
+                    </div>
+                </div>
+
+                <div class="saas-sidebar-action">
+                    <button type="button" class="btn-sidebar-quick-report" id="btnSidebarQuickReport">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Report / Issue</span>
+                        <kbd>F2</kbd>
+                    </button>
+                </div>
+
+                <nav class="saas-nav-tree">
+                    <!-- NAVIGATION GROUP -->
+                    <div class="saas-nav-group-title">NAVIGATION</div>
+                    <a href="#home" class="saas-nav-item" id="btnSidebarLandingLink">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Landing Page</span>
+                    </a>
+
+                    <!-- PLATFORM GROUP -->
+                    <div class="saas-nav-group-title">PLATFORM</div>
+                    <a href="#saas-overview" class="saas-nav-item active" id="saasNavOverview">
+                        <i class="fa-solid fa-chart-pie"></i>
+                        <span>Dashboard Overview</span>
+                    </a>
+                    <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavComplaints">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span>Complaints & Dispatch</span>
+                        <span class="saas-nav-badge count-badge" id="sidebarBadgeTotal">10</span>
+                    </a>
+                    <a href="#calendar" class="saas-nav-item" id="saasNavSchedules">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span>Collection Schedules</span>
+                    </a>
+                    <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavAlerts">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Safety & Urgent Alerts</span>
+                        <span class="saas-nav-badge alert-badge" id="sidebarBadgePending">4</span>
+                    </a>
+                    <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavTrucks">
+                        <i class="fa-solid fa-truck-ramp-box"></i>
+                        <span>Fleet Truck Routing</span>
+                    </a>
+
+                    <!-- MUNICIPAL ZONES -->
+                    <div class="saas-nav-group-title">MUNICIPAL ZONES</div>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="LPU">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>LPU Main Campus</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Law Gate">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Law Gate Student Hub</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Phagwara">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Phagwara GT Road</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Jalandhar">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Jalandhar Model Town</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Green Valley">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Green Valley Heights</span>
+                    </a>
+
+                    <!-- AUDIT & REPORTS -->
+                    <div class="saas-nav-group-title">AUDIT & REPORTS</div>
+                    <a href="javascript:void(0)" class="saas-nav-item" id="btnSidebarExportCSV">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>Export Municipal CSV</span>
+                    </a>
+                </nav>
+
+                <div class="saas-sidebar-footer">
+                    <div class="saas-system-status">
+                        <span class="pulse-dot"></span>
+                        <span>SQLite Local REST Live</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- 2. MAIN APPLICATION WORKSPACE -->
+            <div class="saas-main-area">
+                <!-- Top SaaS App Bar -->
+                <header class="saas-top-bar">
+                    <div class="saas-breadcrumbs">
+                        <span class="crumb-parent"><i class="fa-solid fa-shield-halved"></i> Municipal Authority</span>
+                        <span class="crumb-sep">/</span>
+                        <span class="crumb-current">Incident Command Dashboard</span>
+                    </div>
+
+                    <div class="saas-top-actions">
+                        <button type="button" class="btn-saas-secondary" id="btnSwitchToCitizen">
+                            <i class="fa-solid fa-house"></i> Landing Page
+                        </button>
+                        <div class="saas-db-badge">
+                            <span class="saas-live-dot"></span>
+                            <span>DB: SQLite Live</span>
+                        </div>
+                        <div class="saas-live-clock" id="saasLiveClock">
+                            Sun, Nov 15 • 01:15:00 AM
+                        </div>
+                        <button type="button" class="btn-icon saas-bell-btn" title="7 Unread Notifications">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="notif-badge">7</span>
+                        </button>
+                        <div class="saas-officer-pill">
+                            <i class="fa-solid fa-user-shield"></i>
+                            <span>MUNICIPAL OFFICER</span>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Dashboard Scrollable Body -->
+                <div class="saas-content-body">
                     
-                    <!-- Authority Command Header -->
-                    <div class="authority-header-card">
-                        <div class="authority-title-group">
-                            <div class="authority-badge">
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <span>OFFICIAL MUNICIPAL AUTHORITY & DISPATCH PORTAL</span>
-                            </div>
-                            <h1>Sanitation Incident Command & Fleet Dispatch</h1>
-                            <p>Live incoming citizen complaints triage, fleet truck routing, and resolution telemetry across LPU Campus, Law Gate, Phagwara, Jalandhar & Green Valley.</p>
+                    <!-- Dashboard Overview Header -->
+                    <div class="saas-page-header">
+                        <div>
+                            <h1 class="saas-page-title">Dashboard Overview</h1>
+                            <p class="saas-page-subtitle">Real-time sanitation fleet dispatch, incoming citizen reports, and zone cleanliness health.</p>
                         </div>
-                        <div class="authority-header-actions">
-                            <button type="button" class="btn btn-outline btn-sm" id="btnExportAuthorityCSV">
-                                <i class="fa-solid fa-file-csv"></i> Export Complaints CSV
+                        <div class="saas-header-btns">
+                            <button type="button" class="btn-saas-outline" id="btnExportAuthorityCSV">
+                                <i class="fa-solid fa-file-csv"></i> Export CSV
                             </button>
-                            <button type="button" class="btn btn-primary btn-sm" id="btnSwitchToCitizen">
-                                <i class="fa-solid fa-user"></i> Switch to Citizen View
+                            <button type="button" class="btn-saas-primary" id="btnHeaderNewTicket">
+                                <i class="fa-solid fa-plus"></i> Quick Dispatch (F2)
                             </button>
                         </div>
                     </div>
 
-                    <!-- Authority KPI Metrics Row -->
-                    <div class="authority-kpi-row">
-                        <div class="auth-kpi-card">
-                            <span class="auth-kpi-icon total"><i class="fa-solid fa-clipboard-list"></i></span>
-                            <div>
-                                <span class="auth-kpi-num" id="authKpiTotal">0</span>
-                                <span class="auth-kpi-label">Total Complaints</span>
+                    <!-- Row 1: 4 KPI Cards (PharmaPulse style) -->
+                    <div class="saas-kpi-row">
+                        <!-- KPI 1: Total Complaints -->
+                        <div class="saas-kpi-card">
+                            <div class="saas-kpi-top">
+                                <span class="saas-kpi-name">TOTAL COMPLAINTS</span>
+                                <span class="saas-pill-badge blue">All Reports</span>
+                            </div>
+                            <div class="saas-kpi-metric" id="authKpiTotal">10</div>
+                            <div class="saas-kpi-subtext">
+                                <i class="fa-solid fa-check" style="color:#15803d;"></i> Across 5 University & City Zones
                             </div>
                         </div>
-                        <div class="auth-kpi-card">
-                            <span class="auth-kpi-icon pending"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                            <div>
-                                <span class="auth-kpi-num" id="authKpiPending">0</span>
-                                <span class="auth-kpi-label">Due / Pending Triage</span>
+
+                        <!-- KPI 2: Due / Pending -->
+                        <div class="saas-kpi-card">
+                            <div class="saas-kpi-top">
+                                <span class="saas-kpi-name">DUE / PENDING TRIAGE</span>
+                                <span class="saas-pill-badge orange">Threshold</span>
+                            </div>
+                            <div class="saas-kpi-metric" id="authKpiPending">0</div>
+                            <div class="saas-kpi-subtext" style="color:#b45309;">
+                                <i class="fa-solid fa-clock"></i> Items requiring immediate dispatch
                             </div>
                         </div>
-                        <div class="auth-kpi-card">
-                            <span class="auth-kpi-icon dispatched"><i class="fa-solid fa-truck-fast"></i></span>
-                            <div>
-                                <span class="auth-kpi-num" id="authKpiDispatched">0</span>
-                                <span class="auth-kpi-label">In Progress / Dispatched</span>
+
+                        <!-- KPI 3: In Progress / Dispatched -->
+                        <div class="saas-kpi-card">
+                            <div class="saas-kpi-top">
+                                <span class="saas-kpi-name">FLEET DISPATCHED</span>
+                                <span class="saas-pill-badge cyan">Live Fleet</span>
+                            </div>
+                            <div class="saas-kpi-metric" id="authKpiDispatched">6</div>
+                            <div class="saas-kpi-subtext" style="color:#0284c7;">
+                                <i class="fa-solid fa-truck-fast"></i> Units active on municipal routes
                             </div>
                         </div>
-                        <div class="auth-kpi-card">
-                            <span class="auth-kpi-icon resolved"><i class="fa-solid fa-circle-check"></i></span>
-                            <div>
-                                <span class="auth-kpi-num" id="authKpiResolved">0</span>
-                                <span class="auth-kpi-label">Resolved & Cleaned</span>
+
+                        <!-- KPI 4: Resolved & Cleaned -->
+                        <div class="saas-kpi-card">
+                            <div class="saas-kpi-top">
+                                <span class="saas-kpi-name">RESOLVED & CLEANED</span>
+                                <span class="saas-pill-badge green" id="authKpiRate">SLA 100%</span>
                             </div>
-                        </div>
-                        <div class="auth-kpi-card">
-                            <span class="auth-kpi-icon rate"><i class="fa-solid fa-chart-line"></i></span>
-                            <div>
-                                <span class="auth-kpi-num" id="authKpiRate">100%</span>
-                                <span class="auth-kpi-label">Municipal SLA Rate</span>
+                            <div class="saas-kpi-metric" id="authKpiResolved">4</div>
+                            <div class="saas-kpi-subtext" style="color:#15803d;">
+                                <i class="fa-solid fa-circle-check"></i> Certified clean & citizen verified
                             </div>
                         </div>
                     </div>
 
-                    <!-- Authority Tabular Shell -->
-                    <div class="authority-table-shell">
+                    <!-- Row 2: System Parameters Ribbon -->
+                    <div class="saas-ribbon-bar">
+                        <div class="ribbon-item">
+                            <span class="ribbon-label">Active Monitored Zones:</span>
+                            <strong class="ribbon-val">5 Areas</strong>
+                        </div>
+                        <div class="ribbon-item">
+                            <span class="ribbon-label">Registered Hubs:</span>
+                            <strong class="ribbon-val">LPU, Law Gate, Phagwara, Jalandhar</strong>
+                        </div>
+                        <div class="ribbon-item">
+                            <span class="ribbon-label">Sanitation Fleet Units:</span>
+                            <strong class="ribbon-val">8 Active Trucks</strong>
+                        </div>
+                        <div class="ribbon-item">
+                            <span class="ribbon-label">Database Engine:</span>
+                            <strong class="ribbon-val">SQLite + Local REST (Live)</strong>
+                        </div>
+                    </div>
+
+                    <!-- Row 3: Visual Analytics (7-Day Trend Chart & Category Donut Chart) -->
+                    <div class="saas-charts-grid">
+                        <!-- Left Chart: 7-Day Resolution & Incident Trend -->
+                        <div class="saas-chart-card">
+                            <div class="chart-card-header">
+                                <div>
+                                    <h3 class="chart-card-title">7-Day Incident & Resolution Trend</h3>
+                                    <span class="chart-card-subtitle">Daily reported complaints vs resolved cleanups</span>
+                                </div>
+                                <span class="chart-period-tag">Past 7 Days</span>
+                            </div>
+                            <div class="chart-visual-wrapper" id="saasTrendChartContainer">
+                                <!-- Dynamic Chart rendered by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Right Chart: Category Breakdown Donut -->
+                        <div class="saas-chart-card">
+                            <div class="chart-card-header">
+                                <div>
+                                    <h3 class="chart-card-title">Complaints by Category</h3>
+                                    <span class="chart-card-subtitle">Distribution of reported municipal issues</span>
+                                </div>
+                            </div>
+                            <div class="donut-chart-layout">
+                                <div class="donut-svg-wrapper" id="saasDonutSvgContainer">
+                                    <!-- Dynamic SVG Donut Chart rendered by JS -->
+                                </div>
+                                <div class="donut-legend" id="saasDonutLegend">
+                                    <!-- Dynamic legend items -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 4: Tabular View Table -->
+                    <div class="authority-table-shell" id="saasComplaintsSection">
                         <div class="authority-table-toolbar">
-                            <!-- Tab Navigation Bar (All, Due/Pending, In Progress, Resolved) -->
+                            <!-- Filter Tabs -->
                             <div class="authority-filter-tabs" id="authorityFilterTabs" role="tablist">
                                 <button type="button" class="auth-tab-btn active" data-tab="all">
                                     <i class="fa-solid fa-list-check"></i> All Complaints
@@ -1139,7 +1327,7 @@
                                 </button>
                             </div>
 
-                            <!-- Table Action & Search Toolbar -->
+                            <!-- Search & Zone Filters -->
                             <div class="authority-table-actions">
                                 <div class="auth-search-box">
                                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -1159,7 +1347,7 @@
                             </div>
                         </div>
 
-                        <!-- Tabular View Table -->
+                        <!-- Responsive Complaints Table -->
                         <div class="authority-table-responsive">
                             <table class="authority-table" id="authorityComplaintsTable">
                                 <thead>
@@ -1189,7 +1377,7 @@
                     </div>
 
                 </div>
-            </section>
+            </div>
         </div>
         <!-- END AUTHORITY VIEW -->
 
