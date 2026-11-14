@@ -88,14 +88,6 @@
             </div>
 
             <div class="nav-actions">
-                <!-- Authority Command Dashboard Quick Launch Button -->
-                <button type="button" class="nav-authority-btn" id="btnNavAuthority" title="Launch Municipal Command & Fleet Dispatch Dashboard">
-                    <span class="auth-beacon-pulse"></span>
-                    <i class="fa-solid fa-shield-halved"></i>
-                    <span class="auth-btn-label">Authority Dashboard</span>
-                    <span class="auth-tag">Live</span>
-                </button>
-
                 <!-- 0. Role Switcher (Citizen vs Authority / Officer) -->
                 <div class="role-switcher-dropdown" id="roleSwitcherDropdown">
                     <button type="button" class="nav-square-btn role-square-btn" id="roleSwitcherBtn" aria-expanded="false" aria-haspopup="listbox" title="Switch Portal Mode (Citizen / Authority)">
@@ -116,7 +108,7 @@
                         <li role="option" aria-selected="false" data-role="authority">
                             <div class="role-item-icon authority"><i class="fa-solid fa-shield-halved"></i></div>
                             <div class="role-item-text">
-                                <strong>Authority / Officer</strong>
+                                <strong>Authority Dashboard</strong>
                                 <span>Municipal Command & Dispatch View</span>
                             </div>
                             <i class="fa-solid fa-check role-check"></i>
@@ -370,22 +362,20 @@
                     </div>
 
                     <div class="hero-buttons">
-                        <button type="button" class="btn btn-hero-authority" id="btnHeroLaunchAuthority">
-                            <i class="fa-solid fa-shield-halved"></i>
-                            <span>Authority Command Dashboard</span>
-                            <span class="hero-btn-badge">Live Fleet</span>
-                            <i class="fa-solid fa-arrow-right hero-btn-arrow"></i>
-                        </button>
-
                         <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                             Report an issue
                         </a>
 
-                        <a href="#calendar" class="btn btn-outline btn-large">
+                        <a href="#calendar" class="btn btn-secondary btn-large">
                             <i class="fa-solid fa-calendar-days"></i>
                             View calendar
                         </a>
+
+                        <button type="button" class="btn btn-outline btn-large" data-modal-open="reminderModal">
+                            <i class="fa-solid fa-bell"></i>
+                            Set reminders
+                        </button>
                     </div>
 
                     <div class="hero-trust">
@@ -407,118 +397,94 @@
                 <div class="hero-visual">
                     <div class="visual-glow"></div>
 
-                    <div class="floating-tag tag-top">
-                        <span class="tag-icon">
-                            <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
-                        </span>
-                        <div>
-                            <strong>Route #04 In Progress</strong>
-                            <span>Maple St & 4th Cross · 82% Completed</span>
-                        </div>
-                    </div>
-
-                    <div class="hero-image-wrapper">
-                        <img
-                            src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
-                            alt="Local waste collection and recycling bins"
-                            class="hero-image"
-                            loading="eager"
-                            decoding="async"
-                            width="1000"
-                            height="667">
-
-                        <div class="image-overlay"></div>
-
-                        <div class="image-label">
-                            <span class="label-icon">
-                                <i class="fa-solid fa-location-dot"></i>
+                    <!-- Image Block with Floating Badges -->
+                    <div class="hero-image-block">
+                        <div class="floating-tag tag-top">
+                            <span class="tag-icon">
+                                <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
                             </span>
                             <div>
-                                <span>SMART CITY WASTE SYSTEM</span>
-                                <strong>EcoTrack Connected Zone A</strong>
+                                <strong>Route #04 In Progress</strong>
+                                <span>Maple St & 4th Cross · 82% Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="hero-image-wrapper">
+                            <img
+                                src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
+                                alt="Local waste collection and recycling bins"
+                                class="hero-image"
+                                loading="eager"
+                                decoding="async"
+                                width="1000"
+                                height="667">
+
+                            <div class="image-overlay"></div>
+
+                            <div class="image-label">
+                                <span class="label-icon">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </span>
+                                <div>
+                                    <span>SMART CITY WASTE SYSTEM</span>
+                                    <strong>EcoTrack Connected Zone A</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="floating-tag tag-bottom">
+                            <div class="progress-circle">
+                                <i class="fa-solid fa-bell"></i>
+                            </div>
+                            <div>
+                                <strong>Reminders Activated</strong>
+                                <span>Never forget collection morning</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="floating-tag tag-bottom">
-                        <div class="progress-circle">
-                            <i class="fa-solid fa-bell"></i>
+                    <!-- Authority Dashboard Card on Right Side Under Image -->
+                    <div class="hero-authority-card" id="heroAuthorityCard">
+                        <div class="auth-card-header">
+                            <div class="auth-card-pill">
+                                <span class="auth-pulse-beacon"></span>
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <span>Municipal Dispatch Console</span>
+                            </div>
+                            <span class="auth-card-badge">Live System</span>
                         </div>
-                        <div>
-                            <strong>Reminders Activated</strong>
-                            <span>Never forget collection morning</span>
-                        </div>
-                    </div>
-                </div>
 
-            </div>
-        </section>
-
-
-        <!-- =========================================
-             MUNICIPAL AUTHORITY GATEWAY BANNER
-        ========================================= -->
-        <section class="municipal-gateway-section" id="authorityGateway">
-            <div class="container">
-                <div class="municipal-gateway-card">
-                    <div class="gateway-card-glow"></div>
-                    <div class="gateway-card-left">
-                        <div class="gateway-pill">
-                            <span class="live-dot-beacon"></span>
-                            <i class="fa-solid fa-shield-halved"></i> MUNICIPAL COMMAND & DISPATCH CONSOLE
-                        </div>
-                        <h2 class="gateway-title">Municipal Officer & Sanitation Authority Portal</h2>
-                        <p class="gateway-desc">
-                            Access the centralized incident command console to triage incoming citizen complaints, monitor 8 active fleet trucks across 5 municipal zones, analyze 7-day resolution SLAs, and export certified CSV audit logs.
+                        <h3 class="auth-card-title">Authority Dashboard</h3>
+                        <p class="auth-card-desc">
+                            Access the incident command center to triage citizen complaints, coordinate 8 sanitation fleet units, and monitor real-time municipal SLAs.
                         </p>
-                        <div class="gateway-stats-mini">
-                            <div class="stat-mini-item">
+
+                        <div class="auth-card-metrics">
+                            <div class="auth-metric-pill">
                                 <i class="fa-solid fa-truck-fast"></i>
-                                <div>
-                                    <strong>8 Trucks</strong>
-                                    <span>Active Fleet Units</span>
-                                </div>
+                                <span><strong>8 Trucks</strong> Active Fleet</span>
                             </div>
-                            <div class="stat-mini-item">
+                            <div class="auth-metric-pill">
                                 <i class="fa-solid fa-clock-rotate-left"></i>
-                                <div>
-                                    <strong>Live Feed</strong>
-                                    <span>Real-Time Triage</span>
-                                </div>
+                                <span><strong>Live Feed</strong> Triage</span>
                             </div>
-                            <div class="stat-mini-item">
-                                <i class="fa-solid fa-chart-line"></i>
-                                <div>
-                                    <strong>100% Target</strong>
-                                    <span>Municipal SLA</span>
-                                </div>
-                            </div>
-                            <div class="stat-mini-item">
+                            <div class="auth-metric-pill">
                                 <i class="fa-solid fa-file-csv"></i>
-                                <div>
-                                    <strong>1-Click CSV</strong>
-                                    <span>Municipal Audit</span>
-                                </div>
+                                <span><strong>1-Click</strong> CSV Audit</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="gateway-card-right">
-                        <button type="button" class="btn-launch-gateway" id="btnGatewayLaunchDashboard">
-                            <div class="launch-icon-wrap">
+
+                        <button type="button" class="btn btn-auth-launch" id="btnGatewayLaunchDashboard">
+                            <div class="launch-btn-left">
                                 <i class="fa-solid fa-gauge-high"></i>
+                                <span>Enter Authority Dashboard</span>
                             </div>
-                            <div class="launch-text-wrap">
-                                <span class="launch-title">Enter Command Dashboard</span>
-                                <span class="launch-sub">Full-Screen Enterprise Layout</span>
-                            </div>
-                            <i class="fa-solid fa-arrow-right launch-arrow"></i>
+                            <i class="fa-solid fa-arrow-right launch-btn-arrow"></i>
                         </button>
-                        <div class="gateway-auth-hint">
-                            <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
-                            <span>Connected to SQLite REST Service</span>
-                        </div>
                     </div>
+
                 </div>
+
             </div>
         </section>
 
