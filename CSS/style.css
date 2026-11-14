@@ -4672,12 +4672,12 @@ img {
 }
 
 .hero-authority-card {
-    margin-top: 1.35rem;
-    background: linear-gradient(135deg, #0b261a 0%, #061911 60%, #092618 100%);
-    border: 1.5px solid rgba(52, 211, 153, 0.3);
-    border-radius: 20px;
-    padding: 1.35rem 1.6rem;
-    box-shadow: 0 20px 50px -10px rgba(11, 38, 26, 0.38);
+    margin-top: 1.25rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(242, 249, 245, 0.9) 100%);
+    border: 1.5px solid rgba(21, 108, 70, 0.14);
+    border-radius: 18px;
+    padding: 1.25rem 1.45rem;
+    box-shadow: 0 10px 28px -6px rgba(15, 42, 28, 0.05);
     position: relative;
     overflow: hidden;
     z-index: 2;
@@ -4685,8 +4685,8 @@ img {
 }
 
 .hero-authority-card:hover {
-    border-color: rgba(52, 211, 153, 0.45);
-    box-shadow: 0 24px 55px -10px rgba(11, 38, 26, 0.48), 0 0 25px rgba(52, 211, 153, 0.12);
+    border-color: rgba(21, 108, 70, 0.26);
+    box-shadow: 0 14px 34px -6px rgba(15, 42, 28, 0.08);
 }
 
 .auth-card-header {
@@ -4700,14 +4700,14 @@ img {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid rgba(52, 211, 153, 0.35);
-    padding: 0.25rem 0.65rem;
+    background: rgba(21, 108, 70, 0.08);
+    border: 1px solid rgba(21, 108, 70, 0.2);
+    padding: 0.22rem 0.65rem;
     border-radius: 9999px;
-    color: #34d399;
+    color: #15803d;
     font-size: 0.72rem;
     font-weight: 800;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
 }
 
@@ -4715,14 +4715,15 @@ img {
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: #34d399;
-    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.3);
+    background: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
     animation: beaconPulse 2s infinite ease-in-out;
 }
 
 .auth-card-badge {
-    background: rgba(255, 255, 255, 0.1);
-    color: #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #e2e8f0;
     font-size: 0.68rem;
     font-weight: 700;
     padding: 0.15rem 0.45rem;
@@ -4732,16 +4733,16 @@ img {
 }
 
 .auth-card-title {
-    color: #ffffff;
-    font-size: 1.25rem;
+    color: #0f291e;
+    font-size: 1.15rem;
     font-weight: 800;
     margin-bottom: 0.35rem;
     letter-spacing: -0.01em;
 }
 
 .auth-card-desc {
-    color: #94a3b8;
-    font-size: 0.82rem;
+    color: #475569;
+    font-size: 0.8rem;
     line-height: 1.5;
     margin-bottom: 0.95rem;
 }
@@ -4750,68 +4751,121 @@ img {
     display: flex;
     flex-wrap: wrap;
     gap: 0.55rem;
-    margin-bottom: 1.1rem;
 }
 
 .auth-metric-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.3rem 0.65rem;
+    background: #ffffff;
+    border: 1px solid rgba(21, 108, 70, 0.12);
+    padding: 0.32rem 0.65rem;
     border-radius: 8px;
     font-size: 0.73rem;
-    color: #cbd5e1;
+    color: #334155;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .auth-metric-pill i {
-    color: #34d399;
+    color: #15803d;
     font-size: 0.8rem;
 }
 
 .auth-metric-pill strong {
-    color: #ffffff;
+    color: #0f291e;
     font-weight: 700;
 }
 
-.btn-auth-launch {
+/* Standalone Unique Authority Dashboard Launch Button Just Below Box */
+.btn-authority-unique-launch {
     width: 100%;
+    margin-top: 0.85rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: linear-gradient(135deg, #0e3323 0%, #174d35 48%, #1f6345 100%);
     color: #ffffff !important;
-    border: none;
-    padding: 0.75rem 1.15rem;
-    border-radius: 12px;
-    font-size: 0.88rem;
-    font-weight: 700;
+    border: 1.5px solid rgba(52, 211, 153, 0.45);
+    padding: 0.85rem 1.25rem;
+    border-radius: 14px;
     cursor: pointer;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 28px -6px rgba(14, 51, 35, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    z-index: 2;
 }
 
-.btn-auth-launch:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+.btn-authority-unique-launch:hover {
+    background: linear-gradient(135deg, #174d35 0%, #1f6345 50%, #15803d 100%);
+    border-color: #34d399;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.45);
+    box-shadow: 0 14px 35px -6px rgba(14, 51, 35, 0.45), 0 0 20px rgba(52, 211, 153, 0.25);
     color: #ffffff !important;
 }
 
-.launch-btn-left {
+.launch-unique-left {
     display: flex;
     align-items: center;
-    gap: 0.55rem;
+    gap: 0.65rem;
 }
 
-.launch-btn-arrow {
-    font-size: 0.85rem;
-    transition: transform 0.2s ease;
+.launch-unique-sparkle {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(52, 211, 153, 0.18);
+    border: 1px solid rgba(52, 211, 153, 0.35);
+    display: grid;
+    place-items: center;
+    color: #34d399;
+    font-size: 0.9rem;
+    transition: transform 0.25s ease;
 }
 
-.btn-auth-launch:hover .launch-btn-arrow {
+.btn-authority-unique-launch:hover .launch-unique-sparkle {
+    transform: rotate(15deg) scale(1.08);
+    background: rgba(52, 211, 153, 0.3);
+    color: #ffffff;
+}
+
+.launch-unique-text {
+    font-family: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 0.94rem;
+    font-weight: 800;
+    letter-spacing: 0.035em;
+    text-transform: uppercase;
+    color: #ffffff;
+}
+
+.launch-unique-right {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.launch-unique-badge {
+    background: rgba(52, 211, 153, 0.2);
+    color: #a7f3d0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 0.18rem 0.5rem;
+    border-radius: 9999px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.launch-unique-arrow {
+    font-size: 0.9rem;
+    color: #34d399;
+    transition: transform 0.22s ease, color 0.22s ease;
+}
+
+.btn-authority-unique-launch:hover .launch-unique-arrow {
     transform: translateX(4px);
+    color: #ffffff;
 }
 
 /* Sidebar Drawer Authority Launch Button */
