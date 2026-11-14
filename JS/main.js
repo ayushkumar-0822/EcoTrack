@@ -1568,7 +1568,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function switchRole(newRole) {
         AppState.currentRole = newRole;
-        localStorage.setItem("ecotrack_role", newRole);
 
         const topNavbar = document.getElementById("topNavbar");
         const mainFooter = document.querySelector(".footer");
@@ -1592,6 +1591,7 @@ document.addEventListener("DOMContentLoaded", () => {
             
             startSaasClock();
             loadAuthorityData();
+            window.scrollTo({ top: 0, behavior: "smooth" });
             showToast("Switched to Municipal Authority Command Dashboard", "info");
         } else {
             if (authorityView) authorityView.style.display = "none";
@@ -1601,7 +1601,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (roleLabel) roleLabel.textContent = "Citizen";
             if (roleIcon) roleIcon.className = "fa-solid fa-user-check role-icon";
             if (roleSwitcherBtn) roleSwitcherBtn.classList.remove("authority-mode");
-            showToast("Switched to Citizen Mode", "info");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            showToast("Switched to Citizen Landing Page", "info");
         }
 
         if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
@@ -2297,16 +2298,66 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Check if initial role was authority
-    if (AppState.currentRole === "authority") {
+    // -------------------------------------------------------------
+    // Authority Dashboard & Landing Page Multi-Gateway Routing
+    // -------------------------------------------------------------
+    const launchAuthorityPortal = (e) => {
+        if (e) e.preventDefault();
+        window.location.hash = "#dashboard";
         switchRole("authority");
+    };
+
+    const returnToLandingPage = (e) => {
+        if (e) e.preventDefault();
+        window.location.hash = "#home";
+        switchRole("citizen");
+    };
+
+    // 1. Top Navbar Authority Button
+    const btnNavAuthority = document.getElementById("btnNavAuthority");
+    if (btnNavAuthority) btnNavAuthority.addEventListener("click", launchAuthorityPortal);
+
+    // 2. Hero Section Authority Button
+    const btnHeroLaunchAuthority = document.getElementById("btnHeroLaunchAuthority");
+    if (btnHeroLaunchAuthority) btnHeroLaunchAuthority.addEventListener("click", launchAuthorityPortal);
+
+    // 3. Municipal Gateway Section Launch Button
+    const btnGatewayLaunchDashboard = document.getElementById("btnGatewayLaunchDashboard");
+    if (btnGatewayLaunchDashboard) btnGatewayLaunchDashboard.addEventListener("click", launchAuthorityPortal);
+
+    // 4. Sidebar Drawer Launch Button
+    const btnSidebarLaunchAuthority = document.getElementById("btnSidebarLaunchAuthority");
+    if (btnSidebarLaunchAuthority) {
+        btnSidebarLaunchAuthority.addEventListener("click", (e) => {
+            closeSidebar();
+            launchAuthorityPortal(e);
+        });
     }
 
+    // 5. Back to Landing Page Buttons
+    if (btnSwitchToCitizen) btnSwitchToCitizen.addEventListener("click", returnToLandingPage);
+    if (btnSidebarLandingLink) btnSidebarLandingLink.addEventListener("click", returnToLandingPage);
+
+    // Initial Routing: ALWAYS default to Landing Page first unless URL hash explicitly requests #dashboard
+    if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
+        switchRole("authority");
+    } else {
+        switchRole("citizen");
+    }
+
+    // Hash change listener for browser navigation
+    window.addEventListener("hashchange", () => {
+        if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
+            if (AppState.currentRole !== "authority") switchRole("authority");
+        } else if (window.location.hash === "#home" || window.location.hash === "" || window.location.hash === "#report" || window.location.hash === "#calendar") {
+            if (AppState.currentRole !== "citizen") switchRole("citizen");
+        }
+    });
 
     // Initial Boots
     updateActiveZone(AppState.currentZone);
     renderTrackingView("ECO-2026-LPU-101");
-        syncDashboard();
+    syncDashboard();
     syncNotifications();
 
     console.log(

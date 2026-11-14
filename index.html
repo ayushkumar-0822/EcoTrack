@@ -88,6 +88,14 @@
             </div>
 
             <div class="nav-actions">
+                <!-- Authority Command Dashboard Quick Launch Button -->
+                <button type="button" class="nav-authority-btn" id="btnNavAuthority" title="Launch Municipal Command & Fleet Dispatch Dashboard">
+                    <span class="auth-beacon-pulse"></span>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span class="auth-btn-label">Authority Dashboard</span>
+                    <span class="auth-tag">Live</span>
+                </button>
+
                 <!-- 0. Role Switcher (Citizen vs Authority / Officer) -->
                 <div class="role-switcher-dropdown" id="roleSwitcherDropdown">
                     <button type="button" class="nav-square-btn role-square-btn" id="roleSwitcherBtn" aria-expanded="false" aria-haspopup="listbox" title="Switch Portal Mode (Citizen / Authority)">
@@ -269,6 +277,9 @@
 
         <!-- Sidebar Actions & Status -->
         <div class="sidebar-footer-group">
+            <button type="button" class="btn btn-authority-sidebar full-width" id="btnSidebarLaunchAuthority">
+                <i class="fa-solid fa-shield-halved"></i> Launch Authority Dashboard
+            </button>
             <button type="button" class="btn btn-outline full-width" data-modal-open="reminderModal">
                 <i class="fa-regular fa-bell"></i> Pickup Reminders
             </button>
@@ -359,20 +370,22 @@
                     </div>
 
                     <div class="hero-buttons">
+                        <button type="button" class="btn btn-hero-authority" id="btnHeroLaunchAuthority">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            <span>Authority Command Dashboard</span>
+                            <span class="hero-btn-badge">Live Fleet</span>
+                            <i class="fa-solid fa-arrow-right hero-btn-arrow"></i>
+                        </button>
+
                         <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                             Report an issue
                         </a>
 
-                        <a href="#calendar" class="btn btn-secondary btn-large">
+                        <a href="#calendar" class="btn btn-outline btn-large">
                             <i class="fa-solid fa-calendar-days"></i>
                             View calendar
                         </a>
-
-                        <button type="button" class="btn btn-outline btn-large" data-modal-open="reminderModal">
-                            <i class="fa-solid fa-bell"></i>
-                            Set reminders
-                        </button>
                     </div>
 
                     <div class="hero-trust">
@@ -438,6 +451,74 @@
                     </div>
                 </div>
 
+            </div>
+        </section>
+
+
+        <!-- =========================================
+             MUNICIPAL AUTHORITY GATEWAY BANNER
+        ========================================= -->
+        <section class="municipal-gateway-section" id="authorityGateway">
+            <div class="container">
+                <div class="municipal-gateway-card">
+                    <div class="gateway-card-glow"></div>
+                    <div class="gateway-card-left">
+                        <div class="gateway-pill">
+                            <span class="live-dot-beacon"></span>
+                            <i class="fa-solid fa-shield-halved"></i> MUNICIPAL COMMAND & DISPATCH CONSOLE
+                        </div>
+                        <h2 class="gateway-title">Municipal Officer & Sanitation Authority Portal</h2>
+                        <p class="gateway-desc">
+                            Access the centralized incident command console to triage incoming citizen complaints, monitor 8 active fleet trucks across 5 municipal zones, analyze 7-day resolution SLAs, and export certified CSV audit logs.
+                        </p>
+                        <div class="gateway-stats-mini">
+                            <div class="stat-mini-item">
+                                <i class="fa-solid fa-truck-fast"></i>
+                                <div>
+                                    <strong>8 Trucks</strong>
+                                    <span>Active Fleet Units</span>
+                                </div>
+                            </div>
+                            <div class="stat-mini-item">
+                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                <div>
+                                    <strong>Live Feed</strong>
+                                    <span>Real-Time Triage</span>
+                                </div>
+                            </div>
+                            <div class="stat-mini-item">
+                                <i class="fa-solid fa-chart-line"></i>
+                                <div>
+                                    <strong>100% Target</strong>
+                                    <span>Municipal SLA</span>
+                                </div>
+                            </div>
+                            <div class="stat-mini-item">
+                                <i class="fa-solid fa-file-csv"></i>
+                                <div>
+                                    <strong>1-Click CSV</strong>
+                                    <span>Municipal Audit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gateway-card-right">
+                        <button type="button" class="btn-launch-gateway" id="btnGatewayLaunchDashboard">
+                            <div class="launch-icon-wrap">
+                                <i class="fa-solid fa-gauge-high"></i>
+                            </div>
+                            <div class="launch-text-wrap">
+                                <span class="launch-title">Enter Command Dashboard</span>
+                                <span class="launch-sub">Full-Screen Enterprise Layout</span>
+                            </div>
+                            <i class="fa-solid fa-arrow-right launch-arrow"></i>
+                        </button>
+                        <div class="gateway-auth-hint">
+                            <i class="fa-solid fa-circle-check" style="color: #10b981;"></i>
+                            <span>Connected to SQLite REST Service</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
