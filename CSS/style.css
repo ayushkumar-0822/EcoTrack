@@ -3101,9 +3101,9 @@ img {
 .dev-author-sign {
     font-family: "Times New Roman", Times, Georgia, serif;
     font-style: italic;
-    font-size: 1.25rem;
+    font-size: 1.0rem;
     font-weight: 700;
-    color: #86efac;
+    color: #eaecdd;
     letter-spacing: 0.02em;
 }
 
