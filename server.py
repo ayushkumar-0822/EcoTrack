@@ -118,8 +118,8 @@ def seed_initial_data(cursor):
     cursor.execute("INSERT INTO tickets VALUES (?,?,?,?,?,?,?,?,?,?,?)", t1)
     steps_t1 = [
         ("ECO-2026-MP-101", 1, "Report Logged", "Citizen submitted curbside missed pickup ticket", "08:15 AM", 1),
-        ("ECO-2026-MP-101", 2, "Triaged & Approved", "Sanitation Dispatcher verified route miss", "08:40 AM", 1),
-        ("ECO-2026-MP-101", 3, "Recovery Truck Sent", "Truck-04 rerouted for recovery pickup", "09:55 AM", 1),
+        ("ECO-2026-MP-101", 2, "Pending Inspection", "Sanitation supervisor verified route miss", "08:40 AM", 1),
+        ("ECO-2026-MP-101", 3, "Recovery Truck Sent", "TRK-101 rerouted for recovery pickup", "09:55 AM", 1),
         ("ECO-2026-MP-101", 4, "Pickup Completed", "Bins emptied. Resident confirmed resolution", "11:42 AM", 1)
     ]
     cursor.executemany("INSERT INTO ticket_steps (ticket_id, step_num, name, description, time_str, is_done) VALUES (?,?,?,?,?,?)", steps_t1)
@@ -284,13 +284,13 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO tickets (id, category, title, location, urgency, description, photo_url, status, current_step, created_at, resolved_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, 'Triaged', 2, ?, 'Under Review')
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', 2, ?, 'Under Review')
                 """, (ticket_id, category, title, location, urgency, description, photo_url, now_str))
 
                 # Create 4 steps
                 steps = [
                     (ticket_id, 1, "Report Logged", f"Citizen reported: {title}", now_str, 1),
-                    (ticket_id, 2, "Triaged & Approved", "Assigned to area sanitation coordinator", "Active Now", 1),
+                    (ticket_id, 2, "Pending Inspection", "Assigned to area sanitation coordinator", "Active Now", 1),
                     (ticket_id, 3, "Crew Dispatched", "Recovery vehicle / repair unit scheduled", "Pending", 0),
                     (ticket_id, 4, "Resolved", "Final verification and sign-off", "Pending", 0)
                 ]
@@ -318,7 +318,7 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
 
                 current_step = row[0]
                 next_step = min(4, current_step + 1)
-                new_status = "Resolved" if next_step == 4 else ("Dispatched" if next_step == 3 else "Triaged")
+                new_status = "Resolved" if next_step == 4 else ("Dispatched" if next_step == 3 else "Pending")
                 now_str = datetime.datetime.now().strftime("%I:%M %p")
 
                 cursor.execute("UPDATE tickets SET current_step = ?, status = ?, resolved_at = ? WHERE id = ?", 
@@ -351,8 +351,8 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
                 elif new_status == "Dispatched":
                     cursor.execute("UPDATE tickets SET status = 'Dispatched', current_step = 3 WHERE id = ?", (ticket_id,))
                     cursor.execute("UPDATE ticket_steps SET is_done = 1 WHERE ticket_id = ? AND step_num <= 3", (ticket_id,))
-                elif new_status == "Triaged" or new_status == "Pending":
-                    cursor.execute("UPDATE tickets SET status = 'Triaged', current_step = 2 WHERE id = ?", (ticket_id,))
+                elif new_status == "Pending":
+                    cursor.execute("UPDATE tickets SET status = 'Pending', current_step = 2 WHERE id = ?", (ticket_id,))
                     cursor.execute("UPDATE ticket_steps SET is_done = 1 WHERE ticket_id = ? AND step_num <= 2", (ticket_id,))
 
                 cursor.execute("""

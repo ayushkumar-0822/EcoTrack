@@ -759,24 +759,16 @@
         ========================================= -->
         <div id="authorityView" style="display: none;" class="saas-dashboard-wrapper">
             
-            <!-- 1. LEFT ENTERPRISE SIDEBAR -->
+            <!-- 1. LEFT SIDEBAR -->
             <aside class="saas-sidebar" id="saasSidebar">
                 <div class="saas-sidebar-brand">
                     <div class="saas-brand-icon">
                         <i class="fa-solid fa-leaf"></i>
                     </div>
                     <div class="saas-brand-text">
-                        <div class="saas-brand-title">EcoTrack <span class="saas-version-badge">v2.0</span></div>
-                        <span class="saas-brand-subtitle">Municipal Waste Platform</span>
+                        <div class="saas-brand-title">EcoTrack</div>
+                        <span class="saas-brand-subtitle">Waste Portal</span>
                     </div>
-                </div>
-
-                <div class="saas-sidebar-action">
-                    <button type="button" class="btn-sidebar-quick-report" id="btnSidebarQuickReport">
-                        <i class="fa-solid fa-plus"></i>
-                        <span>New Report / Issue</span>
-                        <kbd>F2</kbd>
-                    </button>
                 </div>
 
                 <nav class="saas-nav-tree">
@@ -795,8 +787,8 @@
                     </a>
                     <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavComplaints">
                         <i class="fa-solid fa-clipboard-list"></i>
-                        <span>Complaints & Dispatch</span>
-                        <span class="saas-nav-badge count-badge" id="sidebarBadgeTotal">10</span>
+                        <span>Complaints &amp; Dispatch</span>
+                        <span class="saas-nav-badge count-badge" id="sidebarBadgeTotal">4</span>
                     </a>
                     <a href="#calendar" class="saas-nav-item" id="saasNavSchedules">
                         <i class="fa-solid fa-calendar-days"></i>
@@ -804,8 +796,8 @@
                     </a>
                     <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavAlerts">
                         <i class="fa-solid fa-triangle-exclamation"></i>
-                        <span>Safety & Urgent Alerts</span>
-                        <span class="saas-nav-badge alert-badge" id="sidebarBadgePending">4</span>
+                        <span>Safety &amp; Urgent Alerts</span>
+                        <span class="saas-nav-badge alert-badge" id="sidebarBadgePending">1</span>
                     </a>
                     <a href="#saasComplaintsSection" class="saas-nav-item" id="saasNavTrucks">
                         <i class="fa-solid fa-truck-ramp-box"></i>
@@ -813,7 +805,7 @@
                     </a>
 
                     <!-- MUNICIPAL ZONES -->
-                    <div class="saas-nav-group-title">CAMPUS & CITY ZONES</div>
+                    <div class="saas-nav-group-title">CAMPUS &amp; CITY ZONES</div>
                     <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="LPU Boys Hostels">
                         <span>LPU Boys Hostels</span>
                     </a>
@@ -829,21 +821,7 @@
                     <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Phagwara GT Road">
                         <span>Phagwara GT Road</span>
                     </a>
-
-                    <!-- AUDIT & REPORTS -->
-                    <div class="saas-nav-group-title">AUDIT & REPORTS</div>
-                    <a href="javascript:void(0)" class="saas-nav-item" id="btnSidebarExportCSV">
-                        <i class="fa-solid fa-file-csv"></i>
-                        <span>Export Municipal CSV</span>
-                    </a>
                 </nav>
-
-                <div class="saas-sidebar-footer">
-                    <div class="saas-system-status">
-                        <span class="pulse-dot"></span>
-                        <span>SQLite Local REST Live</span>
-                    </div>
-                </div>
             </aside>
 
             <!-- 2. MAIN APPLICATION WORKSPACE -->
@@ -851,29 +829,15 @@
                 <!-- Top SaaS App Bar -->
                 <header class="saas-top-bar">
                     <div class="saas-breadcrumbs">
-                        <span class="crumb-parent"><i class="fa-solid fa-shield-halved"></i> Municipal Authority</span>
-                        <span class="crumb-sep">/</span>
-                        <span class="crumb-current">Incident Command Dashboard</span>
+                        <span class="crumb-current">Admin Complaint Dashboard</span>
                     </div>
 
                     <div class="saas-top-actions">
                         <button type="button" class="btn-saas-secondary" id="btnSwitchToCitizen">
                             <i class="fa-solid fa-house"></i> Landing Page
                         </button>
-                        <div class="saas-db-badge">
-                            <span class="saas-live-dot"></span>
-                            <span>DB: SQLite Live</span>
-                        </div>
                         <div class="saas-live-clock" id="saasLiveClock">
                             Sun, Nov 15 • 01:15:00 AM
-                        </div>
-                        <button type="button" class="btn-icon saas-bell-btn" title="7 Unread Notifications">
-                            <i class="fa-solid fa-bell"></i>
-                            <span class="notif-badge">7</span>
-                        </button>
-                        <div class="saas-officer-pill">
-                            <i class="fa-solid fa-user-shield"></i>
-                            <span>MUNICIPAL OFFICER</span>
                         </div>
                     </div>
                 </header>
@@ -885,19 +849,11 @@
                     <div class="saas-page-header">
                         <div>
                             <h1 class="saas-page-title">Dashboard Overview</h1>
-                            <p class="saas-page-subtitle">Real-time sanitation fleet dispatch, incoming citizen reports, and zone cleanliness health.</p>
-                        </div>
-                        <div class="saas-header-btns">
-                            <button type="button" class="btn-saas-outline" id="btnExportAuthorityCSV">
-                                <i class="fa-solid fa-file-csv"></i> Export CSV
-                            </button>
-                            <button type="button" class="btn-saas-primary" id="btnHeaderNewTicket">
-                                <i class="fa-solid fa-plus"></i> Quick Dispatch (F2)
-                            </button>
+                            <p class="saas-page-subtitle">View submitted student and local waste complaints and update pickup status.</p>
                         </div>
                     </div>
 
-                    <!-- Row 1: 4 KPI Cards (PharmaPulse style) -->
+                    <!-- Row 1: 4 KPI Cards -->
                     <div class="saas-kpi-row">
                         <!-- KPI 1: Total Complaints -->
                         <div class="saas-kpi-card">
@@ -905,9 +861,9 @@
                                 <span class="saas-kpi-name">TOTAL COMPLAINTS</span>
                                 <span class="saas-pill-badge blue">All Reports</span>
                             </div>
-                            <div class="saas-kpi-metric" id="authKpiTotal">10</div>
+                            <div class="saas-kpi-metric" id="authKpiTotal">4</div>
                             <div class="saas-kpi-subtext">
-                                <i class="fa-solid fa-check" style="color:#15803d;"></i> Across 5 University & City Zones
+                                Across campus and local zones
                             </div>
                         </div>
 
@@ -915,11 +871,11 @@
                         <div class="saas-kpi-card">
                             <div class="saas-kpi-top">
                                 <span class="saas-kpi-name">PENDING INSPECTION</span>
-                                <span class="saas-pill-badge orange">Threshold</span>
+                                <span class="saas-pill-badge orange">Pending</span>
                             </div>
-                            <div class="saas-kpi-metric" id="authKpiPending">0</div>
+                            <div class="saas-kpi-metric" id="authKpiPending">1</div>
                             <div class="saas-kpi-subtext" style="color:#b45309;">
-                                <i class="fa-solid fa-clock"></i> Items requiring immediate dispatch
+                                Awaiting cleaning crew
                             </div>
                         </div>
 
@@ -927,23 +883,23 @@
                         <div class="saas-kpi-card">
                             <div class="saas-kpi-top">
                                 <span class="saas-kpi-name">FLEET DISPATCHED</span>
-                                <span class="saas-pill-badge cyan">Live Fleet</span>
+                                <span class="saas-pill-badge cyan">On Route</span>
                             </div>
-                            <div class="saas-kpi-metric" id="authKpiDispatched">6</div>
+                            <div class="saas-kpi-metric" id="authKpiDispatched">1</div>
                             <div class="saas-kpi-subtext" style="color:#0284c7;">
-                                <i class="fa-solid fa-truck-fast"></i> Units active on municipal routes
+                                Cleaning trucks on route
                             </div>
                         </div>
 
                         <!-- KPI 4: Resolved & Cleaned -->
                         <div class="saas-kpi-card">
                             <div class="saas-kpi-top">
-                                <span class="saas-kpi-name">RESOLVED & CLEANED</span>
-                                <span class="saas-pill-badge green" id="authKpiRate">SLA 100%</span>
+                                <span class="saas-kpi-name">RESOLVED &amp; CLEANED</span>
+                                <span class="saas-pill-badge green" id="authKpiRate">Completed</span>
                             </div>
-                            <div class="saas-kpi-metric" id="authKpiResolved">4</div>
+                            <div class="saas-kpi-metric" id="authKpiResolved">2</div>
                             <div class="saas-kpi-subtext" style="color:#15803d;">
-                                <i class="fa-solid fa-circle-check"></i> Certified clean & citizen verified
+                                Successfully resolved
                             </div>
                         </div>
                     </div>
@@ -963,8 +919,8 @@
                             <strong class="ribbon-val">8 Active Trucks</strong>
                         </div>
                         <div class="ribbon-item">
-                            <span class="ribbon-label">Database Engine:</span>
-                            <strong class="ribbon-val">SQLite + Local REST (Live)</strong>
+                            <span class="ribbon-label">Storage:</span>
+                            <strong class="ribbon-val">Browser LocalStorage</strong>
                         </div>
                     </div>
 

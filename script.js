@@ -122,88 +122,71 @@ document.addEventListener("DOMContentLoaded", () => {
             id: "ECO-2026-LPU-101",
             category: "Missed Pickup",
             title: "Hostel Mess Organic Waste Overflow",
-            location: "LPU Boys Hostel 4 (BH-4), Main Campus",
+            location: "LPU Boys Hostels (BH-4)",
             submittedAt: "Today • 08:30 AM",
             resolvedAt: "Today • 11:15 AM",
             status: "Resolved",
             currentStep: 4,
+            current_step: 4,
             steps: [
                 { num: 1, name: "Report Logged", desc: "Student warden logged hostel mess overflow", time: "08:30 AM", done: true },
-                { num: 2, name: "Campus Dispatch", desc: "LPU Facility Manager verified route", time: "09:00 AM", done: true },
-                { num: 3, name: "EcoTruck Sent", desc: "LPU-EcoTruck-01 rerouted to BH-4", time: "09:45 AM", done: true },
+                { num: 2, name: "Campus Dispatch", desc: "Facility manager verified route", time: "09:00 AM", done: true },
+                { num: 3, name: "Truck Sent", desc: "TRK-101 rerouted to BH-4", time: "09:45 AM", done: true },
                 { num: 4, name: "Bins Cleared", desc: "Mess food bins emptied & sanitized", time: "11:15 AM", done: true }
             ]
         },
         "ECO-2026-LG-202": {
             id: "ECO-2026-LG-202",
-            category: "Illegal Dumping",
+            category: "Litter / Dumping",
             title: "Commercial Food Delivery Packaging Overflow",
-            location: "Law Gate Main Street (Near Food Hub & Cafes)",
+            location: "Law Gate Main Street",
             submittedAt: "Today • 09:15 AM",
             resolvedAt: "Estimated Today 02:00 PM",
             status: "In Progress",
             currentStep: 3,
+            current_step: 3,
             steps: [
-                { num: 1, name: "Report Logged", desc: "Citizen photo uploaded via EcoTrack", time: "09:15 AM", done: true },
-                { num: 2, name: "Reviewed & Assigned", desc: "Sanitation squad assigned", time: "09:40 AM", done: true },
-                { num: 3, name: "Clearing Crew Active", desc: "Phagwara-MC-08 on site with clearing team", time: "10:30 AM", done: true },
-                { num: 4, name: "Site Restored", desc: "Litter removed & disinfectant spray applied", time: "Pending", done: false }
-            ]
-        },
-        "ECO-2026-PH-303": {
-            id: "ECO-2026-PH-303",
-            category: "Bin Issue",
-            title: "Public Curbside Dustbin Wheel Axle Broken",
-            location: "Phagwara GT Road Near Bus Stand",
-            submittedAt: "Today • 10:00 AM",
-            resolvedAt: "Estimated Today 04:30 PM",
-            status: "Dispatched",
-            currentStep: 2,
-            steps: [
-                { num: 1, name: "Report Logged", desc: "Damaged public bin reported", time: "10:00 AM", done: true },
-                { num: 2, name: "Replacement Dispatched", desc: "Maintenance truck dispatched with spare wheel", time: "10:35 AM", done: true },
-                { num: 3, name: "Curbside Repair", desc: "Technician repairing wheel bracket", time: "Pending", done: false },
-                { num: 4, name: "Certified Ready", desc: "Bin restored to upright position", time: "Pending", done: false }
+                { num: 1, name: "Report Logged", desc: "Student complaint submitted via portal", time: "09:15 AM", done: true },
+                { num: 2, name: "Reviewed & Assigned", desc: "Cleaning squad assigned", time: "09:40 AM", done: true },
+                { num: 3, name: "Clearing Active", desc: "TRK-102 on site with clearing team", time: "10:30 AM", done: true },
+                { num: 4, name: "Site Restored", desc: "Litter removed & area cleared", time: "Pending", done: false }
             ]
         },
         "ECO-2026-UM-404": {
             id: "ECO-2026-UM-404",
             category: "Missed Pickup",
-            title: "Uni-Mall Food Court Waste Missed",
-            location: "LPU Uni-Mall & Central Food Court",
+            title: "Food Court Wet Waste Bins Full",
+            location: "Uni-Mall Food Court",
             submittedAt: "Today • 07:45 AM",
-            resolvedAt: "Estimated Today 01:30 PM",
-            status: "In Progress",
-            currentStep: 3,
-            steps: [
-                { num: 1, name: "Report Logged", desc: "Food court staff submitted pickup request", time: "07:45 AM", done: true },
-                { num: 2, name: "Route Rescheduled", desc: "Campus supervisor scheduled recovery", time: "08:15 AM", done: true },
-                { num: 3, name: "Truck In Transit", desc: "Truck-03 approaching Uni-Mall", time: "09:20 AM", done: true },
-                { num: 4, name: "Cleared", desc: "Commercial packaging collected", time: "Pending", done: false }
-            ]
-        },
-        "ECO-2026-GH-505": {
-            id: "ECO-2026-GH-505",
-            category: "Bin Issue",
-            title: "Girls Hostel GH-2 Dustbin Exchange",
-            location: "LPU Girls Hostel GH-2",
-            submittedAt: "Nov 12, 2026 • 09:00 AM",
-            resolvedAt: "Nov 12, 2026 • 01:20 PM",
+            resolvedAt: "Today • 01:30 PM",
             status: "Resolved",
             currentStep: 4,
+            current_step: 4,
             steps: [
-                { num: 1, name: "Report Logged", desc: "Hostel warden requested bin replacement", time: "09:00 AM", done: true },
-                { num: 2, name: "Bin Allocated", desc: "240L Green Lid retrieved from store", time: "10:10 AM", done: true },
-                { num: 3, name: "Delivered", desc: "Truck-02 delivered and installed new bin", time: "11:50 AM", done: true },
-                { num: 4, name: "Resolved", desc: "Installation verified complete", time: "01:20 PM", done: true }
+                { num: 1, name: "Report Logged", desc: "Food court staff submitted pickup request", time: "07:45 AM", done: true },
+                { num: 2, name: "Route Rescheduled", desc: "Supervisor scheduled recovery", time: "08:15 AM", done: true },
+                { num: 3, name: "Truck In Transit", desc: "TRK-103 arrived at Uni-Mall", time: "09:20 AM", done: true },
+                { num: 4, name: "Cleared", desc: "Commercial waste collected and bins sanitized", time: "01:30 PM", done: true }
+            ]
+        },
+        "ECO-2026-PH-303": {
+            id: "ECO-2026-PH-303",
+            category: "Damaged or Full Bin",
+            title: "Public Curbside Dustbin Wheel Axle Broken",
+            location: "Phagwara GT Road",
+            submittedAt: "Today • 10:00 AM",
+            resolvedAt: "Estimated Today 04:30 PM",
+            status: "Pending",
+            currentStep: 1,
+            current_step: 1,
+            steps: [
+                { num: 1, name: "Report Logged", desc: "Damaged public bin reported", time: "10:00 AM", done: true },
+                { num: 2, name: "Inspection Scheduled", desc: "Assigned to area cleaning coordinator", time: "Pending", done: false },
+                { num: 3, name: "Truck Dispatched", desc: "Maintenance crew en route", time: "Pending", done: false },
+                { num: 4, name: "Certified Ready", desc: "Bin restored and upright", time: "Pending", done: false }
             ]
         }
     };
-
-    // Backward aliases for demo tickets
-    SAMPLE_REPORTS["ECO-2026-JL-404"] = SAMPLE_REPORTS["ECO-2026-UM-404"];
-    SAMPLE_REPORTS["ECO-2026-GV-505"] = SAMPLE_REPORTS["ECO-2026-GH-505"];
-    SAMPLE_REPORTS["ECO-2026-MP-101"] = SAMPLE_REPORTS["ECO-2026-LPU-101"];
 
     // -------------------------------------------------------------
     // 2. Toast Notification Service
@@ -483,7 +466,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     function getPickupsForDay(dayNumber, dayOfWeek, zoneKey) {
-        const zone = ZONES[zoneKey] || ZONES["zone-green-valley"];
+        const zone = ZONES[zoneKey] || ZONES["zone-lpu-bh"];
         const dayPickups = zone.weeklySchedule[dayOfWeek] || [];
 
         if (AppState.activeCategoryFilter === "all") {
@@ -759,17 +742,17 @@ document.addEventListener("DOMContentLoaded", () => {
         function getLocalTickets() {
             let stored = {};
             try {
-                stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+                stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
             if (Object.keys(stored).length === 0 && typeof SAMPLE_REPORTS !== "undefined") {
                 stored = { ...SAMPLE_REPORTS };
-                localStorage.setItem("ecotrack_tickets", JSON.stringify(stored));
+                localStorage.setItem("ecotrack_lpu_v1", JSON.stringify(stored));
             }
             return stored;
         }
 
         function saveLocalTickets(ticketsObj) {
-            localStorage.setItem("ecotrack_tickets", JSON.stringify(ticketsObj));
+            localStorage.setItem("ecotrack_lpu_v1", JSON.stringify(ticketsObj));
         }
 
         // 1. GET /api/tickets (or /api/tickets?q=...)
@@ -1309,9 +1292,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function saveReport(record) {
         try {
-            const saved = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+            const saved = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             saved[record.id] = record;
-            localStorage.setItem("ecotrack_tickets", JSON.stringify(saved));
+            localStorage.setItem("ecotrack_lpu_v1", JSON.stringify(saved));
         } catch (e) {
             console.error(e);
         }
@@ -1337,7 +1320,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!ticket) {
             let stored = {};
             try {
-                stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+                stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
             ticket = stored[normalizedId] || SAMPLE_REPORTS[normalizedId];
         }
@@ -1353,7 +1336,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Search local storage and sample reports
                 let stored = {};
                 try {
-                    stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+                    stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
                 } catch (e) {}
                 const allLocal = Object.values({ ...SAMPLE_REPORTS, ...stored });
                 const qLower = query.toLowerCase();
@@ -1596,7 +1579,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.EcoTrackCMS = {
         getZones: () => ZONES,
-        getReports: () => JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}"),
+        getReports: () => JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}"),
         submitExternalReport: (report) => saveReport(report)
     };
 
@@ -1881,7 +1864,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!Array.isArray(tickets) || tickets.length === 0) {
             let stored = {};
             try {
-                stored = JSON.parse(localStorage.getItem("ecotrack_tickets") || "{}");
+                stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
             tickets = Object.values({ ...SAMPLE_REPORTS, ...stored });
         }
@@ -2195,13 +2178,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span class="urgency-badge ${urgencyClass}">${urgency}</span>
                     </td>
                     <td class="col-progress">
-                        <div class="mini-step-bar" title="Stage ${step} of 4">
+                        <div class="mini-step-bar" title="Step ${step} of 4">
                             <span class="mini-step-dot done"></span>
                             <span class="mini-step-dot ${step >= 2 ? "done" : ""}"></span>
                             <span class="mini-step-dot ${step >= 3 ? "done" : ""}"></span>
                             <span class="mini-step-dot ${step >= 4 ? "done" : ""}"></span>
                         </div>
-                        <span style="font-size:0.7rem; color:var(--text-light); margin-top:2px; display:block;">Stage ${step}/4</span>
+                        <span style="font-size:0.7rem; color:var(--text-light); margin-top:2px; display:block;">Step ${step} of 4</span>
                     </td>
                     <td class="col-status">
                         <span class="status-badge-cell ${statusClass}">
@@ -2307,19 +2290,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1rem;">
                         <div>
-                            <label class="form-label" style="font-size:0.78rem;">Assign Municipal Recovery Unit:</label>
+                            <label class="form-label" style="font-size:0.78rem;">Assign Cleaning Unit:</label>
                             <select id="modalAssignTruck" class="form-select" style="font-size:0.82rem; padding:0.4rem 0.65rem;">
-                                <option value="Phagwara-MC-08">Phagwara-MC-08 (Law Gate Special)</option>
-                                <option value="LPU-EcoTruck-01">LPU-EcoTruck-01 (Hostel Route)</option>
-                                <option value="MC-Phagwara-04">MC-Phagwara-04 (GT Road Fleet)</option>
-                                <option value="MCJ-SmartTruck-11">MCJ-SmartTruck-11 (Jalandhar Cantt)</option>
-                                <option value="Truck-04">Truck-04 (Green Valley Sector 1–4)</option>
+                                <option value="TRK-101">TRK-101 (LPU Boys Hostels)</option>
+                                <option value="TRK-102">TRK-102 (Law Gate)</option>
+                                <option value="TRK-103">TRK-103 (Uni-Mall)</option>
+                                <option value="TRK-104">TRK-104 (Phagwara GT Road)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="form-label" style="font-size:0.78rem;">Current Workflow Stage:</label>
+                            <label class="form-label" style="font-size:0.78rem;">Current Workflow Step:</label>
                             <div style="background:#f1f5f9; padding:0.45rem 0.75rem; border-radius:6px; font-size:0.84rem; font-weight:700; color:var(--primary-dark);">
-                                Stage ${currentStep} of 4 · ${ticket.status || "Pending"}
+                                Step ${currentStep} of 4 · ${ticket.status || "Pending"}
                             </div>
                         </div>
                     </div>
@@ -2332,7 +2314,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!isResolved) {
                 btnsHtml += `
                     <button type="button" class="btn btn-outline btn-sm" id="btnModalAdvance" style="color:var(--primary); border-color:var(--primary);">
-                        <i class="fa-solid fa-forward-step"></i> Advance Stage (${currentStep} ➔ ${Math.min(4, currentStep + 1)})
+                        <i class="fa-solid fa-forward-step"></i> Advance Step (${currentStep} ➔ ${Math.min(4, currentStep + 1)})
                     </button>
                     <button type="button" class="btn btn-primary btn-sm" id="btnModalResolve">
                         <i class="fa-solid fa-circle-check"></i> Mark Cleaned & Resolved

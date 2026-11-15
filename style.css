@@ -3820,6 +3820,7 @@ img {
 
 .saas-dashboard-wrapper {
     display: flex;
+    align-items: flex-start;
     min-height: 100vh;
     background: #f8faf8;
     width: 100%;
@@ -3829,7 +3830,7 @@ img {
 
 /* 1. Left Enterprise Sidebar */
 .saas-sidebar {
-    width: 255px;
+    width: 240px;
     flex-shrink: 0;
     background: #ffffff;
     border-right: 1px solid rgba(21, 108, 70, 0.12);
@@ -4017,10 +4018,10 @@ img {
 
 /* 2. Main Area */
 .saas-main-area {
-    flex-grow: 1;
+    flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    min-width: 0;
     background: #f8faf8;
 }
 
