@@ -15,6 +15,8 @@ from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
 
 PORT = int(os.environ.get("PORT", 5000))
+# Set DEMO_MODE to True for offline demonstration; False for genuine production
+DEMO_MODE = False
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "ecotrack.db")
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
@@ -108,58 +110,50 @@ def init_db():
 
         # Seed initial data if tickets are empty
         cursor.execute("SELECT COUNT(*) FROM tickets")
-        if cursor.fetchone()[0] == 0:
+        if cursor.fetchone()[0] == 0 and DEMO_MODE:
             seed_initial_data(cursor)
             conn.commit()
 
 def seed_initial_data(cursor):
-    # Initial Demo Ticket 1
-    t1 = ("ECO-2026-MP-101", "Missed Pickup", "Missed Organic Household Bins", "142 Elm Street, Maple Quarter", "High", "Bins were curbside since 6:30 AM", "", "Resolved", 4, "Nov 11, 2026 • 08:15 AM", "Nov 11, 2026 • 11:42 AM")
+    current_year = datetime.datetime.now(datetime.timezone.utc).year
+    now_str = datetime.datetime.now(datetime.timezone.utc).strftime("%b %d, %Y • %I:%M %p")
+
+    # Initial Demo Ticket 1 (LPU Boys Hostels)
+    t1 = (f"ECO-{current_year}-LPU-101", "Missed Pickup", "Hostel Mess Organic Waste Overflow", "LPU Boys Hostels (BH-4)", "High", "Mess food bins uncollected since morning", "", "Resolved", 4, now_str, now_str)
     cursor.execute("INSERT INTO tickets VALUES (?,?,?,?,?,?,?,?,?,?,?)", t1)
     steps_t1 = [
-        ("ECO-2026-MP-101", 1, "Report Logged", "Citizen submitted curbside missed pickup ticket", "08:15 AM", 1),
-        ("ECO-2026-MP-101", 2, "Pending Inspection", "Sanitation supervisor verified route miss", "08:40 AM", 1),
-        ("ECO-2026-MP-101", 3, "Recovery Truck Sent", "TRK-101 rerouted for recovery pickup", "09:55 AM", 1),
-        ("ECO-2026-MP-101", 4, "Pickup Completed", "Bins emptied. Resident confirmed resolution", "11:42 AM", 1)
+        (f"ECO-{current_year}-LPU-101", 1, "Report Logged", "Student warden logged hostel mess overflow", "08:30 AM", 1),
+        (f"ECO-{current_year}-LPU-101", 2, "Campus Dispatch", "Facility manager verified route", "09:00 AM", 1),
+        (f"ECO-{current_year}-LPU-101", 3, "Truck Sent", "TRK-101 rerouted to BH-4", "09:45 AM", 1),
+        (f"ECO-{current_year}-LPU-101", 4, "Bins Cleared", "Mess food bins emptied & sanitized", "11:15 AM", 1)
     ]
     cursor.executemany("INSERT INTO ticket_steps (ticket_id, step_num, name, description, time_str, is_done) VALUES (?,?,?,?,?,?)", steps_t1)
 
-    # Initial Demo Ticket 2
-    t2 = ("ECO-2026-BN-204", "Bin Issue", "Damaged Wheels & Split Lid", "88 North Ridge Blvd, Bin #BN-892", "Standard", "Lid broken during storm, wheel axle detached", "", "In Progress", 3, "Today at 07:30 AM", "Est. Today 03:30 PM")
+    # Initial Demo Ticket 2 (Law Gate)
+    t2 = (f"ECO-{current_year}-LG-202", "Litter / Dumping", "Commercial Food Delivery Packaging Overflow", "Law Gate Main Street", "Standard", "Takeaway food containers scattered near curb", "", "In Progress", 3, now_str, "Est. Today 02:00 PM")
     cursor.execute("INSERT INTO tickets VALUES (?,?,?,?,?,?,?,?,?,?,?)", t2)
     steps_t2 = [
-        ("ECO-2026-BN-204", 1, "Report Logged", "Photo and bin serial received", "07:30 AM", 1),
-        ("ECO-2026-BN-204", 2, "Replacement Order", "240L Heavy-duty replacement bin allocated from depot", "08:10 AM", 1),
-        ("ECO-2026-BN-204", 3, "En Route for Delivery", "Depot Maintenance Truck #02 dispatched", "10:15 AM", 1),
-        ("ECO-2026-BN-204", 4, "Installation & Exchange", "Old bin retrieved & new bin placed curbside", "Pending", 0)
+        (f"ECO-{current_year}-LG-202", 1, "Report Logged", "Student complaint submitted via portal", "09:15 AM", 1),
+        (f"ECO-{current_year}-LG-202", 2, "Reviewed & Assigned", "Cleaning squad assigned", "09:40 AM", 1),
+        (f"ECO-{current_year}-LG-202", 3, "Clearing Active", "TRK-102 on site with clearing team", "10:30 AM", 1),
+        (f"ECO-{current_year}-LG-202", 4, "Site Restored", "Litter removed & area cleared", "Pending", 0)
     ]
     cursor.executemany("INSERT INTO ticket_steps (ticket_id, step_num, name, description, time_str, is_done) VALUES (?,?,?,?,?,?)", steps_t2)
 
-    # Initial Demo Ticket 3
-    t3 = ("ECO-2026-ID-308", "Illegal Dumping", "Construction Debris & Dry Dumping", "Empty lot behind Green Valley Central Park", "High", "Approx 3 tons drywall, bricks and timber dumped overnight", "", "Dispatched", 2, "Today at 09:00 AM", "Inspection within 2 hours")
-    cursor.execute("INSERT INTO tickets VALUES (?,?,?,?,?,?,?,?,?,?,?)", t3)
-    steps_t3 = [
-        ("ECO-2026-ID-308", 1, "Report Logged", "Citizen reported ~3 tons dry debris", "09:00 AM", 1),
-        ("ECO-2026-ID-308", 2, "Officer Dispatched", "Sanitation Inspector assigned for assessment", "09:25 AM", 1),
-        ("ECO-2026-ID-308", 3, "Clearing Crew", "Heavy waste machinery en route", "Pending", 0),
-        ("ECO-2026-ID-308", 4, "Site Cleared", "Sanitized and certified clean", "Pending", 0)
-    ]
-    cursor.executemany("INSERT INTO ticket_steps (ticket_id, step_num, name, description, time_str, is_done) VALUES (?,?,?,?,?,?)", steps_t3)
-
     # Initial Notifications
     notifs = [
-        ("Route #4 Completed", "Organic waste pickup on Maple St finished early.", "green", "Zone A", "22 mins ago", 1),
-        ("Upcoming Pickup", "Dry Recyclables collection tomorrow morning at 08:00 AM.", "orange", "Reminder", "1 hr ago", 1),
-        ("Weather Advisory", "Normal collection schedules unaffected by light rain.", "blue", "All Zones", "Yesterday", 0)
+        ("Route #1 Completed", "Hostel organic waste pickup at LPU Boys Hostels finished early.", "green", "LPU Boys Hostels", "22 mins ago", 1),
+        ("Upcoming Pickup", "Dry Recyclables collection tomorrow morning at 08:00 AM.", "orange", "Law Gate", "1 hr ago", 1),
+        ("Weather Advisory", "Normal collection schedules unaffected by light rain.", "blue", "Campus Wide", "Yesterday", 0)
     ]
     cursor.executemany("INSERT INTO notifications (title, message, type, zone, time_str, is_unread) VALUES (?,?,?,?,?,?)", notifs)
 
     # Initial Fleet Routes
     fleet = [
-        ("Truck-04", "Green Valley (Sector 1–4)", "Organic Wet", "R. Patel & Team", 92, "On Route"),
-        ("Truck-09", "Green Valley (Sector 5–8)", "Recyclables", "M. Jenkins", 78, "On Route"),
-        ("Truck-12", "North Ridge (Main Blvd)", "Organic Wet", "S. Kumar & Team", 100, "Completed"),
-        ("Truck-02", "Downtown Commercial", "Cardboard & Dry", "A. Gomez", 64, "On Route")
+        ("TRK-101", "LPU Boys Hostels (BH-1 to BH-4)", "Hostel Mess Food Waste", "Ram Singh & Team", 85, "On Route"),
+        ("TRK-102", "Law Gate", "Street Bins & Plastic", "Harpreet & Team", 70, "On Route"),
+        ("TRK-103", "Uni-Mall", "Mixed Waste", "Sukhwinder", 100, "Completed"),
+        ("TRK-104", "Phagwara GT Road", "Packaging & Dry", "Gurpreet Singh", 55, "On Route")
     ]
     cursor.executemany("INSERT INTO fleet_routes VALUES (?,?,?,?,?,?)", fleet)
 
@@ -240,8 +234,8 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
                     "total_tickets": total_tickets,
                     "resolved_tickets": resolved_tickets,
                     "resolution_rate": f"{resolution_rate}%",
-                    "route_completion": "84%",
-                    "active_trucks": "14 / 16",
+                    "route_completion": "85%",
+                    "active_trucks": "6 / 8",
                     "cleanliness_score": "98 / 100",
                     "fleet": fleet
                 })
@@ -277,15 +271,17 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
 
             # Generate categorized ID
             prefix = "MP" if "Missed" in category else ("BN" if "Bin" in category else "ID")
-            ticket_id = f"ECO-2026-{prefix}-{int(datetime.datetime.now().timestamp() % 10000):04d}"
-            now_str = datetime.datetime.now().strftime("Today at %I:%M %p")
+            current_year = datetime.datetime.now(datetime.timezone.utc).year
+            ticket_id = f"ECO-{current_year}-{prefix}-{int(datetime.datetime.now(datetime.timezone.utc).timestamp() % 10000):04d}"
+            now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+            now_str = datetime.datetime.now(datetime.timezone.utc).strftime("%b %d, %Y • %I:%M %p")
 
             with get_db() as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
                     INSERT INTO tickets (id, category, title, location, urgency, description, photo_url, status, current_step, created_at, resolved_at)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', 2, ?, 'Under Review')
-                """, (ticket_id, category, title, location, urgency, description, photo_url, now_str))
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending', 1, ?, NULL)
+                """, (ticket_id, category, title, location, urgency, description, photo_url, now_iso))
 
                 # Create 4 steps
                 steps = [
@@ -321,8 +317,9 @@ class EcoTrackHandler(BaseHTTPRequestHandler):
                 new_status = "Resolved" if next_step == 4 else ("Dispatched" if next_step == 3 else "Pending")
                 now_str = datetime.datetime.now().strftime("%I:%M %p")
 
+                resolved_at_val = datetime.datetime.now(datetime.timezone.utc).isoformat() if next_step == 4 else None
                 cursor.execute("UPDATE tickets SET current_step = ?, status = ?, resolved_at = ? WHERE id = ?", 
-                               (next_step, new_status, f"Completed at {now_str}" if next_step == 4 else "In Progress", ticket_id))
+                               (next_step, new_status, resolved_at_val, ticket_id))
                 cursor.execute("UPDATE ticket_steps SET is_done = 1, time_str = ? WHERE ticket_id = ? AND step_num = ?", 
                                (now_str, ticket_id, current_step))
 

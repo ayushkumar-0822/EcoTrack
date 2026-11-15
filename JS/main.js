@@ -16,14 +16,92 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastFocusedElement = null;
 
     // Current State
+    // Configuration: Set DEMO_MODE to true for offline viva demonstrations
+    // Set DEMO_MODE to false for genuine database records and production
+    const DEMO_MODE = false;
+
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    // Core dynamic state
     const AppState = {
         currentZone: localStorage.getItem("ecotrack_zone") || "zone-lpu",
-        calendarYear: 2026,
-        calendarMonth: 10, // 0-indexed: 10 is November
-        selectedDay: 18,
+        calendarYear: today.getFullYear(),
+        calendarMonth: today.getMonth(),
+        selectedDay: today.getDate(),
         activeCategoryFilter: "all",
-        notificationsUnread: 2
+        notificationsUnread: 0
     };
+
+    // Helper: Generate dynamic, unique, viva-safe ticket ID
+        // Helper: Escape HTML to prevent XSS in citizen/authority views
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return "";
+        return String(str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function generateTicketId(category = "General", location = "") {
+        const yr = new Date().getFullYear();
+        let prefix = "CMP";
+        const catLower = (category || "").toLowerCase();
+        const locLower = (location || "").toLowerCase();
+
+        if (locLower.includes("hostel") || locLower.includes("bh") || locLower.includes("gh") || locLower.includes("lpu")) {
+            prefix = "LPU";
+        } else if (locLower.includes("law gate") || locLower.includes("lg")) {
+            prefix = "LG";
+        } else if (locLower.includes("uni-mall") || locLower.includes("mall") || locLower.includes("um")) {
+            prefix = "UM";
+        } else if (locLower.includes("phagwara") || locLower.includes("gt road") || locLower.includes("phg")) {
+            prefix = "PHG";
+        } else if (catLower.includes("missed")) {
+            prefix = "MP";
+        } else if (catLower.includes("bin")) {
+            prefix = "BN";
+        } else if (catLower.includes("dumping") || catLower.includes("illegal")) {
+            prefix = "ID";
+        }
+
+        const randomNum = Math.floor(100 + Math.random() * 900);
+        return `ECO-${yr}-${prefix}-${randomNum}`;
+    }
+
+    // Helper: Consistent timestamp formatter for UI display
+    function formatTimestamp(isoStr) {
+        if (!isoStr) return "Just now";
+        try {
+            const d = new Date(isoStr);
+            if (isNaN(d.getTime())) return isoStr;
+            return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) +
+                   " • " +
+                   d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+        } catch (e) {
+            return isoStr;
+        }
+    }
+
+    // Helper: Show or hide the prominent Demo Mode banner
+    function updateDemoBanner() {
+        let banner = document.getElementById("demoModeBanner");
+        if (DEMO_MODE) {
+            if (!banner) {
+                banner = document.createElement("div");
+                banner.id = "demoModeBanner";
+                banner.className = "demo-mode-banner";
+                banner.innerHTML = '<i class="fa-solid fa-circle-info"></i> <span>Demo Mode — Showing sample records.</span>';
+                const mainArea = document.querySelector(".saas-content-body") || document.getElementById("authorityView");
+                if (mainArea) mainArea.insertBefore(banner, mainArea.firstChild);
+            }
+            banner.style.display = "flex";
+        } else {
+            if (banner) banner.style.display = "none";
+        }
+    }
 
     // Zone Definitions — Student Campus & Local Zones (LPU Boys, LPU Girls, Uni-Mall, Law Gate, Phagwara GT Road)
     const ZONES = {
@@ -514,7 +592,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const dayEl = document.createElement("div");
             dayEl.className = "calendar-day";
-            if (d === 13) dayEl.classList.add("today"); // Current date highlight
+            const isToday = (
+                d === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+            );
+            if (isToday) dayEl.classList.add("today");
             if (d === AppState.selectedDay) dayEl.classList.add("selected");
 
             const numSpan = document.createElement("span");
@@ -553,7 +636,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedDateHeading || !selectedDatePickups) return;
 
         const dayName = dateObj.toLocaleDateString("en-US", { weekday: "long" });
-        selectedDateHeading.textContent = `${dayName}, Nov ${dayNum}`;
+        const monthShort = MONTH_NAMES[month].substring(0, 3);
+        selectedDateHeading.textContent = `${dayName}, ${monthShort} ${dayNum}`;
 
         if (pickups.length === 0) {
             selectedDateDesc.textContent = "No collections scheduled for this date in your zone.";
@@ -595,14 +679,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (btnPrevMonth) {
         btnPrevMonth.addEventListener("click", () => {
-            AppState.calendarMonth = (AppState.calendarMonth === 0) ? 11 : AppState.calendarMonth - 1;
+            if (AppState.calendarMonth === 0) {
+                AppState.calendarMonth = 11;
+                AppState.calendarYear--;
+            } else {
+                AppState.calendarMonth--;
+            }
             renderCalendar();
         });
     }
 
     if (btnNextMonth) {
         btnNextMonth.addEventListener("click", () => {
-            AppState.calendarMonth = (AppState.calendarMonth === 11) ? 0 : AppState.calendarMonth + 1;
+            if (AppState.calendarMonth === 11) {
+                AppState.calendarMonth = 0;
+                AppState.calendarYear++;
+            } else {
+                AppState.calendarMonth++;
+            }
             renderCalendar();
         });
     }
@@ -711,24 +805,260 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------------------------------------------
     const API_BASE = window.location.protocol.startsWith("http") ? "" : "http://localhost:5000";
 
-    async function apiFetch(endpoint, options = {}) {
-        try {
-            const res = await fetch(`${API_BASE}${endpoint}`, {
-                headers: { "Content-Type": "application/json" },
-                ...options
-            });
-            if (res.ok) {
-                const contentType = res.headers.get("content-type") || "";
-                if (contentType.includes("application/json")) {
-                    return await res.json();
-                }
+    // -------------------------------------------------------------
+    // Supabase Cloud PostgreSQL REST Integration
+    // Enables shared, multi-device complaint persistence across Vercel deployments
+    // -------------------------------------------------------------
+    const SUPABASE_CONFIG = {
+        url: "https://fbgcoulrluypogrdlgtv.supabase.co",
+        anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZiZ2NvdWxybHV5cG9ncmRsZ3R2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3MzY2ODMsImV4cCI6MjExMDMxMjY4M30.qSuFtNkV4fQbJbo57aAVP4Bss7lrbbsOzdvDQns918E"
+    };
+
+    function supabaseHeaders() {
+        return {
+            "apikey": SUPABASE_CONFIG.anonKey,
+            "Authorization": `Bearer ${SUPABASE_CONFIG.anonKey}`,
+            "Content-Type": "application/json"
+        };
+    }
+
+    async function handleSupabaseRequest(endpoint, options = {}) {
+        if (!SUPABASE_CONFIG.url || !SUPABASE_CONFIG.anonKey) return null;
+        const method = (options.method || "GET").toUpperCase();
+
+        // 1. GET /api/tickets (or /api/tickets?q=...)
+        if (endpoint.startsWith("/api/tickets") && !endpoint.includes("/advance") && !endpoint.includes("/update") && method === "GET") {
+            const cleanId = endpoint.replace("/api/tickets/", "").replace("/api/tickets", "").replace("/", "").trim().toUpperCase();
+
+            // Direct ID lookup: /api/tickets/ECO-2026-LPU-101
+            if (cleanId && !cleanId.startsWith("?")) {
+                const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?id=eq.${encodeURIComponent(cleanId)}&select=*,ticket_steps(*)`, {
+                    headers: supabaseHeaders()
+                });
+                if (!res.ok) return null;
+                const rows = await res.json();
+                if (!rows.length) return null;
+                const t = rows[0];
+                const steps = (t.ticket_steps || []).sort((a, b) => a.step_num - b.step_num).map(s => ({
+                    num: s.step_num,
+                    name: s.name,
+                    desc: s.description,
+                    time: s.time_str,
+                    done: Boolean(s.is_done)
+                }));
+                return {
+                    ...t,
+                    steps,
+                    currentStep: t.current_step,
+                    submittedAt: formatTimestamp(t.created_at),
+                    resolvedAt: t.resolved_at ? formatTimestamp(t.resolved_at) : (t.status === "Resolved" ? "Completed" : "Under Review")
+                };
             }
-            throw new Error(`HTTP ${res.status}`);
-        } catch (err) {
-            // Live Python backend unreachable (e.g. on Vercel static deployment)
-            // Seamless client-side resilient backend engine takes over
-            return handleClientSideFallback(endpoint, options);
+
+            // List tickets query
+            const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?select=*,ticket_steps(*)&order=created_at.desc`, {
+                headers: supabaseHeaders()
+            });
+            if (!res.ok) return null;
+            const rows = await res.json();
+            return rows.map(t => {
+                const steps = (t.ticket_steps || []).sort((a, b) => a.step_num - b.step_num).map(s => ({
+                    num: s.step_num,
+                    name: s.name,
+                    desc: s.description,
+                    time: s.time_str,
+                    done: Boolean(s.is_done)
+                }));
+                return {
+                    ...t,
+                    steps,
+                    currentStep: t.current_step,
+                    submittedAt: formatTimestamp(t.created_at),
+                    resolvedAt: t.resolved_at ? formatTimestamp(t.resolved_at) : (t.status === "Resolved" ? "Completed" : "Under Review")
+                };
+            });
         }
+
+        // 2. POST /api/tickets (Create new ticket in Supabase)
+        if (endpoint === "/api/tickets" && method === "POST") {
+            let body = {};
+            try { body = typeof options.body === "string" ? JSON.parse(options.body) : options.body; } catch (e) {}
+
+            const category = body.category || "General Issue";
+            const ticketId = generateTicketId(category, body.location || "");
+            const nowIso = new Date().toISOString();
+            const nowStr = formatTimestamp(nowIso);
+
+            const ticketPayload = {
+                id: ticketId,
+                category: category,
+                title: body.title || `Citizen Report: ${category}`,
+                location: body.location || "Local Zone",
+                urgency: body.urgency || "Standard",
+                description: body.description || "",
+                photo_url: body.photo_url || "",
+                status: "Under Review",
+                current_step: 2,
+                created_at: nowIso,
+                resolved_at: null
+            };
+
+            const insRes = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets`, {
+                method: "POST",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify(ticketPayload)
+            });
+            if (!insRes.ok) return null;
+
+            // Insert workflow steps
+            const stepsPayload = [
+                { ticket_id: ticketId, step_num: 1, name: "Report Logged", description: `Complaint filed: ${body.title || category}`, time_str: nowStr, is_done: 1 },
+                { ticket_id: ticketId, step_num: 2, name: "Reviewed & Assigned", description: "Assigned to area cleaning team", time_str: "Active Now", is_done: 1 },
+                { ticket_id: ticketId, step_num: 3, name: "Crew Dispatched", description: "Cleaning truck scheduled on route", time_str: "Pending", is_done: 0 },
+                { ticket_id: ticketId, step_num: 4, name: "Resolved", description: "Final verification and sign-off", time_str: "Pending", is_done: 0 }
+            ];
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/ticket_steps`, {
+                method: "POST",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify(stepsPayload)
+            });
+
+            // Insert notification
+            const notifPayload = {
+                title: `New Ticket: ${ticketId}`,
+                message: `${category} reported at ${body.location || "Campus"}`,
+                type: "orange",
+                zone: body.location || "Campus",
+                time_str: "Just now",
+                is_unread: 1,
+                created_at: nowIso
+            };
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/notifications`, {
+                method: "POST",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify(notifPayload)
+            });
+
+            return { success: true, ticket_id: ticketId, message: "Ticket saved to Supabase cloud database!" };
+        }
+
+        // 3. POST /api/tickets/:id/advance
+        if (endpoint.startsWith("/api/tickets/") && endpoint.includes("/advance") && method === "POST") {
+            const cleanId = endpoint.replace("/api/tickets/", "").replace("/advance", "").trim().toUpperCase();
+            const curRes = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?id=eq.${encodeURIComponent(cleanId)}&select=current_step`, {
+                headers: supabaseHeaders()
+            });
+            if (!curRes.ok) return null;
+            const curRows = await curRes.json();
+            if (!curRows.length) return null;
+            const nextStep = Math.min(4, (curRows[0].current_step || 1) + 1);
+            const newStatus = nextStep === 4 ? "Resolved" : (nextStep === 3 ? "Dispatched" : "Pending");
+            const nowIso = new Date().toISOString();
+
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?id=eq.${encodeURIComponent(cleanId)}`, {
+                method: "PATCH",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify({
+                    current_step: nextStep,
+                    status: newStatus,
+                    resolved_at: nextStep === 4 ? nowIso : null
+                })
+            });
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/ticket_steps?ticket_id=eq.${encodeURIComponent(cleanId)}&step_num=eq.${curRows[0].current_step}`, {
+                method: "PATCH",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify({ is_done: 1, time_str: formatTimestamp(nowIso) })
+            });
+            return { success: true, ticket_id: cleanId, new_step: nextStep, status: newStatus };
+        }
+
+        // 4. POST /api/tickets/:id/update
+        if (endpoint.startsWith("/api/tickets/") && endpoint.includes("/update") && method === "POST") {
+            const cleanId = endpoint.replace("/api/tickets/", "").replace("/update", "").trim().toUpperCase();
+            let body = {};
+            try { body = typeof options.body === "string" ? JSON.parse(options.body) : options.body; } catch (e) {}
+            const newStatus = body.status || "Pending";
+            const nowIso = new Date().toISOString();
+            let stepNum = 2;
+            if (newStatus === "Resolved") stepNum = 4;
+            else if (newStatus === "Dispatched") stepNum = 3;
+
+            await fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?id=eq.${encodeURIComponent(cleanId)}`, {
+                method: "PATCH",
+                headers: { ...supabaseHeaders(), "Prefer": "return=minimal" },
+                body: JSON.stringify({
+                    status: newStatus,
+                    current_step: stepNum,
+                    resolved_at: newStatus === "Resolved" ? nowIso : null
+                })
+            });
+            return { success: true, ticket_id: cleanId, status: newStatus };
+        }
+
+        // 5. GET /api/dashboard
+        if (endpoint === "/api/dashboard" && method === "GET") {
+            const [ticketsRes, fleetRes] = await Promise.all([
+                fetch(`${SUPABASE_CONFIG.url}/rest/v1/tickets?select=id,status`, { headers: supabaseHeaders() }),
+                fetch(`${SUPABASE_CONFIG.url}/rest/v1/fleet_routes?select=*`, { headers: supabaseHeaders() })
+            ]);
+            if (!ticketsRes.ok) return null;
+            const tickets = await ticketsRes.json();
+            const fleet = fleetRes.ok ? await fleetRes.json() : [];
+
+            const total = tickets.length;
+            const resolved = tickets.filter(t => (t.status || "").toLowerCase().includes("resolved")).length;
+            const resRate = total > 0 ? Math.round((resolved / total) * 100) : 100;
+
+            return {
+                total_tickets: total,
+                resolved_tickets: resolved,
+                resolution_rate: `${resRate}%`,
+                route_completion: "85%",
+                active_trucks: "6 / 8",
+                cleanliness_score: "98 / 100",
+                fleet: fleet.length > 0 ? fleet : undefined
+            };
+        }
+
+        // 6. GET /api/notifications
+        if (endpoint === "/api/notifications" && method === "GET") {
+            const res = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/notifications?select=*&order=id.desc&limit=10`, {
+                headers: supabaseHeaders()
+            });
+            if (!res.ok) return null;
+            return await res.json();
+        }
+
+        return null;
+    }
+
+    async function apiFetch(endpoint, options = {}) {
+        // 1. If running locally with Python backend active, try it first
+        if (window.location.hostname === "localhost" && API_BASE) {
+            try {
+                const res = await fetch(`${API_BASE}${endpoint}`, {
+                    headers: { "Content-Type": "application/json" },
+                    ...options
+                });
+                if (res.ok) {
+                    const contentType = res.headers.get("content-type") || "";
+                    if (contentType.includes("application/json")) {
+                        return await res.json();
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // 2. Try Supabase Cloud PostgreSQL REST API (primary backend on Vercel & deployed clients)
+        try {
+            const supaResult = await handleSupabaseRequest(endpoint, options);
+            if (supaResult !== null) return supaResult;
+        } catch (err) {
+            console.warn("Supabase request error, using resilient fallback:", err);
+        }
+
+        // 3. Resilient client-side fallback
+        return handleClientSideFallback(endpoint, options);
     }
 
     function handleClientSideFallback(endpoint, options = {}) {
@@ -744,7 +1074,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
-            if (Object.keys(stored).length === 0 && typeof SAMPLE_REPORTS !== "undefined") {
+            if (Object.keys(stored).length === 0 && DEMO_MODE && typeof SAMPLE_REPORTS !== "undefined") {
                 stored = { ...SAMPLE_REPORTS };
                 localStorage.setItem("ecotrack_lpu_v1", JSON.stringify(stored));
             }
@@ -785,7 +1115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const tickets = getLocalTickets();
             const category = body.category || "General Issue";
             const prefix = category.includes("Missed") ? "MP" : (category.includes("Bin") ? "BN" : "ID");
-            const ticketId = `ECO-2026-${prefix}-${Math.floor(100 + Math.random() * 900)}`;
+            const ticketId = generateTicketId(category, body.location || "");
             const now = new Date();
             const timeStr = `Today at ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
@@ -802,8 +1132,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 currentStep: 2,
                 created_at: timeStr,
                 submittedAt: timeStr,
-                resolved_at: "Under Review",
-                resolvedAt: "Under Review",
+                resolved_at: null,
+                resolvedAt: null,
                 steps: [
                     { num: 1, name: "Report Logged", desc: `Complaint: ${body.title || category}`, time: timeStr, done: true },
                     { num: 2, name: "Reviewed & Assigned", desc: "Assigned to area cleaning team", time: "Active Now", done: true },
@@ -1087,7 +1417,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(payload)
             });
 
-            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-MP-${Math.floor(100 + Math.random() * 900)}`;
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : generateTicketId("Missed Pickup", `${addr} • ${area}`);
 
             const newRecord = {
                 id: ticketId,
@@ -1113,6 +1443,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
             uploadedPhotos.missed = "";
 
+            sessionStorage.setItem("last_submitted_ticket", ticketId);
             showToast(`Missed Pickup Ticket #${ticketId} saved to database!`, "success");
             await renderTrackingView(ticketId);
             await syncDashboard();
@@ -1146,7 +1477,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(payload)
             });
 
-            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-BN-${Math.floor(100 + Math.random() * 900)}`;
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : generateTicketId("Bin Issue", loc);
 
             const newRecord = {
                 id: ticketId,
@@ -1172,6 +1503,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
             uploadedPhotos.bin = "";
 
+            sessionStorage.setItem("last_submitted_ticket", ticketId);
             showToast(`Bin Issue Ticket #${ticketId} saved to database!`, "success");
             await renderTrackingView(ticketId);
             await syncDashboard();
@@ -1204,7 +1536,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify(payload)
             });
 
-            const ticketId = (res && res.ticket_id) ? res.ticket_id : `ECO-2026-ID-${Math.floor(100 + Math.random() * 900)}`;
+            const ticketId = (res && res.ticket_id) ? res.ticket_id : generateTicketId("Illegal Dumping", loc);
 
             const newRecord = {
                 id: ticketId,
@@ -1230,6 +1562,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (preview) { preview.style.display = "none"; preview.innerHTML = ""; }
             uploadedPhotos.general = "";
 
+            sessionStorage.setItem("last_submitted_ticket", ticketId);
             showToast(`Environmental Ticket #${ticketId} saved to database!`, "success");
             await renderTrackingView(ticketId);
             await syncDashboard();
@@ -1307,6 +1640,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageTrackingInput = document.getElementById("pageTrackingInput");
     const pageTrackingResult = document.getElementById("pageTrackingResult");
 
+        function renderTrackingPrompt() {
+        if (!pageTrackingResult) return;
+        pageTrackingResult.innerHTML = `
+            <div style="background: #ffffff; border: 1.5px solid rgba(23,107,69,0.18); border-radius: var(--radius-md); padding: 2rem 1.5rem; text-align: center;">
+                <i class="fa-solid fa-clipboard-check" style="font-size: 2.25rem; color: var(--primary); margin-bottom: 0.75rem; display: block;"></i>
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 0.35rem;">Live Complaint Tracking</h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); max-width: 500px; margin: 0 auto 1.25rem;">
+                    Enter your complaint reference number or your hostel/area name above to check the real-time resolution status of your request.
+                </p>
+                <a href="#report" class="btn btn-outline btn-sm">Submit New Complaint</a>
+            </div>
+        `;
+    }
+
     async function renderTrackingView(searchQuery) {
         if (!pageTrackingResult) return;
         const query = searchQuery.trim();
@@ -1322,7 +1669,7 @@ document.addEventListener("DOMContentLoaded", () => {
             try {
                 stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
-            ticket = stored[normalizedId] || SAMPLE_REPORTS[normalizedId];
+            ticket = stored[normalizedId] || (DEMO_MODE ? SAMPLE_REPORTS[normalizedId] : null);
         }
 
         // 2. If no exact ticket ID match, search tickets by location or keyword!
@@ -1338,7 +1685,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
                 } catch (e) {}
-                const allLocal = Object.values({ ...SAMPLE_REPORTS, ...stored });
+                const allLocal = DEMO_MODE ? Object.values({ ...SAMPLE_REPORTS, ...stored }) : Object.values(stored);
                 const qLower = query.toLowerCase();
                 matchingTickets = allLocal.filter(t => 
                     (t.location && t.location.toLowerCase().includes(qLower)) ||
@@ -1861,13 +2208,18 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fetch tickets from live server first
         let tickets = await apiFetch("/api/tickets");
 
-        if (!Array.isArray(tickets) || tickets.length === 0) {
+        if (!Array.isArray(tickets)) {
+            // Server offline, fall back to local storage
             let stored = {};
             try {
                 stored = JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}");
             } catch (e) {}
-            tickets = Object.values({ ...SAMPLE_REPORTS, ...stored });
+            tickets = DEMO_MODE ? Object.values({ ...SAMPLE_REPORTS, ...stored }) : Object.values(stored);
+        } else if (tickets.length === 0 && DEMO_MODE) {
+            tickets = Object.values(SAMPLE_REPORTS);
         }
+
+        updateDemoBanner();
 
         cachedAuthorityTickets = tickets;
 
@@ -2128,7 +2480,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (filtered.length === 0) {
             authorityTableBody.innerHTML = "";
-            if (authTableEmpty) authTableEmpty.style.display = "block";
+            if (authTableEmpty) {
+                authTableEmpty.style.display = "block";
+                authTableEmpty.innerHTML = `
+                    <i class="fa-solid fa-inbox" style="font-size: 2rem; color: #94a3b8; margin-bottom: 0.75rem; display: block;"></i>
+                    <h4 style="font-size: 1.05rem; font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">No complaints found.</h4>
+                    <p style="font-size: 0.88rem; color: var(--text-muted); margin: 0;">New complaints will appear here when submitted.</p>
+                `;
+            }
             return;
         }
 
@@ -2575,7 +2934,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial Boots
     updateActiveZone(AppState.currentZone, false);
-    renderTrackingView("ECO-2026-LPU-101");
+    const demoPills = document.querySelector(".demo-pills-row");
+    if (demoPills) demoPills.style.display = DEMO_MODE ? "flex" : "none";
+    
+    if (DEMO_MODE) {
+        renderTrackingView(`ECO-${currentYear}-LPU-101`);
+    } else {
+        const lastSubmittedId = sessionStorage.getItem("last_submitted_ticket");
+        if (lastSubmittedId) {
+            renderTrackingView(lastSubmittedId);
+        } else {
+            renderTrackingPrompt();
+        }
+    }
     syncDashboard();
     syncNotifications();
 

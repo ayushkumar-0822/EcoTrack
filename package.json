@@ -9,7 +9,7 @@
     "gtr:list": "powershell -ExecutionPolicy Bypass -File ./gtr.ps1 list",
     "gtr:help": "powershell -ExecutionPolicy Bypass -File ./gtr.ps1 help",
     "review": "coderabbit review --agent",
-    "test": "echo \"Running client sanity tests...\" && node -e \"console.log('EcoTrack validation passed.')\""
+    "test": "python test_ecotrack.py"
   },
   "keywords": [
     "waste-management",
