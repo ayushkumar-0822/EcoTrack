@@ -133,7 +133,7 @@
 
                     <!-- Live Location Search & Quick Area Selector -->
                     <div class="hero-location-search-box">
-                        <div class="location-search-input-group">
+                        <div class="location-search-input-group" style="display: none;">
                             <input type="text"
                                    id="globalAreaSearch"
                                    list="localLocationsList"
@@ -172,10 +172,6 @@
                         <a href="#calendar" class="btn btn-secondary btn-large">
                             View calendar
                         </a>
-
-                        <button type="button" class="btn btn-outline btn-large" data-modal-open="reminderModal">
-                            Set reminders
-                        </button>
                     </div>
                 </div>
 
@@ -335,7 +331,7 @@
                             <div class="progress-bar-container">
                                 <div class="progress-bar-fill" style="width: 75%; background: #2563eb;"></div>
                             </div>
-                            <span class="kpi-footnote">6 / 8 Active Trucks (2 in maintenance)</span>
+                            <span class="kpi-footnote">2 trucks in maintenance</span>
                         </div>
                     </div>
 
@@ -945,7 +941,7 @@
                             <div class="chart-card-header">
                                 <div>
                                     <h3 class="chart-card-title">Complaints by Category</h3>
-                                    <span class="chart-card-subtitle">Distribution of reported municipal issues</span>
+                                    <span class="chart-card-subtitle">Distribution of reported campus and local complaints</span>
                                 </div>
                             </div>
                             <div class="donut-chart-layout">
@@ -1053,7 +1049,7 @@
                         EcoTrack<span class="logo-dot">.</span>
                     </a>
                     <p class="footer-tagline">
-                        A 1st-year computer science student project for tracking hostel waste collection schedules, submitting cleaning complaints, and viewing truck routes.
+                        A campus and local waste management portal for tracking hostel pickup schedules, submitting cleaning complaints, and viewing truck routes.
                     </p>
                     <div class="footer-project-meta">
                         <span>LPU &amp; Phagwara Student Initiative</span>
@@ -1095,10 +1091,7 @@
                                 <span><strong>JavaScript (ES6+)</strong> — Form Handling, Calendar &amp; Local Tracking</span>
                             </li>
                             <li>
-                                <span><strong>Python 3</strong> — Simple Backend REST Server (<code>server.py</code>)</span>
-                            </li>
-                            <li>
-                                <span><strong>SQLite3</strong> — Embedded Local Database (<code>ecotrack.db</code>)</span>
+                                <span><strong>LocalStorage API</strong> — Client-Side Complaint &amp; Schedule Storage</span>
                             </li>
                         </ul>
                     </div>
@@ -1109,9 +1102,6 @@
                 <span class="footer-copy">
                     Built with HTML5, CSS3, and JavaScript | B.Tech CSE Project by Ayush Kumar
                 </span>
-                <div class="footer-status-pill">
-                    System Active &amp; Ready
-                </div>
             </div>
         </div>
     </footer>
