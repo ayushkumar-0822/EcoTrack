@@ -1,8 +1,8 @@
 /**
- * EcoTrack — Local Waste-Service Coordination Engine
- * Implements: Area Selection, Collection Calendar, Reminders, Missed Pickup & Bin Issue Reporting,
- * Status Stepper, Municipal Service Dashboard, Notifications, and CMS/Figma Token Bridges.
- * WCAG 2.1 AA Compliant & CodeRabbit Standards.
+ * EcoTrack — Hostel & Local Waste Collection Portal
+ * 1st-Year CS Student Project by Ayush Kumar (LPU)
+ * Implements: Area Selection, Collection Calendar, Reminders, Missed Pickup & Bin Reporting,
+ * Status Stepper, Operations Dashboard, and Local Tracking.
  */
 
 "use strict";
@@ -25,96 +25,96 @@ document.addEventListener("DOMContentLoaded", () => {
         notificationsUnread: 2
     };
 
-    // Zone Definitions — Punjab / Local Hubs (LPU, Law Gate, Phagwara, Jalandhar, Green Valley)
+    // Zone Definitions — Student Campus & Local Zones (LPU Boys, LPU Girls, Uni-Mall, Law Gate, Phagwara GT Road)
     const ZONES = {
-        "zone-lpu": {
-            name: "LPU Campus — Lovely Professional University",
-            shortName: "LPU Campus",
-            type: "University Campus, Hostels & Uni-Mall",
-            trucks: ["LPU-EcoTruck-01", "LPU-Clean-02"],
-            nextPickup: "Today, 4:00 PM · Student Mess Organic",
+        "zone-lpu-bh": {
+            name: "LPU Boys Hostels (BH-1 to BH-8)",
+            shortName: "LPU Boys Hostels",
+            type: "Campus Student Hostels & Dining",
+            trucks: ["Truck-01 (BH Route)"],
+            nextPickup: "Today, 4:00 PM · Mess Waste Collection",
             weeklySchedule: {
-                1: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01 (Harpreet S.)" }],
-                2: [{ type: "Dry Recyclables & Parcels", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "LPU-Fleet-03" }],
-                3: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }],
-                4: [{ type: "Hostel Plastics & Paper", time: "10:00 AM – 01:00 PM", cat: "recyclable", crew: "LPU-Fleet-03" }],
-                5: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }],
+                1: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "Truck-01 (Ram Singh)" }],
+                2: [{ type: "Dry Recyclables & Parcels", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "Truck-02" }],
+                3: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "Truck-01" }],
+                4: [{ type: "Hostel Plastics & Paper", time: "10:00 AM – 01:00 PM", cat: "recyclable", crew: "Truck-02" }],
+                5: [{ type: "Organic (Mess & Food Court)", time: "06:30 AM – 09:00 AM", cat: "organic", crew: "Truck-01" }],
                 6: [
-                    { type: "Campus Recyclables & Uni-Mall", time: "08:00 AM – 11:00 AM", cat: "recyclable", crew: "LPU-Fleet-03" },
-                    { type: "Lab & E-Waste Special", time: "02:00 PM – 05:00 PM", cat: "hazardous", crew: "Campus Safety Team" }
+                    { type: "Hostel Recyclables", time: "08:00 AM – 11:00 AM", cat: "recyclable", crew: "Truck-02" },
+                    { type: "E-Waste Collection", time: "02:00 PM – 05:00 PM", cat: "hazardous", crew: "Maintenance Team" }
                 ],
-                0: [{ type: "Hostel Weekend Deep Clearance", time: "07:00 AM – 10:00 AM", cat: "organic", crew: "LPU-EcoTruck-01" }]
+                0: [{ type: "Weekend Hostel Clearance", time: "07:00 AM – 10:00 AM", cat: "organic", crew: "Truck-01" }]
+            }
+        },
+        "zone-lpu-gh": {
+            name: "LPU Girls Hostels (GH-1 to GH-3)",
+            shortName: "LPU Girls Hostels",
+            type: "Campus Student Hostels",
+            trucks: ["Truck-02 (GH Route)"],
+            nextPickup: "Today, 5:30 PM · Recyclable Packaging",
+            weeklySchedule: {
+                1: [{ type: "Domestic & Food Waste", time: "07:00 AM – 09:00 AM", cat: "organic", crew: "Truck-02 (Gurpreet S.)" }],
+                2: [{ type: "Dry Recyclables & Delivery Boxes", time: "09:30 AM – 12:00 PM", cat: "recyclable", crew: "Truck-02" }],
+                3: [{ type: "Domestic & Food Waste", time: "07:00 AM – 09:00 AM", cat: "organic", crew: "Truck-02" }],
+                5: [{ type: "Domestic & Food Waste", time: "07:00 AM – 09:00 AM", cat: "organic", crew: "Truck-02" }],
+                6: [{ type: "Hostel Packaging Clearance", time: "08:30 AM – 11:30 AM", cat: "recyclable", crew: "Truck-02" }]
+            }
+        },
+        "zone-unimall": {
+            name: "Uni-Mall (Campus Commercial)",
+            shortName: "Uni-Mall",
+            type: "Food Court, Shops & Commercial Blocks",
+            trucks: ["Truck-03 (Mall Route)"],
+            nextPickup: "Tomorrow, 8:00 AM · Food Waste",
+            weeklySchedule: {
+                1: [{ type: "Food Court Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Truck-03 (Sukhwinder)" }],
+                2: [{ type: "Commercial Cartons & Plastics", time: "11:00 AM – 01:30 PM", cat: "recyclable", crew: "Truck-03" }],
+                3: [{ type: "Food Court Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Truck-03" }],
+                5: [{ type: "Food Court Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Truck-03" }],
+                6: [{ type: "Weekend Mall Clearance", time: "08:00 AM – 12:00 PM", cat: "recyclable", crew: "Truck-03" }]
             }
         },
         "zone-law-gate": {
-            name: "Law Gate Student & Commercial Hub, LPU Phagwara",
+            name: "Law Gate (PG & Student Hub)",
             shortName: "Law Gate",
             type: "Food Streets, Cafes, PGs & Student Living",
-            trucks: ["Phagwara-MC-08 (Law Gate Special)"],
-            nextPickup: "Tonight, 10:00 PM · Commercial Eatery Waste",
+            trucks: ["Truck-04 (Law Gate Route)"],
+            nextPickup: "Tonight, 10:00 PM · Street & PG Waste",
             weeklySchedule: {
-                1: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Phagwara-MC-08 (Gurdeep S.)" }],
-                2: [{ type: "PG & Delivery Carton Dry Waste", time: "11:00 AM – 01:30 PM", cat: "recyclable", crew: "Phagwara-MC-08" }],
-                3: [{ type: "Commercial Food Waste (Late Night)", time: "09:30 PM – 11:30 PM", cat: "organic", crew: "Night Route #02" }],
-                4: [{ type: "Street Bin Clearance & Plastics", time: "08:30 AM – 11:00 AM", cat: "recyclable", crew: "Phagwara-MC-08" }],
-                5: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Phagwara-MC-08" }],
+                1: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Truck-04 (Harpreet & Team)" }],
+                2: [{ type: "PG & Delivery Carton Dry Waste", time: "11:00 AM – 01:30 PM", cat: "recyclable", crew: "Truck-04" }],
+                3: [{ type: "Commercial Food Waste (Late Night)", time: "09:30 PM – 11:30 PM", cat: "organic", crew: "Night Route" }],
+                4: [{ type: "Street Bin Clearance & Plastics", time: "08:30 AM – 11:00 AM", cat: "recyclable", crew: "Truck-04" }],
+                5: [{ type: "Food Stalls Wet Waste", time: "08:00 AM – 10:30 AM", cat: "organic", crew: "Truck-04" }],
                 6: [
-                    { type: "Weekend Market Clearance", time: "08:00 AM – 12:00 PM", cat: "recyclable", crew: "Phagwara-MC-08" },
-                    { type: "Special Sanitation & Disinfection", time: "03:00 PM – 06:00 PM", cat: "hazardous", crew: "Sanitation Squad" }
+                    { type: "Weekend Market Clearance", time: "08:00 AM – 12:00 PM", cat: "recyclable", crew: "Truck-04" }
                 ],
-                0: [{ type: "Evening Food Street Wet Waste", time: "09:00 PM – 11:30 PM", cat: "organic", crew: "Night Route #02" }]
+                0: [{ type: "Evening Food Street Wet Waste", time: "09:00 PM – 11:30 PM", cat: "organic", crew: "Night Route" }]
             }
         },
         "zone-phagwara": {
-            name: "Phagwara City & GT Road Suburbs",
-            shortName: "Phagwara",
-            type: "Urban Estate, Main Markets & GT Road",
-            trucks: ["MC-Phagwara-04", "MC-Phagwara-07"],
-            nextPickup: "Tomorrow, 6:30 AM · Domestic Wet & Dry",
+            name: "Phagwara GT Road",
+            shortName: "Phagwara GT Road",
+            type: "Urban Area, Bus Stand & Railway Link",
+            trucks: ["Truck-05", "Truck-06"],
+            nextPickup: "Tomorrow, 6:30 AM · Domestic Waste",
             weeklySchedule: {
-                1: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04 (Rajesh K.)" }],
-                2: [{ type: "Dry Recyclables & Packaging", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "MC-Phagwara-07" }],
-                3: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04" }],
-                5: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "MC-Phagwara-04" }],
+                1: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "Truck-05 (Rajesh K.)" }],
+                2: [{ type: "Dry Recyclables & Packaging", time: "09:00 AM – 11:30 AM", cat: "recyclable", crew: "Truck-06" }],
+                3: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "Truck-05" }],
+                5: [{ type: "Domestic Wet Waste", time: "06:30 AM – 08:30 AM", cat: "organic", crew: "Truck-05" }],
                 6: [
-                    { type: "Dry Recyclables & Commercial", time: "08:30 AM – 11:30 AM", cat: "recyclable", crew: "MC-Phagwara-07" },
-                    { type: "Hazardous & Battery Waste", time: "11:30 AM – 02:30 PM", cat: "hazardous", crew: "MC HazMat Team" }
-                ]
-            }
-        },
-        "zone-jalandhar": {
-            name: "Jalandhar Central, Model Town & Cantt",
-            shortName: "Jalandhar",
-            type: "Municipal Corporation Jalandhar (MCJ)",
-            trucks: ["MCJ-SmartTruck-11", "MCJ-Cantt-03"],
-            nextPickup: "Tomorrow, 7:00 AM · Municipal Collection",
-            weeklySchedule: {
-                1: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11 (Amit S.)" }],
-                2: [{ type: "Paper, Plastic & Cans", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "MCJ-Cantt-03" }],
-                3: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11" }],
-                4: [{ type: "Cantt & Commercial Dry Waste", time: "09:00 AM – 12:00 PM", cat: "recyclable", crew: "MCJ-Cantt-03" }],
-                5: [{ type: "Curbside Domestic Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "MCJ-SmartTruck-11" }],
-                6: [{ type: "Dry Recyclables & Glass", time: "08:30 AM – 11:00 AM", cat: "recyclable", crew: "MCJ-Cantt-03" }]
-            }
-        },
-        "zone-green-valley": {
-            name: "Green Valley & Eco Heights (Zone A)",
-            shortName: "Green Valley",
-            type: "Residential & Sustainable Parks",
-            trucks: ["Truck-04", "Truck-09"],
-            nextPickup: "Tomorrow, 7:00 AM · Organic",
-            weeklySchedule: {
-                1: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
-                2: [{ type: "Dry Recyclables", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "Route #09 (M. Jenkins)" }],
-                3: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
-                5: [{ type: "Organic", time: "07:00 AM – 09:30 AM", cat: "organic", crew: "Route #04 (R. Patel)" }],
-                6: [
-                    { type: "Dry Recyclables", time: "08:00 AM – 10:30 AM", cat: "recyclable", crew: "Route #09 (M. Jenkins)" },
-                    { type: "Hazardous & E-Waste", time: "10:00 AM – 02:00 PM", cat: "hazardous", crew: "HazMat Team #02" }
+                    { type: "Dry Recyclables & Commercial", time: "08:30 AM – 11:30 AM", cat: "recyclable", crew: "Truck-06" },
+                    { type: "Hazardous & Battery Waste", time: "11:30 AM – 02:30 PM", cat: "hazardous", crew: "HazMat Team" }
                 ]
             }
         }
     };
+
+    // Aliases for backward compatibility
+    ZONES["zone-lpu"] = ZONES["zone-lpu-bh"];
+    ZONES["zone-jalandhar"] = ZONES["zone-unimall"];
+    ZONES["zone-green-valley"] = ZONES["zone-lpu-gh"];
 
     // Preloaded Demo Tickets for Status Tracking
     const SAMPLE_REPORTS = {
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
             currentStep: 3,
             steps: [
                 { num: 1, name: "Report Logged", desc: "Citizen photo uploaded via EcoTrack", time: "09:15 AM", done: true },
-                { num: 2, name: "Triage & Order", desc: "Phagwara Municipal Squad assigned", time: "09:40 AM", done: true },
+                { num: 2, name: "Reviewed & Assigned", desc: "Sanitation squad assigned", time: "09:40 AM", done: true },
                 { num: 3, name: "Clearing Crew Active", desc: "Phagwara-MC-08 on site with clearing team", time: "10:30 AM", done: true },
                 { num: 4, name: "Site Restored", desc: "Litter removed & disinfectant spray applied", time: "Pending", done: false }
             ]
@@ -166,55 +166,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 { num: 4, name: "Certified Ready", desc: "Bin restored to upright position", time: "Pending", done: false }
             ]
         },
-        "ECO-2026-JL-404": {
-            id: "ECO-2026-JL-404",
+        "ECO-2026-UM-404": {
+            id: "ECO-2026-UM-404",
             category: "Missed Pickup",
-            title: "Model Town Curbside Recyclables Missed",
-            location: "Jalandhar Model Town Gol Market",
+            title: "Uni-Mall Food Court Waste Missed",
+            location: "LPU Uni-Mall & Central Food Court",
             submittedAt: "Today • 07:45 AM",
             resolvedAt: "Estimated Today 01:30 PM",
             status: "In Progress",
             currentStep: 3,
             steps: [
-                { num: 1, name: "Report Logged", desc: "Model Town shop owner submitted pickup request", time: "07:45 AM", done: true },
-                { num: 2, name: "Route Rescheduled", desc: "MCJ Route Dispatcher scheduled recovery", time: "08:15 AM", done: true },
-                { num: 3, name: "Truck In Transit", desc: "MCJ-SmartTruck-11 approaching Gol Market", time: "09:20 AM", done: true },
+                { num: 1, name: "Report Logged", desc: "Food court staff submitted pickup request", time: "07:45 AM", done: true },
+                { num: 2, name: "Route Rescheduled", desc: "Campus supervisor scheduled recovery", time: "08:15 AM", done: true },
+                { num: 3, name: "Truck In Transit", desc: "Truck-03 approaching Uni-Mall", time: "09:20 AM", done: true },
                 { num: 4, name: "Cleared", desc: "Commercial packaging collected", time: "Pending", done: false }
             ]
         },
-        "ECO-2026-GV-505": {
-            id: "ECO-2026-GV-505",
+        "ECO-2026-GH-505": {
+            id: "ECO-2026-GH-505",
             category: "Bin Issue",
-            title: "Green Valley Central Park Organic Bin Exchange",
-            location: "Green Valley Central Park (Zone A)",
+            title: "Girls Hostel GH-2 Dustbin Exchange",
+            location: "LPU Girls Hostel GH-2",
             submittedAt: "Nov 12, 2026 • 09:00 AM",
             resolvedAt: "Nov 12, 2026 • 01:20 PM",
             status: "Resolved",
             currentStep: 4,
             steps: [
-                { num: 1, name: "Report Logged", desc: "Park supervisor requested bin lid replacement", time: "09:00 AM", done: true },
-                { num: 2, name: "Lid Allocated", desc: "240L Green Lid retrieved from central store", time: "10:10 AM", done: true },
-                { num: 3, name: "Delivered", desc: "Truck-04 delivered and installed new lid", time: "11:50 AM", done: true },
-                { num: 4, name: "Resolved", desc: "Exchange certified complete", time: "01:20 PM", done: true }
-            ]
-        },
-        "ECO-2026-MP-101": {
-            id: "ECO-2026-MP-101",
-            category: "Missed Pickup",
-            title: "Missed Organic Household Bins",
-            location: "142 Elm Street, Maple Quarter",
-            submittedAt: "Nov 11, 2026 • 08:15 AM",
-            resolvedAt: "Nov 11, 2026 • 11:42 AM",
-            status: "Resolved",
-            currentStep: 4,
-            steps: [
-                { num: 1, name: "Report Logged", desc: "Citizen submitted curbside missed pickup ticket", time: "08:15 AM", done: true },
-                { num: 2, name: "Triaged & Approved", desc: "Sanitation Dispatcher verified route miss", time: "08:40 AM", done: true },
-                { num: 3, name: "Recovery Truck Sent", desc: "Truck-04 rerouted for recovery pickup", time: "09:55 AM", done: true },
-                { num: 4, name: "Pickup Completed", desc: "Bins emptied. Resident confirmed resolution", time: "11:42 AM", done: true }
+                { num: 1, name: "Report Logged", desc: "Hostel warden requested bin replacement", time: "09:00 AM", done: true },
+                { num: 2, name: "Bin Allocated", desc: "240L Green Lid retrieved from store", time: "10:10 AM", done: true },
+                { num: 3, name: "Delivered", desc: "Truck-02 delivered and installed new bin", time: "11:50 AM", done: true },
+                { num: 4, name: "Resolved", desc: "Installation verified complete", time: "01:20 PM", done: true }
             ]
         }
     };
+
+    // Backward aliases for demo tickets
+    SAMPLE_REPORTS["ECO-2026-JL-404"] = SAMPLE_REPORTS["ECO-2026-UM-404"];
+    SAMPLE_REPORTS["ECO-2026-GV-505"] = SAMPLE_REPORTS["ECO-2026-GH-505"];
+    SAMPLE_REPORTS["ECO-2026-MP-101"] = SAMPLE_REPORTS["ECO-2026-LPU-101"];
 
     // -------------------------------------------------------------
     // 2. Toast Notification Service
@@ -245,7 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -------------------------------------------------------------
-    // 3. Modal Manager (WCAG 2.1 AA Compliant)
+    // 3. Modal Manager
     // -------------------------------------------------------------
     function openModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -304,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const heroCurrentZoneName = document.getElementById("heroCurrentZoneName");
     const heroNextPickup = document.getElementById("heroNextPickup");
 
-    function updateActiveZone(zoneKey) {
+    function updateActiveZone(zoneKey, showToastNotification = false) {
         if (!ZONES[zoneKey]) return;
         AppState.currentZone = zoneKey;
         localStorage.setItem("ecotrack_zone", zoneKey);
@@ -338,7 +327,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         renderCalendar();
-        showToast(`Area switched to ${zone.shortName}`, "info");
+        if (showToastNotification) {
+            showToast(`Area switched to ${zone.shortName}`, "info");
+        }
     }
 
     if (navAreaBtn && navAreaDropdown) {
@@ -353,16 +344,16 @@ document.addEventListener("DOMContentLoaded", () => {
         navAreaMenu.querySelectorAll("li").forEach(item => {
             item.addEventListener("click", () => {
                 const zoneKey = item.getAttribute("data-zone");
-                updateActiveZone(zoneKey);
-                navAreaDropdown.classList.remove("open");
-                navAreaBtn.setAttribute("aria-expanded", "false");
+                updateActiveZone(zoneKey, true);
+                if (navAreaDropdown) navAreaDropdown.classList.remove("open");
+                if (navAreaBtn) navAreaBtn.setAttribute("aria-expanded", "false");
             });
         });
     }
 
     if (calendarAreaSelect) {
         calendarAreaSelect.addEventListener("change", () => {
-            updateActiveZone(calendarAreaSelect.value);
+            updateActiveZone(calendarAreaSelect.value, true);
         });
     }
 
@@ -383,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".loc-chip").forEach(chip => {
         chip.addEventListener("click", () => {
             const zKey = chip.getAttribute("data-zone");
-            updateActiveZone(zKey);
+            updateActiveZone(zKey, true);
         });
     });
 
@@ -823,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 urgency: body.urgency || "Standard",
                 description: body.description || "",
                 photo_url: body.photo_url || "",
-                status: "Triaged",
+                status: "Under Review",
                 current_step: 2,
                 currentStep: 2,
                 created_at: timeStr,
@@ -831,9 +822,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 resolved_at: "Under Review",
                 resolvedAt: "Under Review",
                 steps: [
-                    { num: 1, name: "Report Logged", desc: `Citizen report: ${body.title || category}`, time: timeStr, done: true },
-                    { num: 2, name: "Triaged & Approved", desc: "Assigned to area sanitation coordinator", time: "Active Now", done: true },
-                    { num: 3, name: "Crew Dispatched", desc: "Recovery vehicle scheduled on route", time: "Pending", done: false },
+                    { num: 1, name: "Report Logged", desc: `Complaint: ${body.title || category}`, time: timeStr, done: true },
+                    { num: 2, name: "Reviewed & Assigned", desc: "Assigned to area cleaning team", time: "Active Now", done: true },
+                    { num: 3, name: "Crew Dispatched", desc: "Cleaning truck scheduled on route", time: "Pending", done: false },
                     { num: 4, name: "Resolved", desc: "Final verification and sign-off", time: "Pending", done: false }
                 ]
             };
@@ -867,7 +858,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (t) {
                 const currentStep = t.current_step || t.currentStep || 1;
                 const nextStep = Math.min(4, currentStep + 1);
-                const nextStatus = nextStep === 4 ? "Resolved" : (nextStep === 3 ? "Dispatched" : "Triaged");
+                const nextStatus = nextStep === 4 ? "Resolved" : (nextStep === 3 ? "Dispatched" : "Under Review");
                 const now = new Date();
                 const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
@@ -932,14 +923,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 total_tickets: total,
                 resolved_tickets: resolved,
                 resolution_rate: `${rate}%`,
-                route_completion: "88%",
+                route_completion: "82%",
                 active_trucks: "8 / 8",
-                cleanliness_score: "96 / 100",
+                cleanliness_score: "98 / 100",
                 fleet: [
-                    { id: 1, route_id: "Route-LPU-01", truck_name: "LPU-EcoTruck-01", status: "Active", progress_pct: 82 },
-                    { id: 2, route_id: "Route-LG-04", truck_name: "Phagwara-MC-08", status: "Active", progress_pct: 64 },
-                    { id: 3, route_id: "Route-PG-GT", truck_name: "MC-Phagwara-04", status: "En Route", progress_pct: 90 },
-                    { id: 4, route_id: "Route-JL-MT", truck_name: "MCJ-SmartTruck-11", status: "Active", progress_pct: 75 }
+                    { id: "Truck-01", route_id: "Route-LPU-BH", truck_name: "Truck-01", sector: "LPU Boys Hostels (BH-1 to BH-4)", assigned_sector: "LPU Boys Hostels (BH-1 to BH-4)", waste_stream: "Mess Food Waste", driver: "Ram Singh & Team", driver_crew: "Ram Singh & Team", progress: 85, progress_pct: 85, status: "On Route" },
+                    { id: "Truck-02", route_id: "Route-LPU-GH", truck_name: "Truck-02", sector: "LPU Girls Hostels (GH-1 to GH-3)", assigned_sector: "LPU Girls Hostels (GH-1 to GH-3)", waste_stream: "Dry Recyclables", driver: "Gurpreet Singh", driver_crew: "Gurpreet Singh", progress: 70, progress_pct: 70, status: "On Route" },
+                    { id: "Truck-03", route_id: "Route-UNIMALL", truck_name: "Truck-03", sector: "Uni-Mall & Commercial Blocks", assigned_sector: "Uni-Mall & Commercial Blocks", waste_stream: "Mixed Waste", driver: "Sukhwinder", driver_crew: "Sukhwinder", progress: 100, progress_pct: 100, status: "Completed" },
+                    { id: "Truck-04", route_id: "Route-LAWGATE", truck_name: "Truck-04", sector: "Law Gate & Student PGs", assigned_sector: "Law Gate & Student PGs", waste_stream: "Street Bins & Plastic", driver: "Harpreet & Team", driver_crew: "Harpreet & Team", progress: 55, progress_pct: 55, status: "On Route" }
                 ]
             };
         }
@@ -950,9 +941,9 @@ document.addEventListener("DOMContentLoaded", () => {
             try { notifs = JSON.parse(localStorage.getItem("ecotrack_notifs") || "[]"); } catch (e) {}
             if (notifs.length === 0) {
                 notifs = [
-                    { id: 1, title: "Route #4 Completed", message: "Organic waste pickup on Maple St finished early.", type: "green", zone: "LPU Campus", time_str: "22 mins ago", is_unread: 1 },
+                    { id: 1, title: "Route #1 Completed", message: "Organic waste pickup at LPU Boys Hostels finished early.", type: "green", zone: "LPU Boys Hostels", time_str: "22 mins ago", is_unread: 1 },
                     { id: 2, title: "Upcoming Pickup", message: "Dry Recyclables collection tomorrow morning at 08:00 AM.", type: "orange", zone: "Law Gate", time_str: "1 hr ago", is_unread: 1 },
-                    { id: 3, title: "Weather Advisory", message: "Normal collection schedules unaffected by light rain.", type: "blue", zone: "City Wide", time_str: "Yesterday", is_unread: 0 }
+                    { id: 3, title: "Weather Advisory", message: "Normal collection schedules unaffected by light rain.", type: "blue", zone: "Campus Wide", time_str: "Yesterday", is_unread: 0 }
                 ];
             }
             return notifs;
@@ -1122,12 +1113,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 location: payload.location,
                 photo_url: photoUrl,
                 submittedAt: "Just now",
-                resolvedAt: "Guaranteed within 4 hours",
-                status: "Triaged",
+                resolvedAt: "Inspection within a few hours",
+                status: "Under Review",
                 currentStep: 2,
                 steps: [
                     { num: 1, name: "Report Logged", desc: `Missed pickup filed for ${wasteType}`, time: "Just now", done: true },
-                    { num: 2, name: "Triaged & Approved", desc: "Route supervisor scheduled recovery truck", time: "Pending", done: true },
+                    { num: 2, name: "Reviewed & Assigned", desc: "Route supervisor scheduled recovery truck", time: "Pending", done: true },
                     { num: 3, name: "Recovery Truck Sent", desc: "Truck dispatched on priority recovery loop", time: "Pending", done: false },
                     { num: 4, name: "Pickup Completed", desc: "Bins emptied & confirmed", time: "Pending", done: false }
                 ]
@@ -1295,14 +1286,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 title: payload.title,
                 location: loc,
                 submittedAt: "Just now",
-                resolvedAt: "Active triage in progress",
-                status: "Triaged",
+                resolvedAt: "Review in progress",
+                status: "Under Review",
                 currentStep: 2,
                 steps: [
                     { num: 1, name: "Report Logged", desc: "Citizen submission recorded via portal", time: "Just now", done: true },
-                    { num: 2, name: "Triaged & Approved", desc: "Municipal dispatch assigned crew", time: "Pending", done: true },
-                    { num: 3, name: "Truck En Route", desc: "Sanitation vehicle dispatched", time: "Pending", done: false },
-                    { num: 4, name: "Resolved", desc: "Work order closed", time: "Pending", done: false }
+                    { num: 2, name: "Reviewed & Assigned", desc: "Hostel supervisor assigned crew", time: "Pending", done: true },
+                    { num: 3, name: "Truck En Route", desc: "Cleaning vehicle dispatched", time: "Pending", done: false },
+                    { num: 4, name: "Resolved", desc: "Issue resolved", time: "Pending", done: false }
                 ]
             };
 
@@ -1564,8 +1555,8 @@ document.addEventListener("DOMContentLoaded", () => {
             setTimeout(() => {
                 const kpi = document.getElementById("kpiRouteCompletion");
                 if (kpi) kpi.textContent = "84%";
-                btnRefreshDashboard.innerHTML = '<i class="fa-solid fa-rotate"></i> Live Refresh';
-                showToast("Municipal operations data synchronized with fleet telemetry.", "success");
+                btnRefreshDashboard.innerHTML = 'Live Refresh';
+                showToast("Operations data synchronized with active trucks.", "success");
             }, 600);
         });
     }
@@ -1788,7 +1779,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function switchRole(newRole) {
+    function switchRole(newRole, showToastNotification = false) {
         AppState.currentRole = newRole;
 
         const topNavbar = document.getElementById("topNavbar");
@@ -1814,7 +1805,9 @@ document.addEventListener("DOMContentLoaded", () => {
             startSaasClock();
             loadAuthorityData();
             window.scrollTo({ top: 0, behavior: "smooth" });
-            showToast("Switched to Municipal Authority Command Dashboard", "info");
+            if (showToastNotification) {
+                showToast("Switched to Waste Management Dashboard", "info");
+            }
         } else {
             if (authorityView) authorityView.style.display = "none";
             if (citizenView) citizenView.style.display = "block";
@@ -1824,7 +1817,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (roleIcon) roleIcon.className = "fa-solid fa-user-check role-icon";
             if (roleSwitcherBtn) roleSwitcherBtn.classList.remove("authority-mode");
             window.scrollTo({ top: 0, behavior: "smooth" });
-            showToast("Switched to Citizen Landing Page", "info");
+            if (showToastNotification) {
+                showToast("Switched to Student Portal", "info");
+            }
         }
 
         if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
@@ -2397,14 +2392,14 @@ document.addEventListener("DOMContentLoaded", () => {
             cachedAuthorityTickets.forEach(t => {
                 const row = [
                     t.id || "",
-                    `"${(t.category || "").replace(/"/g, '""')}"`,
-                    `"${(t.title || "").replace(/"/g, '""')}"`,
-                    `"${(t.location || "").replace(/"/g, '""')}"`,
+                    JSON.stringify(t.category || ""),
+                    JSON.stringify(t.title || ""),
+                    JSON.stringify(t.location || ""),
                     t.urgency || "Standard",
                     t.status || "Pending",
                     t.current_step || t.currentStep || 1,
-                    `"${t.created_at || t.submittedAt || ""}"`,
-                    `"${t.resolved_at || t.resolvedAt || ""}"`
+                    JSON.stringify(t.created_at || t.submittedAt || ""),
+                    JSON.stringify(t.resolved_at || t.resolvedAt || "")
                 ];
                 csvContent += row.join(",") + "\n";
             });
@@ -2526,14 +2521,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const launchAuthorityPortal = (e) => {
         if (e) e.preventDefault();
         window.location.hash = "#dashboard";
-        switchRole("authority");
+        switchRole("authority", true);
     };
 
     const returnToLandingPage = (e) => {
         if (e) e.preventDefault();
         window.location.hash = "#home";
-        switchRole("citizen");
+        switchRole("citizen", true);
     };
+
+    // 0. Clean Navbar Dashboard & Link Routing
+    const navLinkDashboard = document.getElementById("navLinkDashboard");
+    if (navLinkDashboard) {
+        navLinkDashboard.addEventListener("click", launchAuthorityPortal);
+    }
+
+    document.querySelectorAll('#mainNavLinks a:not(#navLinkDashboard), .logo').forEach(link => {
+        link.addEventListener("click", () => {
+            if (AppState.currentRole !== "citizen") {
+                switchRole("citizen", false);
+            }
+        });
+    });
 
     // 1. Top Navbar Authority Button
     const btnNavAuthority = document.getElementById("btnNavAuthority");
@@ -2562,28 +2571,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Initial Routing: ALWAYS default to Landing Page first unless URL hash explicitly requests #dashboard
     if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
-        switchRole("authority");
+        switchRole("authority", false);
     } else {
-        switchRole("citizen");
+        switchRole("citizen", false);
     }
 
     // Hash change listener for browser navigation
     window.addEventListener("hashchange", () => {
         if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
-            if (AppState.currentRole !== "authority") switchRole("authority");
+            if (AppState.currentRole !== "authority") switchRole("authority", false);
         } else if (window.location.hash === "#home" || window.location.hash === "" || window.location.hash === "#report" || window.location.hash === "#calendar") {
-            if (AppState.currentRole !== "citizen") switchRole("citizen");
+            if (AppState.currentRole !== "citizen") switchRole("citizen", false);
         }
     });
 
     // Initial Boots
-    updateActiveZone(AppState.currentZone);
+    updateActiveZone(AppState.currentZone, false);
     renderTrackingView("ECO-2026-LPU-101");
     syncDashboard();
     syncNotifications();
 
     console.log(
-        "%cEcoTrack Local Waste Coordination App initialized with v0 UI & CMS Bridge!",
+        "%cEcoTrack Local Waste Coordination App initialized!",
         "color: #176b45; font-size: 14px; font-weight: bold;"
     );
 });

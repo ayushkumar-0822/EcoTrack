@@ -31,44 +31,35 @@
     <!-- Design System CSS -->
     <link rel="stylesheet" href="CSS/style.css?v=3.0">
     <style>
-        /* Modern Eco Aesthetic & Clean Ambient Styling */
+        /* Clean 1st-Year Student Project Base Styling */
         body {
-            background-color: #f7faf7 !important;
-            background-image:
-                radial-gradient(at 0% 0%, rgba(21, 108, 70, 0.09) 0px, transparent 48%),
-                radial-gradient(at 100% 0%, rgba(146, 216, 58, 0.12) 0px, transparent 42%),
-                radial-gradient(at 50% 40%, rgba(21, 108, 70, 0.04) 0px, transparent 60%),
-                radial-gradient(at 95% 85%, rgba(146, 216, 58, 0.09) 0px, transparent 45%),
-                radial-gradient(at 5% 95%, rgba(21, 108, 70, 0.07) 0px, transparent 50%) !important;
-            background-attachment: fixed !important;
+            background-color: #f8fafc !important;
+            background-image: none !important;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         .calendar-section {
-            background-color: #f2f7f3 !important;
-            background-image:
-                radial-gradient(at 12% 15%, rgba(146, 216, 58, 0.14) 0px, transparent 50%),
-                radial-gradient(at 88% 12%, rgba(21, 108, 70, 0.10) 0px, transparent 55%),
-                linear-gradient(180deg, #f7faf7 0%, #edf5ef 50%, #f7faf7 100%) !important;
-            border-top: 1px solid rgba(21, 108, 70, 0.10) !important;
-            border-bottom: 1px solid rgba(21, 108, 70, 0.10) !important;
-            padding: 44px 0 56px !important;
+            background: #ffffff !important;
+            border-top: 1px solid #e2e8f0 !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 40px 0 !important;
         }
         .calendar-card-shell {
             background: #ffffff !important;
-            border: 1px solid rgba(21, 108, 70, 0.12) !important;
-            border-radius: 20px !important;
-            box-shadow: 0 18px 45px -10px rgba(15, 34, 25, 0.07) !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
         }
         .calendar-day {
-            height: 52px !important;
-            min-height: 52px !important;
+            height: 48px !important;
+            min-height: 48px !important;
             aspect-ratio: unset !important;
-            border-radius: 10px !important;
-            transition: all 0.2s ease !important;
+            border-radius: 6px !important;
+            border: 1px solid #e2e8f0 !important;
+            transition: all 0.15s ease !important;
         }
         .calendar-day:hover {
-            background-color: #f2f8f4 !important;
+            background-color: #f1f5f9 !important;
         }
     </style>
 
@@ -78,7 +69,7 @@
 
 <body>
     <!-- =========================================
-         NAVBAR & NOTIFICATIONS
+         NAVBAR (Clean 1st-Year Student Style)
     ========================================= -->
     <header class="navbar" id="topNavbar">
         <div class="container nav-container">
@@ -92,202 +83,16 @@
                 </a>
             </div>
 
-            <div class="nav-actions">
-                <!-- 0. Role Switcher (Citizen vs Authority / Officer) -->
-                <div class="role-switcher-dropdown" id="roleSwitcherDropdown">
-                    <button type="button" class="nav-square-btn role-square-btn" id="roleSwitcherBtn" aria-expanded="false" aria-haspopup="listbox" title="Switch Portal Mode (Citizen / Authority)">
-                        <span class="role-badge-dot"></span>
-                        <i class="fa-solid fa-user-check role-icon" id="roleIcon"></i>
-                        <span id="roleLabel">Citizen</span>
-                        <i class="fa-solid fa-chevron-down pill-chevron"></i>
-                    </button>
-                    <ul class="role-menu" id="roleMenu" role="listbox" tabindex="-1">
-                        <li role="option" aria-selected="true" data-role="citizen" class="active">
-                            <div class="role-item-icon citizen"><i class="fa-solid fa-user"></i></div>
-                            <div class="role-item-text">
-                                <strong>Citizen Mode</strong>
-                                <span>Report Issues & View Schedules</span>
-                            </div>
-                            <i class="fa-solid fa-check role-check"></i>
-                        </li>
-                        <li role="option" aria-selected="false" data-role="authority">
-                            <div class="role-item-icon authority"><i class="fa-solid fa-shield-halved"></i></div>
-                            <div class="role-item-text">
-                                <strong>Authority Dashboard</strong>
-                                <span>Municipal Command & Dispatch View</span>
-                            </div>
-                            <i class="fa-solid fa-check role-check"></i>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 1. Area Selection (Boxed in Square) -->
-                <div class="area-pill-dropdown" id="navAreaDropdown">
-                    <button type="button" class="nav-square-btn area-square-btn" id="navAreaBtn" aria-expanded="false" aria-haspopup="listbox" title="Select your local area or university zone">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span id="navAreaLabel">LPU Campus</span>
-                        <i class="fa-solid fa-chevron-down pill-chevron"></i>
-                    </button>
-                    <ul class="area-menu" id="navAreaMenu" role="listbox" tabindex="-1">
-                        <div class="area-search-container">
-                            <i class="fa-solid fa-magnifying-glass area-search-icon"></i>
-                            <input type="text" id="areaSearchInput" class="area-search-input" placeholder="Search area (e.g. Law Gate, LPU...)" autocomplete="off">
-                        </div>
-                        <li role="option" aria-selected="true" data-zone="zone-lpu" class="active">
-                            <strong>LPU Main Campus</strong>
-                            <span>Hostels, Uni-Mall & Academic Blocks</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-law-gate">
-                            <strong>Law Gate Student Hub</strong>
-                            <span>Food Streets, PGs & Commercial Zone</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-phagwara">
-                            <strong>Phagwara City & GT Road</strong>
-                            <span>Urban Estate, Model Town & Suburbs</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-jalandhar">
-                            <strong>Jalandhar Cantt & Central</strong>
-                            <span>Model Town, Civil Lines & MCJ Zone</span>
-                        </li>
-                        <li role="option" aria-selected="false" data-zone="zone-green-valley">
-                            <strong>Green Valley & Eco Heights</strong>
-                            <span>Zone A • Residential & Sustainable Parks</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <!-- 2. Notifications Bell (Boxed in Square) -->
-                <div class="notif-wrapper" id="notifWrapper">
-                    <button type="button" class="nav-square-btn notif-square-btn" id="notifBtn" aria-label="Notifications" aria-expanded="false" title="Service Alerts">
-                        <i class="fa-regular fa-bell"></i>
-                        <span class="notif-badge" id="notifBadge">2</span>
-                    </button>
-                    <div class="notif-dropdown" id="notifDropdown" aria-hidden="true">
-                        <div class="notif-header">
-                            <div>
-                                <h4>Service Alerts</h4>
-                                <span class="notif-count-text">2 new notices</span>
-                            </div>
-                            <button type="button" class="btn-text-link" id="btnMarkAllRead">Mark all read</button>
-                        </div>
-                        <div class="notif-list" id="notifList">
-                            <div class="notif-item unread">
-                                <span class="notif-type-icon green"><i class="fa-solid fa-truck-fast"></i></span>
-                                <div class="notif-body">
-                                    <p><strong>Route #4 Completed</strong>: Organic waste pickup on Maple St finished early.</p>
-                                    <span class="notif-time">22 mins ago • Zone A</span>
-                                </div>
-                            </div>
-                            <div class="notif-item unread">
-                                <span class="notif-type-icon orange"><i class="fa-solid fa-clock"></i></span>
-                                <div class="notif-body">
-                                    <p><strong>Upcoming Pickup</strong>: Dry Recyclables collection tomorrow morning at 08:00 AM.</p>
-                                    <span class="notif-time">1 hr ago • Reminder</span>
-                                </div>
-                            </div>
-                            <div class="notif-item">
-                                <span class="notif-type-icon blue"><i class="fa-solid fa-cloud-sun"></i></span>
-                                <div class="notif-body">
-                                    <p><strong>Weather Advisory</strong>: Normal collection schedules unaffected by light rain.</p>
-                                    <span class="notif-time">Yesterday</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3. Report an Issue CTA -->
-                <a href="#report" class="btn btn-primary nav-cta" data-modal-open="reportModal">
-                    Report an issue
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-
-                <!-- 4. 3-Line Menu Button (Boxed in Square) -->
-                <button class="nav-square-btn menu-toggle-square"
-                        id="menuToggle"
-                        aria-label="Open navigation sidebar"
-                        aria-controls="appSidebar"
-                        aria-expanded="false"
-                        title="Open Menu">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
+            <!-- Clean Student Navigation: Logo + 4 Essential Links -->
+            <nav class="nav-links" id="mainNavLinks">
+                <a href="#calendar" class="nav-link">Calendar</a>
+                <a href="#dashboard" class="nav-link" id="navLinkDashboard">Dashboard</a>
+                <a href="#report" class="nav-link" data-modal-open="reportModal">Report Issue</a>
+                <a href="#track" class="nav-link">Track Status</a>
+            </nav>
 
         </div>
     </header>
-
-    <!-- =========================================
-         EXPANDABLE SIDEBAR DRAWER
-    ========================================= -->
-    <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
-    <aside class="app-sidebar" id="appSidebar" role="dialog" aria-modal="true" aria-label="Navigation Menu" aria-hidden="true">
-        <div class="sidebar-header">
-            <a href="#home" class="logo" aria-label="EcoTrack Home">
-                <span class="logo-icon">
-                    <i class="fa-solid fa-leaf"></i>
-                </span>
-                EcoTrack<span class="logo-dot">.</span>
-            </a>
-            <button type="button" class="nav-square-btn sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-
-        <!-- Sidebar Current Zone Card -->
-        <div class="sidebar-zone-card">
-            <div class="sidebar-zone-icon">
-                <i class="fa-solid fa-map-location-dot"></i>
-            </div>
-            <div>
-                <span class="sidebar-zone-sub">CURRENT ZONE</span>
-                <strong id="sidebarZoneLabel">Green Valley (Zone A)</strong>
-            </div>
-        </div>
-
-        <!-- Sidebar Navigation List -->
-        <nav class="sidebar-nav-list" aria-label="Sidebar Navigation">
-            <a href="#home" class="sidebar-link active">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-house"></i></span>
-                <span class="sidebar-link-text">Home</span>
-            </a>
-            <a href="#calendar" class="sidebar-link">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-calendar-days"></i></span>
-                <span class="sidebar-link-text">Collection Calendar</span>
-            </a>
-            <a href="#dashboard" class="sidebar-link">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-chart-line"></i></span>
-                <span class="sidebar-link-text">Service Dashboard</span>
-            </a>
-            <a href="#report" class="sidebar-link">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
-                <span class="sidebar-link-text">Report Local Issue</span>
-            </a>
-            <a href="#track" class="sidebar-link">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-location-crosshairs"></i></span>
-                <span class="sidebar-link-text">Track Status</span>
-            </a>
-            <a href="#community" class="sidebar-link">
-                <span class="sidebar-link-icon"><i class="fa-solid fa-users"></i></span>
-                <span class="sidebar-link-text">Community Impact</span>
-            </a>
-        </nav>
-
-        <!-- Sidebar Actions & Status -->
-        <div class="sidebar-footer-group">
-            <button type="button" class="btn btn-authority-sidebar full-width" id="btnSidebarLaunchAuthority">
-                <i class="fa-solid fa-shield-halved"></i> Launch Authority Dashboard
-            </button>
-            <button type="button" class="btn btn-outline full-width" data-modal-open="reminderModal">
-                <i class="fa-regular fa-bell"></i> Pickup Reminders
-            </button>
-            <button type="button" class="btn btn-primary full-width" data-modal-open="reportModal">
-                <i class="fa-solid fa-triangle-exclamation"></i> Quick Report Issue
-            </button>
-            <div class="sidebar-status-note">
-                <span class="pulse-dot"></span> 14 Municipal Trucks Active
-            </div>
-        </div>
-    </aside>
 
     <!-- =========================================
          MAIN CONTENT
@@ -301,119 +106,81 @@
 
         <!-- 1. HERO SECTION -->
         <section class="hero" id="home">
-            <div class="hero-background-shape"></div>
-
             <div class="container hero-grid">
 
                 <!-- LEFT CONTENT -->
                 <div class="hero-content">
-                    <h1>
-                        Clean neighborhoods.<br>
-                        Coordinated schedules.<br>
-                        <span class="heading-highlight">Zero missed pickups.</span>
-                    </h1>
+                    <h1>LPU & Phagwara Waste Collection Portal</h1>
 
                     <p class="hero-description">
-                        Empowering citizens and municipal sanitation crews to synchronize collection schedules, automate pickup reminders, report missed bins, and monitor live city cleanliness metrics.
+                        A student-led portal to track daily hostel waste collection schedules, submit pickup complaints for LPU campus and nearby areas, and view active cleaning trucks.
                     </p>
 
                     <!-- Active Zone Overview Banner -->
                     <div class="hero-zone-badge">
                         <div class="zone-badge-left">
-                            <i class="fa-solid fa-bullseye"></i>
                             <div>
-                                <span class="label">CURRENTLY VIEWING</span>
-                                <strong id="heroCurrentZoneName">LPU Campus — Lovely Professional University</strong>
+                                <span class="label">Current Area</span>
+                                <strong id="heroCurrentZoneName">LPU Boys Hostels (BH-1 to BH-8)</strong>
                             </div>
                         </div>
                         <div class="zone-badge-right">
-                            <span class="next-label">NEXT COLLECTION</span>
-                            <strong id="heroNextPickup">Today, 4:00 PM · Student Mess Organic</strong>
+                            <span class="next-label">Next Scheduled Pickup</span>
+                            <strong id="heroNextPickup">Today, 4:00 PM · Mess Waste Collection</strong>
                         </div>
                     </div>
 
                     <!-- Live Location Search & Quick Area Selector -->
                     <div class="hero-location-search-box">
                         <div class="location-search-input-group">
-                            <i class="fa-solid fa-magnifying-glass search-icon"></i>
                             <input type="text"
                                    id="globalAreaSearch"
                                    list="localLocationsList"
                                    class="location-search-input"
-                                   placeholder="Search area (e.g. Law Gate, LPU, Phagwara, Jalandhar)..."
+                                   placeholder="Search hostel or local area (e.g. BH-4, Law Gate, Uni-Mall)..."
                                    autocomplete="off">
                             <button type="button" class="btn btn-primary btn-sm" id="btnSearchArea">
-                                <i class="fa-solid fa-location-arrow"></i> Select Area
+                                Select Area
                             </button>
                         </div>
                         <div class="quick-location-chips" id="quickLocationChips">
-                            <span class="chips-title"><i class="fa-solid fa-map-pin"></i> Quick Select:</span>
-                            <button type="button" class="loc-chip active" data-zone="zone-lpu">
-                                <i class="fa-solid fa-graduation-cap"></i> LPU Campus
+                            <span class="chips-title">Quick Select:</span>
+                            <button type="button" class="loc-chip active" data-zone="zone-lpu-bh">
+                                LPU Boys Hostels
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-lpu-gh">
+                                LPU Girls Hostels
+                            </button>
+                            <button type="button" class="loc-chip" data-zone="zone-unimall">
+                                Uni-Mall
                             </button>
                             <button type="button" class="loc-chip" data-zone="zone-law-gate">
-                                <i class="fa-solid fa-store"></i> Law Gate
+                                Law Gate
                             </button>
                             <button type="button" class="loc-chip" data-zone="zone-phagwara">
-                                <i class="fa-solid fa-city"></i> Phagwara
-                            </button>
-                            <button type="button" class="loc-chip" data-zone="zone-jalandhar">
-                                <i class="fa-solid fa-landmark"></i> Jalandhar
-                            </button>
-                            <button type="button" class="loc-chip" data-zone="zone-green-valley">
-                                <i class="fa-solid fa-tree"></i> Green Valley
+                                Phagwara GT Road
                             </button>
                         </div>
                     </div>
 
                     <div class="hero-buttons">
                         <a href="#report" class="btn btn-primary btn-large" data-modal-open="reportModal">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
                             Report an issue
                         </a>
 
                         <a href="#calendar" class="btn btn-secondary btn-large">
-                            <i class="fa-solid fa-calendar-days"></i>
                             View calendar
                         </a>
 
                         <button type="button" class="btn btn-outline btn-large" data-modal-open="reminderModal">
-                            <i class="fa-solid fa-bell"></i>
                             Set reminders
                         </button>
-                    </div>
-
-                    <div class="hero-trust">
-                        <div class="trust-avatars">
-                            <span><i class="fa-solid fa-recycle"></i></span>
-                            <span><i class="fa-solid fa-truck"></i></span>
-                            <span><i class="fa-solid fa-shield-heart"></i></span>
-                            <span><i class="fa-solid fa-check"></i></span>
-                        </div>
-
-                        <div class="trust-text">
-                            <strong>Live Municipal Coordination Active</strong>
-                            <span>14 Service Trucks on Route • 96.2% On-Time Pickup</span>
-                        </div>
                     </div>
                 </div>
 
                 <!-- RIGHT VISUAL -->
                 <div class="hero-visual">
-                    <div class="visual-glow"></div>
-
-                    <!-- Image Block with Floating Badges -->
                     <div class="hero-image-block">
-                        <div class="floating-tag tag-top">
-                            <span class="tag-icon">
-                                <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
-                            </span>
-                            <div>
-                                <strong>Route #04 In Progress</strong>
-                                <span>Maple St & 4th Cross · 82% Completed</span>
-                            </div>
-                        </div>
-
                         <div class="hero-image-wrapper">
                             <img
                                 src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
@@ -423,76 +190,12 @@
                                 decoding="async"
                                 width="1000"
                                 height="667">
-
-                            <div class="image-overlay"></div>
-
-                            <div class="image-label">
-                                <span class="label-icon">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </span>
-                                <div>
-                                    <span>SMART CITY WASTE SYSTEM</span>
-                                    <strong>EcoTrack Connected Zone A</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="floating-tag tag-bottom">
-                            <div class="progress-circle">
-                                <i class="fa-solid fa-bell"></i>
-                            </div>
-                            <div>
-                                <strong>Reminders Activated</strong>
-                                <span>Never forget collection morning</span>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Faded Municipal Dispatch Console Card on Right Side Under Image -->
-                    <div class="hero-authority-card" id="heroAuthorityCard">
-                        <div class="auth-card-header">
-                            <div class="auth-card-pill">
-                                <span class="auth-pulse-beacon"></span>
-                                <i class="fa-solid fa-shield-halved"></i>
-                                <span>Municipal Dispatch Console</span>
-                            </div>
-                            <span class="auth-card-badge">Live System</span>
-                        </div>
-
-                        <h3 class="auth-card-title">Incident Command Overview</h3>
-                        <p class="auth-card-desc">
-                            Real-time municipal telemetry across 5 zones: triage citizen reports, track fleet units, and monitor resolution SLAs.
-                        </p>
-
-                        <div class="auth-card-metrics">
-                            <div class="auth-metric-pill">
-                                <i class="fa-solid fa-truck-fast"></i>
-                                <span><strong>8 Trucks</strong> Active Fleet</span>
-                            </div>
-                            <div class="auth-metric-pill">
-                                <i class="fa-solid fa-clock-rotate-left"></i>
-                                <span><strong>Live Feed</strong> Triage</span>
-                            </div>
-                            <div class="auth-metric-pill">
-                                <i class="fa-solid fa-file-csv"></i>
-                                <span><strong>1-Click</strong> CSV Audit</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Unique Standalone Authority Dashboard Launch Button Just Below Box -->
-                    <button type="button" class="btn-authority-unique-launch" id="btnGatewayLaunchDashboard">
-                        <div class="launch-unique-left">
-                            <span class="launch-unique-sparkle">
-                                <i class="fa-solid fa-gauge-high"></i>
-                            </span>
-                            <span class="launch-unique-text">Authority Dashboard</span>
-                        </div>
-                        <div class="launch-unique-right">
-                            <i class="fa-solid fa-arrow-right launch-unique-arrow"></i>
-                        </div>
+                    <button type="button" class="btn btn-secondary" id="btnGatewayLaunchDashboard" style="margin-top: 1rem; width: 100%;">
+                        View Waste Collection Dashboard &rarr;
                     </button>
-
                 </div>
 
             </div>
@@ -504,11 +207,10 @@
             <div class="container">
                 <div class="section-heading">
                     <div>
-                        <span class="section-label">SYNCHRONIZED SCHEDULES</span>
-                        <h2>Collection Calendar & Pickups</h2>
+                        <h2>Hostel & Area Collection Calendar</h2>
                     </div>
                     <p>
-                        View scheduled collection dates for your zone, filter by waste type, and set automated alerts before collection crews arrive.
+                        View weekly collection days for your hostel or local area, filter by waste type, and set reminders.
                     </p>
                 </div>
 
@@ -517,31 +219,30 @@
                     <div class="calendar-toolbar">
                         <div class="calendar-zone-picker">
                             <label for="calendarAreaSelect" class="toolbar-label">
-                                <i class="fa-solid fa-map-pin"></i> Neighborhood Zone:
+                                Select Area / Hostel:
                             </label>
                             <select id="calendarAreaSelect" class="form-select inline-select">
-                                <option value="zone-lpu" selected>LPU Main Campus (Hostels & Uni-Mall)</option>
-                                <option value="zone-law-gate">Law Gate Student & Commercial Hub</option>
-                                <option value="zone-phagwara">Phagwara City & GT Road</option>
-                                <option value="zone-jalandhar">Jalandhar Central & Cantt</option>
-                                <option value="zone-green-valley">Green Valley & Eco Heights (Zone A)</option>
+                                <option value="zone-lpu-bh" selected>LPU Boys Hostels (BH-1 to BH-8)</option>
+                                <option value="zone-lpu-gh">LPU Girls Hostels (GH-1 to GH-3)</option>
+                                <option value="zone-unimall">Uni-Mall (Campus Commercial)</option>
+                                <option value="zone-law-gate">Law Gate (PG & Student Hub)</option>
+                                <option value="zone-phagwara">Phagwara GT Road</option>
                             </select>
                         </div>
 
                         <!-- Month Navigator -->
                         <div class="month-navigator">
                             <button type="button" class="btn-icon" id="btnPrevMonth" aria-label="Previous month">
-                                <i class="fa-solid fa-chevron-left"></i>
+                                &larr;
                             </button>
                             <span class="current-month-display" id="calendarMonthTitle">November 2026</span>
                             <button type="button" class="btn-icon" id="btnNextMonth" aria-label="Next month">
-                                <i class="fa-solid fa-chevron-right"></i>
+                                &rarr;
                             </button>
                         </div>
 
                         <!-- Reminders Shortcut Button -->
                         <button type="button" class="btn btn-outline" data-modal-open="reminderModal">
-                            <i class="fa-regular fa-bell"></i>
                             Notification Settings
                         </button>
                     </div>
@@ -550,13 +251,13 @@
                     <div class="filter-chips" id="calendarFilters" role="tablist">
                         <button type="button" class="chip active" data-filter="all">All Pickups</button>
                         <button type="button" class="chip chip-organic" data-filter="organic">
-                            <span class="chip-dot dot-organic"></span> Organic / Wet
+                            Organic / Mess Waste
                         </button>
                         <button type="button" class="chip chip-recyclable" data-filter="recyclable">
-                            <span class="chip-dot dot-recyclable"></span> Dry Recyclables
+                            Dry Recyclables
                         </button>
                         <button type="button" class="chip chip-hazardous" data-filter="hazardous">
-                            <span class="chip-dot dot-hazardous"></span> Hazardous / E-Waste
+                            E-Waste / Bulk
                         </button>
                     </div>
 
@@ -583,7 +284,7 @@
                             <div class="detail-card-header">
                                 <span class="badge" id="selectedDateBadge">Selected Day</span>
                                 <h3 id="selectedDateHeading">Wednesday, Nov 18</h3>
-                                <p class="detail-desc" id="selectedDateDesc">Regular neighborhood collection schedule</p>
+                                <p class="detail-desc" id="selectedDateDesc">Regular hostel collection schedule</p>
                             </div>
 
                             <div class="detail-pickups-list" id="selectedDatePickups">
@@ -597,7 +298,7 @@
                                         <p>Receive SMS/Email notification at 8:00 PM</p>
                                     </div>
                                     <button type="button" class="btn btn-secondary btn-sm" id="btnQuickReminder">
-                                        <i class="fa-solid fa-bell"></i> Remind Me
+                                        Remind Me
                                     </button>
                                 </div>
                             </div>
@@ -614,86 +315,69 @@
             <div class="container">
                 <div class="section-heading">
                     <div>
-                        <span class="section-label">LIVE OPERATIONS</span>
-                        <h2>Municipal Service Dashboard</h2>
+                        <h2>Hostel & Campus Waste Dashboard</h2>
                     </div>
                     <p>
-                        Real-time tracking of waste collection trucks, route completion rates, and municipal responsiveness across all zones.
+                        Daily tracking of campus cleaning trucks, route completion, and resolved complaints across hostels and local zones.
                     </p>
                 </div>
 
                 <!-- 4 Top KPI Metric Cards -->
                 <div class="kpi-grid">
                     <div class="v0-card kpi-card">
-                        <div class="kpi-top">
-                            <span class="kpi-icon icon-green"><i class="fa-solid fa-route"></i></span>
-                            <span class="kpi-trend trend-up"><i class="fa-solid fa-arrow-up"></i> +4.1%</span>
-                        </div>
                         <div class="kpi-body">
                             <div class="kpi-value" id="kpiRouteCompletion">82%</div>
                             <div class="kpi-label">Today's Route Completion</div>
                             <div class="progress-bar-container">
                                 <div class="progress-bar-fill" style="width: 82%;"></div>
                             </div>
-                            <span class="kpi-footnote">18 of 22 sectors collected</span>
+                            <span class="kpi-footnote">7 of 8 routes completed</span>
                         </div>
                     </div>
 
                     <div class="v0-card kpi-card">
-                        <div class="kpi-top">
-                            <span class="kpi-icon icon-blue"><i class="fa-solid fa-truck-moving"></i></span>
-                            <span class="kpi-status-live"><span class="pulse-dot"></span> Live GPS</span>
-                        </div>
                         <div class="kpi-body">
-                            <div class="kpi-value" id="kpiActiveFleet">14 / 16</div>
-                            <div class="kpi-label">Active Collection Trucks</div>
+                            <div class="kpi-value" id="kpiActiveFleet">8 / 8</div>
+                            <div class="kpi-label">Active Cleaning Trucks</div>
                             <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: 88%; background: #2563eb;"></div>
+                                <div class="progress-bar-fill" style="width: 100%; background: #2563eb;"></div>
                             </div>
-                            <span class="kpi-footnote">2 trucks in depot maintenance</span>
+                            <span class="kpi-footnote">All 8 trucks on route</span>
                         </div>
                     </div>
 
                     <div class="v0-card kpi-card">
-                        <div class="kpi-top">
-                            <span class="kpi-icon icon-purple"><i class="fa-solid fa-stopwatch"></i></span>
-                            <span class="kpi-trend trend-up"><i class="fa-solid fa-check"></i> Target met</span>
-                        </div>
                         <div class="kpi-body">
-                            <div class="kpi-value" id="kpiResolutionRate">96.2%</div>
+                            <div class="kpi-value" id="kpiResolutionRate">96%</div>
                             <div class="kpi-label">Issue Resolution Rate</div>
                             <div class="progress-bar-container">
                                 <div class="progress-bar-fill" style="width: 96%; background: #7c3aed;"></div>
                             </div>
-                            <span class="kpi-footnote">Avg. response under 3.5 hrs</span>
+                            <span class="kpi-footnote">Average response under 4 hours</span>
                         </div>
                     </div>
 
                     <div class="v0-card kpi-card">
-                        <div class="kpi-top">
-                            <span class="kpi-icon icon-orange"><i class="fa-solid fa-leaf"></i></span>
-                            <span class="kpi-badge-gold">Grade A+</span>
-                        </div>
                         <div class="kpi-body">
                             <div class="kpi-value" id="kpiCleanlinessIndex">98 / 100</div>
-                            <div class="kpi-label">Neighborhood Cleanliness Index</div>
+                            <div class="kpi-label">Campus Cleanliness Score</div>
                             <div class="progress-bar-container">
                                 <div class="progress-bar-fill" style="width: 98%; background: var(--primary);"></div>
                             </div>
-                            <span class="kpi-footnote">Rated by resident audit</span>
+                            <span class="kpi-footnote">Based on hostel audit reports</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Live Municipal Activity Feed & Fleet Log -->
+                <!-- Live Activity Feed & Fleet Log -->
                 <div class="v0-card dashboard-log-card">
                     <div class="card-header-row">
                         <div>
-                            <h3>Active Route Operations & Dispatches</h3>
-                            <p>Live status stream directly from municipal dispatch coordinators</p>
+                            <h3>Active Route Operations</h3>
+                            <p>Current schedule and route progress across campus and city sectors</p>
                         </div>
                         <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshDashboard">
-                            <i class="fa-solid fa-rotate"></i> Live Refresh
+                            Refresh Data
                         </button>
                     </div>
 
@@ -702,7 +386,7 @@
                             <thead>
                                 <tr>
                                     <th>Truck #</th>
-                                    <th>Assigned Sector</th>
+                                    <th>Assigned Area</th>
                                     <th>Waste Stream</th>
                                     <th>Driver / Crew</th>
                                     <th>Route Progress</th>
@@ -711,36 +395,36 @@
                             </thead>
                             <tbody id="fleetTableBody">
                                 <tr>
-                                    <td><strong>Truck-04</strong></td>
-                                    <td>Green Valley (Sector 1–4)</td>
-                                    <td><span class="tag tag-organic">Organic Wet</span></td>
-                                    <td>R. Patel & Team</td>
+                                    <td><strong>Truck-01</strong></td>
+                                    <td>LPU Boys Hostels (BH-1 to BH-4)</td>
+                                    <td><span class="tag tag-organic">Mess Food Waste</span></td>
+                                    <td>Ram Singh &amp; Team</td>
                                     <td>
                                         <div class="table-progress">
-                                            <div class="bar" style="width: 92%;"></div>
-                                            <span>92%</span>
+                                            <div class="bar" style="width: 85%;"></div>
+                                            <span>85%</span>
                                         </div>
                                     </td>
                                     <td><span class="status-pill status-active">On Route</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-09</strong></td>
-                                    <td>Green Valley (Sector 5–8)</td>
-                                    <td><span class="tag tag-recyclable">Recyclables</span></td>
-                                    <td>M. Jenkins</td>
+                                    <td><strong>Truck-02</strong></td>
+                                    <td>LPU Girls Hostels (GH-1 to GH-3)</td>
+                                    <td><span class="tag tag-recyclable">Dry Recyclables</span></td>
+                                    <td>Gurpreet Singh</td>
                                     <td>
                                         <div class="table-progress">
-                                            <div class="bar" style="width: 78%;"></div>
-                                            <span>78%</span>
+                                            <div class="bar" style="width: 70%;"></div>
+                                            <span>70%</span>
                                         </div>
                                     </td>
                                     <td><span class="status-pill status-active">On Route</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-12</strong></td>
-                                    <td>North Ridge (Main Blvd)</td>
-                                    <td><span class="tag tag-organic">Organic Wet</span></td>
-                                    <td>S. Kumar & Team</td>
+                                    <td><strong>Truck-03</strong></td>
+                                    <td>Uni-Mall &amp; Commercial Blocks</td>
+                                    <td><span class="tag tag-organic">Mixed Waste</span></td>
+                                    <td>Sukhwinder</td>
                                     <td>
                                         <div class="table-progress">
                                             <div class="bar" style="width: 100%;"></div>
@@ -750,14 +434,14 @@
                                     <td><span class="status-pill status-done">Completed</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-02</strong></td>
-                                    <td>Downtown Commercial</td>
-                                    <td><span class="tag tag-hazardous">Cardboard & Dry</span></td>
-                                    <td>A. Gomez</td>
+                                    <td><strong>Truck-04</strong></td>
+                                    <td>Law Gate &amp; Student PGs</td>
+                                    <td><span class="tag tag-hazardous">Street Bins &amp; Plastic</span></td>
+                                    <td>Harpreet &amp; Team</td>
                                     <td>
                                         <div class="table-progress">
-                                            <div class="bar" style="width: 64%;"></div>
-                                            <span>64%</span>
+                                            <div class="bar" style="width: 55%;"></div>
+                                            <span>55%</span>
                                         </div>
                                     </td>
                                     <td><span class="status-pill status-active">On Route</span></td>
@@ -776,11 +460,10 @@
             <div class="container">
                 <div class="section-heading">
                     <div>
-                        <span class="section-label">ISSUE RESOLUTION CENTER</span>
-                        <h2>Report an Issue or Request Service</h2>
+                        <h2>Report an Issue</h2>
                     </div>
                     <p>
-                        Did the collection truck miss your street? Is your public or domestic bin broken or overflowing? Submit below for immediate dispatch.
+                        Report missed hostel waste pickups, broken bins, or litter around campus and local areas.
                     </p>
                 </div>
 
@@ -788,18 +471,15 @@
                     <!-- Segmented Tabs Navigation -->
                     <div class="v0-segmented-tabs" role="tablist" aria-label="Report Issue Categories">
                         <button type="button" class="tab-btn active" role="tab" id="tabMissedBtn" aria-selected="true" aria-controls="paneMissed" data-tab="missed">
-                            <i class="fa-solid fa-truck-ramp-box"></i>
-                            <span>Missed Pickup Report</span>
+                            Missed Pickup
                         </button>
 
                         <button type="button" class="tab-btn" role="tab" id="tabBinBtn" aria-selected="false" aria-controls="paneBin" data-tab="bin">
-                            <i class="fa-solid fa-trash-can"></i>
-                            <span>Bin Issue Report</span>
+                            Damaged or Full Bin
                         </button>
 
                         <button type="button" class="tab-btn" role="tab" id="tabGeneralBtn" aria-selected="false" aria-controls="paneGeneral" data-tab="general">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
-                            <span>Illegal Dumping / Other</span>
+                            Litter / Dumping
                         </button>
                     </div>
 
@@ -807,52 +487,52 @@
                     <div class="tab-pane active" id="paneMissed" role="tabpanel" aria-labelledby="tabMissedBtn">
                         <form id="formMissedPickup" class="report-form-grid">
                             <div class="form-group">
-                                <label for="missedArea" class="form-label">Neighborhood Area *</label>
+                                <label for="missedArea" class="form-label">Area / Hostel *</label>
                                 <select id="missedArea" class="form-select" required>
-                                    <option value="Green Valley (Zone A)">Green Valley & Eco Heights (Zone A)</option>
-                                    <option value="North Ridge (Zone B)">North Ridge Residential (Zone B)</option>
-                                    <option value="Central Downtown (Zone C)">Central Commercial & Downtown (Zone C)</option>
-                                    <option value="South Harbor (Zone D)">South Harbor & Waterfront (Zone D)</option>
+                                    <option value="LPU Boys Hostels" selected>LPU Boys Hostels (BH-1 to BH-8)</option>
+                                    <option value="LPU Girls Hostels">LPU Girls Hostels (GH-1 to GH-3)</option>
+                                    <option value="Uni-Mall">Uni-Mall (Campus Commercial)</option>
+                                    <option value="Law Gate">Law Gate (PG & Student Hub)</option>
+                                    <option value="Phagwara GT Road">Phagwara GT Road</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="missedAddress" class="form-label">Street Address & House / Apt # *</label>
+                                <label for="missedAddress" class="form-label">Block / Room or Street Details *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="missedAddress" list="localLocationsList" class="form-control" placeholder="e.g. Law Gate Main Street, LPU BH-4, Phagwara GT Road..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location via GPS">
-                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    <input type="text" id="missedAddress" list="localLocationsList" class="form-control" placeholder="e.g. BH-4 Mess Gate, Law Gate Lane 1..." required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
+                                        Location
                                     </button>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label for="missedDate" class="form-label">Scheduled Date That Was Missed *</label>
+                                <label for="missedDate" class="form-label">Date Missed *</label>
                                 <input type="date" id="missedDate" class="form-control" required>
                             </div>
 
                             <div class="form-group">
                                 <label for="missedWasteType" class="form-label">Waste Type Left Behind *</label>
                                 <select id="missedWasteType" class="form-select" required>
-                                    <option value="Organic Wet Waste">Organic / Wet Household Waste (Green Bin)</option>
-                                    <option value="Dry Recyclables">Dry Recyclables - Paper & Plastics (Blue Bin)</option>
-                                    <option value="Hazardous / Bulk Waste">Hazardous / Electronics / Bulk Items</option>
-                                    <option value="All Scheduled Bins">All Scheduled Bins Were Missed</option>
+                                    <option value="Organic Wet Waste">Organic / Mess Food Waste</option>
+                                    <option value="Dry Recyclables">Dry Recyclables - Paper & Plastics</option>
+                                    <option value="Hazardous / Bulk Waste">E-Waste / Bulk Waste</option>
+                                    <option value="All Scheduled Bins">All Bins Were Missed</option>
                                 </select>
                             </div>
 
                             <div class="form-group full-width">
-                                <label for="missedNotes" class="form-label">Additional Instructions / Placement Details</label>
-                                <textarea id="missedNotes" class="form-textarea" placeholder="e.g. Bins were curbside since 6:30 AM; gate code #4192."></textarea>
+                                <label for="missedNotes" class="form-label">Additional Details</label>
+                                <textarea id="missedNotes" class="form-textarea" placeholder="e.g. Dustbins near block entrance were not cleared."></textarea>
                             </div>
 
                             <div class="form-group full-width">
-                                <label class="form-label">Attach Photo Evidence (Optional)</label>
+                                <label class="form-label">Attach Photo (Optional)</label>
                                 <div class="file-upload-box">
                                     <input type="file" id="missedPhotoInput" class="photo-file-input" accept="image/*">
                                     <label for="missedPhotoInput" class="file-upload-label">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>Click to attach photo of curbside / missed bins</span>
+                                        <span>Click to select photo of bins / location</span>
                                     </label>
                                     <div class="photo-preview" id="missedPhotoPreview" style="display:none;"></div>
                                 </div>
@@ -860,11 +540,10 @@
 
                             <div class="form-footer full-width">
                                 <div class="response-pledge">
-                                    <i class="fa-solid fa-clock-rotate-left"></i>
-                                    <span>Guaranteed recovery truck dispatch within 4 hours.</span>
+                                    <span>Campus cleaning staff will inspect the reported area.</span>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-large">
-                                    <i class="fa-solid fa-paper-plane"></i> Submit Missed Pickup Ticket
+                                    Submit Missed Pickup Ticket
                                 </button>
                             </div>
                         </form>
@@ -874,31 +553,31 @@
                     <div class="tab-pane" id="paneBin" role="tabpanel" aria-labelledby="tabBinBtn" hidden>
                         <form id="formBinIssue" class="report-form-grid">
                             <div class="form-group">
-                                <label for="binIssueType" class="form-label">Bin Problem Type *</label>
+                                <label for="binIssueType" class="form-label">Problem Type *</label>
                                 <select id="binIssueType" class="form-select" required>
                                     <option value="Damaged Bin (Wheels / Lid Cracked)">Damaged Bin (Wheels / Lid Cracked)</option>
-                                    <option value="Overflowing Public Bin">Overflowing Public Street Bin</option>
-                                    <option value="Missing / Stolen Bin">Missing or Stolen Receptacle</option>
-                                    <option value="Request New / Additional Bin">Request Additional / Larger Bin</option>
-                                    <option value="Smell / Sanitation Hazard">Sanitation / Cleaning Required</option>
+                                    <option value="Overflowing Public Bin">Overflowing Bin</option>
+                                    <option value="Missing / Stolen Bin">Missing Bin</option>
+                                    <option value="Request New / Additional Bin">Request Additional Bin</option>
+                                    <option value="Smell / Sanitation Hazard">Cleaning Required</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="binSize" class="form-label">Bin Receptacle Size</label>
+                                <label for="binSize" class="form-label">Bin Size</label>
                                 <select id="binSize" class="form-select">
-                                    <option value="120 Litres Standard">120L Standard Domestic Bin</option>
-                                    <option value="240 Litres Large">240L Large Family / Commercial Bin</option>
-                                    <option value="Public Street Bin">Public Street / Park Bin</option>
+                                    <option value="120 Litres Standard">120L Standard Hostel Bin</option>
+                                    <option value="240 Litres Large">240L Large Mess Bin</option>
+                                    <option value="Public Street Bin">Campus Walkway Bin</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label for="binLocation" class="form-label">Location / Bin Serial (If known) *</label>
+                                <label for="binLocation" class="form-label">Location / Landmark *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="binLocation" list="localLocationsList" class="form-control" placeholder="e.g. Law Gate Food Street, LPU Uni-Mall, Phagwara GT Road..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Use GPS Location">
-                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    <input type="text" id="binLocation" list="localLocationsList" class="form-control" placeholder="e.g. Uni-Mall Food Court, Law Gate Street..." required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
+                                        Location
                                     </button>
                                 </div>
                             </div>
@@ -906,24 +585,23 @@
                             <div class="form-group">
                                 <label for="binUrgency" class="form-label">Urgency Level</label>
                                 <select id="binUrgency" class="form-select">
-                                    <option value="Standard">Standard (Within 2 business days)</option>
-                                    <option value="High">High (Spill risk / pedestrian obstruction)</option>
-                                    <option value="Urgent">Urgent (Biohazard / completely blocked walkway)</option>
+                                    <option value="Standard">Standard</option>
+                                    <option value="High">High Priority</option>
+                                    <option value="Urgent">Urgent</option>
                                 </select>
                             </div>
 
                             <div class="form-group full-width">
-                                <label for="binDetails" class="form-label">Description & Specific Damage</label>
-                                <textarea id="binDetails" class="form-textarea" placeholder="Describe the condition of the bin or replacement requirements..."></textarea>
+                                <label for="binDetails" class="form-label">Description</label>
+                                <textarea id="binDetails" class="form-textarea" placeholder="Describe the condition of the bin..."></textarea>
                             </div>
 
                             <div class="form-group full-width">
-                                <label class="form-label">Attach Photo of Damaged Bin / Serial (Optional)</label>
+                                <label class="form-label">Attach Photo (Optional)</label>
                                 <div class="file-upload-box">
                                     <input type="file" id="binPhotoInput" class="photo-file-input" accept="image/*">
                                     <label for="binPhotoInput" class="file-upload-label">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>Click to attach photo showing bin damage or serial stamp</span>
+                                        <span>Click to select photo</span>
                                     </label>
                                     <div class="photo-preview" id="binPhotoPreview" style="display:none;"></div>
                                 </div>
@@ -931,11 +609,10 @@
 
                             <div class="form-footer full-width">
                                 <div class="response-pledge">
-                                    <i class="fa-solid fa-truck-pickup"></i>
-                                    <span>Replacement bins delivered free of municipal charge.</span>
+                                    <span>Damaged bins will be repaired or replaced by maintenance.</span>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-large">
-                                    <i class="fa-solid fa-paper-plane"></i> Submit Bin Issue Ticket
+                                    Submit Bin Issue Ticket
                                 </button>
                             </div>
                         </form>
@@ -947,35 +624,34 @@
                             <div class="form-group">
                                 <label for="generalCategory" class="form-label">Category *</label>
                                 <select id="generalCategory" class="form-select" required>
-                                    <option value="Illegal Dumping Site">Illegal Garbage Dumping Site</option>
-                                    <option value="Construction Debris">Construction / Remodeling Debris</option>
-                                    <option value="Hazardous Chemical Spill">Chemical / Oil / Hazardous Spill</option>
-                                    <option value="Dead Animal Sanitation">Dead Animal Removal Needed</option>
+                                    <option value="Illegal Dumping Site">Garbage Dumping / Litter Site</option>
+                                    <option value="Construction Debris">Construction Debris</option>
+                                    <option value="Hazardous Chemical Spill">Chemical / Oil Spill</option>
+                                    <option value="Dead Animal Sanitation">Sanitation Cleanup Needed</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="generalLocation" class="form-label">Exact Location / Landmark *</label>
                                 <div class="input-with-action">
-                                    <input type="text" id="generalLocation" list="localLocationsList" class="form-control" placeholder="e.g. Near Law Gate transformer, LPU Block 34, Jalandhar Model Town..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Auto-detect location">
-                                        <i class="fa-solid fa-location-crosshairs"></i> GPS
+                                    <input type="text" id="generalLocation" list="localLocationsList" class="form-control" placeholder="e.g. Near Law Gate transformer, LPU Block 34..." required>
+                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
+                                        Location
                                     </button>
                                 </div>
                             </div>
 
                             <div class="form-group full-width">
-                                <label for="generalDescription" class="form-label">Description of Dumping / Spill</label>
-                                <textarea id="generalDescription" class="form-textarea" placeholder="Approximate volume of waste, type of materials observed, vehicle plates if known..."></textarea>
+                                <label for="generalDescription" class="form-label">Description of Waste</label>
+                                <textarea id="generalDescription" class="form-textarea" placeholder="Describe the waste and approximate size..."></textarea>
                             </div>
 
                             <div class="form-group full-width">
-                                <label class="form-label">Attach Site Photo of Waste / Dumping (Optional)</label>
+                                <label class="form-label">Attach Photo (Optional)</label>
                                 <div class="file-upload-box">
                                     <input type="file" id="generalPhotoInput" class="photo-file-input" accept="image/*">
                                     <label for="generalPhotoInput" class="file-upload-label">
-                                        <i class="fa-solid fa-camera"></i>
-                                        <span>Click to attach photo showing dumping extent or hazard</span>
+                                        <span>Click to select photo</span>
                                     </label>
                                     <div class="photo-preview" id="generalPhotoPreview" style="display:none;"></div>
                                 </div>
@@ -983,11 +659,10 @@
 
                             <div class="form-footer full-width">
                                 <div class="response-pledge">
-                                    <i class="fa-solid fa-shield-halved"></i>
-                                    <span>Reviewed directly by environmental protection inspectors.</span>
+                                    <span>Reviewed by campus sanitation coordinator.</span>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-large">
-                                    <i class="fa-solid fa-paper-plane"></i> Dispatch Environmental Crew
+                                    Submit Report
                                 </button>
                             </div>
                         </form>
@@ -1004,42 +679,40 @@
             <div class="container">
                 <div class="section-heading">
                     <div>
-                        <span class="section-label">REAL-TIME RESOLUTION</span>
-                        <h2>Track Complaint & Service Status</h2>
+                        <h2>Track Complaint Status</h2>
                     </div>
                     <p>
-                        Enter your report tracking ID to view live officer assignment, crew dispatch updates, and photo verification of resolution.
+                        Enter your complaint tracking ID to see inspection and resolution updates.
                     </p>
                 </div>
 
                 <div class="v0-card tracker-shell">
                     <form id="pageTrackerForm" class="tracker-input-row">
                         <div class="input-icon-group">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="pageTrackingInput" class="form-control tracker-input" placeholder="Enter Tracking ID (e.g. ECO-2026-MP-101)..." required>
+                            <input type="text" id="pageTrackingInput" class="form-control tracker-input" placeholder="Enter Tracking ID (e.g. ECO-2026-LPU-101)..." required>
                         </div>
                         <button type="submit" class="btn btn-primary btn-large">
-                            <i class="fa-solid fa-location-crosshairs"></i> Track Status
+                            Track Status
                         </button>
                     </form>
 
                     <!-- Quick Demo Ticket Pills -->
                     <div class="demo-pills-row">
-                        <span>Try Sample Tickets or Search Areas:</span>
+                        <span>Sample Tickets:</span>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LPU-101">
-                            <i class="fa-solid fa-graduation-cap"></i> ECO-2026-LPU-101 (LPU Campus)
+                            ECO-2026-LPU-101 (LPU Boys Hostels)
                         </button>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LG-202">
-                            <i class="fa-solid fa-store"></i> ECO-2026-LG-202 (Law Gate Food St)
+                            ECO-2026-LG-202 (Law Gate)
                         </button>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-PH-303">
-                            <i class="fa-solid fa-city"></i> ECO-2026-PH-303 (Phagwara GT Road)
+                            ECO-2026-PH-303 (Phagwara GT Road)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-JL-404">
-                            <i class="fa-solid fa-landmark"></i> ECO-2026-JL-404 (Jalandhar Model Town)
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-UM-404">
+                            ECO-2026-UM-404 (Uni-Mall)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-GV-505">
-                            <i class="fa-solid fa-tree"></i> ECO-2026-GV-505 (Green Valley Park)
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-GH-505">
+                            ECO-2026-GH-505 (LPU Girls Hostels)
                         </button>
                     </div>
 
@@ -1057,16 +730,18 @@
         <section class="stats-section" id="community">
             <div class="container stats-grid">
                 <div class="stats-intro">
-                    <span class="section-label">OUR COLLECTIVE IMPACT</span>
-                    <h2>Measurable progress every single day.</h2>
+                    <h2>Project Statistics</h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem;">
+                        Real campus numbers tracked across hostels and student residential areas.
+                    </p>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-icon">
-                        <i class="fa-solid fa-house-chimney"></i>
+                        <i class="fa-solid fa-map-location-dot"></i>
                     </div>
                     <div>
-                        <h3 data-count="12">0</h3>
+                        <h3 data-count="5">5</h3>
                         <span>Coordinated Zones</span>
                     </div>
                 </div>
@@ -1076,8 +751,8 @@
                         <i class="fa-solid fa-truck"></i>
                     </div>
                     <div>
-                        <h3 data-count="240">0</h3>
-                        <span>Monthly Route Cycles</span>
+                        <h3 data-count="120">120</h3>
+                        <span>Monthly Pickups</span>
                     </div>
                 </div>
 
@@ -1086,8 +761,8 @@
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div>
-                        <h3 data-count="850">0</h3>
-                        <span>Registered Citizens</span>
+                        <h3 data-count="450">450</h3>
+                        <span>Registered Students</span>
                     </div>
                 </div>
 
@@ -1096,8 +771,8 @@
                         <i class="fa-solid fa-recycle"></i>
                     </div>
                     <div>
-                        <h3 data-count="1250">0</h3>
-                        <span>Tons Recycled</span>
+                        <h3 data-count="18">18</h3>
+                        <span>Tons Collected</span>
                     </div>
                 </div>
             </div>
@@ -1166,26 +841,21 @@
                     </a>
 
                     <!-- MUNICIPAL ZONES -->
-                    <div class="saas-nav-group-title">MUNICIPAL ZONES</div>
-                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="LPU">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>LPU Main Campus</span>
+                    <div class="saas-nav-group-title">CAMPUS & CITY ZONES</div>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="LPU Boys Hostels">
+                        <span>LPU Boys Hostels</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="LPU Girls Hostels">
+                        <span>LPU Girls Hostels</span>
+                    </a>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Uni-Mall">
+                        <span>Uni-Mall</span>
                     </a>
                     <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Law Gate">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>Law Gate Student Hub</span>
+                        <span>Law Gate</span>
                     </a>
-                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Phagwara">
-                        <i class="fa-solid fa-location-dot"></i>
+                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Phagwara GT Road">
                         <span>Phagwara GT Road</span>
-                    </a>
-                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Jalandhar">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>Jalandhar Model Town</span>
-                    </a>
-                    <a href="javascript:void(0)" class="saas-nav-item saas-zone-link" data-zone-target="Green Valley">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <span>Green Valley Heights</span>
                     </a>
 
                     <!-- AUDIT & REPORTS -->
@@ -1272,7 +942,7 @@
                         <!-- KPI 2: Due / Pending -->
                         <div class="saas-kpi-card">
                             <div class="saas-kpi-top">
-                                <span class="saas-kpi-name">DUE / PENDING TRIAGE</span>
+                                <span class="saas-kpi-name">PENDING INSPECTION</span>
                                 <span class="saas-pill-badge orange">Threshold</span>
                             </div>
                             <div class="saas-kpi-metric" id="authKpiPending">0</div>
@@ -1392,11 +1062,11 @@
                                 </div>
                                 <select id="authZoneFilterSelect" class="form-select inline-select" style="min-width: 160px; height: 38px; font-size: 0.82rem;">
                                     <option value="all">All Locations</option>
-                                    <option value="LPU">LPU Campus</option>
+                                    <option value="LPU Boys Hostels">LPU Boys Hostels</option>
+                                    <option value="LPU Girls Hostels">LPU Girls Hostels</option>
+                                    <option value="Uni-Mall">Uni-Mall</option>
                                     <option value="Law Gate">Law Gate</option>
-                                    <option value="Phagwara">Phagwara</option>
-                                    <option value="Jalandhar">Jalandhar</option>
-                                    <option value="Green Valley">Green Valley</option>
+                                    <option value="Phagwara GT Road">Phagwara GT Road</option>
                                 </select>
                                 <button type="button" class="btn-icon" id="btnRefreshAuthorityData" title="Refresh Live Authority Data">
                                     <i class="fa-solid fa-rotate"></i>
@@ -1442,7 +1112,7 @@
 
 
     <!-- =========================================
-         FOOTER
+         FOOTER (Authentic Student Project)
     ========================================= -->
     <footer class="footer">
         <div class="container footer-content">
@@ -1455,27 +1125,26 @@
                         EcoTrack<span class="logo-dot">.</span>
                     </a>
                     <p class="footer-tagline">
-                        Smart local waste-service coordination platform for schedules, reminders, and municipal issue tracking.
+                        A 1st-year computer science student project for tracking hostel waste collection schedules, submitting cleaning complaints, and viewing truck routes.
                     </p>
                     <div class="footer-project-meta">
-                        <span class="pulse-dot"></span>
-                        <span>Municipal Coordination Engine v2.0 • Punjab Hubs</span>
+                        <span>LPU &amp; Phagwara Student Initiative</span>
                     </div>
                 </div>
 
                 <div class="footer-links-group">
-                    <strong>Quick Coordination</strong>
+                    <strong>Quick Links</strong>
                     <ul>
-                        <li><a href="#calendar"><i class="fa-solid fa-calendar-days"></i> Collection Calendar</a></li>
-                        <li><a href="#dashboard"><i class="fa-solid fa-gauge-high"></i> Authority Dashboard</a></li>
-                        <li><a href="#report"><i class="fa-solid fa-triangle-exclamation"></i> Report Missed Pickup</a></li>
-                        <li><a href="#report"><i class="fa-solid fa-trash-can"></i> Report Bin Damage</a></li>
-                        <li><a href="#track"><i class="fa-solid fa-location-crosshairs"></i> Live Ticket Tracking</a></li>
+                        <li><a href="#calendar">Collection Calendar</a></li>
+                        <li><a href="#dashboard">Operations Dashboard</a></li>
+                        <li><a href="#report">Report Missed Pickup</a></li>
+                        <li><a href="#report">Report Bin Issue</a></li>
+                        <li><a href="#track">Track Complaint</a></li>
                     </ul>
                 </div>
 
                 <div class="footer-links-group footer-dev-col">
-                    <strong>Developer & Architecture</strong>
+                    <strong>About Developer &amp; Technologies</strong>
                     
                     <!-- About Developer By Ayush Kumar in Times New Roman Italics -->
                     <div class="footer-dev-card">
@@ -1487,31 +1156,22 @@
 
                     <!-- Tech Stack Details -->
                     <div class="footer-tech-stack-box">
-                        <span class="tech-stack-heading">Technologies & Stack Used:</span>
+                        <span class="tech-stack-heading">Technologies Used:</span>
                         <ul class="footer-tech-list">
                             <li>
-                                <i class="fa-brands fa-html5" style="color: #f97316;"></i>
-                                <span><strong>HTML5</strong> — Semantic Web, ARIA & WCAG 2.1 AA Accessibility</span>
+                                <span><strong>HTML5</strong> — Page Structure &amp; Semantic Forms</span>
                             </li>
                             <li>
-                                <i class="fa-brands fa-css3-alt" style="color: #38bdf8;"></i>
-                                <span><strong>CSS3</strong> — Custom Properties, Responsive SaaS Flex/Grid & Transitions</span>
+                                <span><strong>CSS3</strong> — Custom Styles &amp; Responsive Layout</span>
                             </li>
                             <li>
-                                <i class="fa-brands fa-square-js" style="color: #facc15;"></i>
-                                <span><strong>JavaScript (ES6+)</strong> — Reactive State, Dynamic SVG Charts & Modals</span>
+                                <span><strong>JavaScript (ES6+)</strong> — Form Handling, Calendar &amp; Local Tracking</span>
                             </li>
                             <li>
-                                <i class="fa-brands fa-python" style="color: #60a5fa;"></i>
-                                <span><strong>Python 3</strong> — REST API Server (<code>server.py</code>)</span>
+                                <span><strong>Python 3</strong> — Simple Backend REST Server (<code>server.py</code>)</span>
                             </li>
                             <li>
-                                <i class="fa-solid fa-database" style="color: #a3e635;"></i>
                                 <span><strong>SQLite3</strong> — Embedded Local Database (<code>ecotrack.db</code>)</span>
-                            </li>
-                            <li>
-                                <i class="fa-solid fa-icons" style="color: #c084fc;"></i>
-                                <span><strong>Icons & Typography</strong> — Font Awesome 6 & Google Fonts (Manrope, Inter)</span>
                             </li>
                         </ul>
                     </div>
@@ -1520,10 +1180,10 @@
 
             <div class="footer-bottom-bar">
                 <span class="footer-copy">
-                    © 2026 EcoTrack Municipal Coordination Platform. Architected & Developed by Ayush Kumar.
+                    &copy; 2026 EcoTrack — 1st Year College Project by Ayush Kumar (LPU).
                 </span>
                 <div class="footer-status-pill">
-                    <span class="pulse-dot"></span> System Operational • SQLite REST Live
+                    System Active &amp; Ready
                 </div>
             </div>
         </div>
@@ -1540,15 +1200,12 @@
         <div class="modal-dialog" style="max-width: 680px;">
             <div class="modal-header">
                 <div>
-                    <span style="font-size: 0.72rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05em;">
-                        Official Incident Dossier & Action Console
-                    </span>
-                    <h3 class="modal-title" id="authModalTitle" style="margin-top: 0.2rem;">
-                        <i class="fa-solid fa-shield-halved" style="color: var(--primary);"></i> Complaint Details
+                    <h3 class="modal-title" id="authModalTitle">
+                        Complaint Details
                     </h3>
                 </div>
                 <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
-                    <i class="fa-solid fa-xmark"></i>
+                    &times;
                 </button>
             </div>
             <div class="modal-body" id="authModalBody">
@@ -1569,11 +1226,10 @@
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="reportModalTitle">
-                    <i class="fa-solid fa-triangle-exclamation" style="color: #ea580c;"></i>
                     Quick Issue Report
                 </h3>
                 <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
-                    <i class="fa-solid fa-xmark"></i>
+                    &times;
                 </button>
             </div>
             <form id="reportIssueForm">
@@ -1581,20 +1237,19 @@
                     <div class="form-group">
                         <label for="quickCategory" class="form-label">Issue Category *</label>
                         <select id="quickCategory" class="form-select" required>
-                            <option value="Missed Household Pickup">Missed Household Pickup</option>
-                            <option value="Overflowing Public Bin">Overflowing Public Street Bin</option>
-                            <option value="Damaged / Broken Bin">Damaged / Broken Bin Receptacle</option>
-                            <option value="Illegal Waste Dumping">Illegal Garbage Dumping</option>
-                            <option value="Hazardous / Chemical Spill">Hazardous Waste / Chemical Spill</option>
+                            <option value="Missed Hostel Pickup">Missed Hostel Pickup</option>
+                            <option value="Damaged or Full Bin">Damaged or Full Bin</option>
+                            <option value="Campus Litter or Dumping">Campus Litter or Dumping</option>
+                            <option value="Other Campus Sanitation Issue">Other Campus Sanitation Issue</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="quickLocation" class="form-label">Street Location / Landmark *</label>
+                        <label for="quickLocation" class="form-label">Location / Landmark *</label>
                         <div class="input-with-action">
-                            <input type="text" id="quickLocation" class="form-control" placeholder="e.g. 5th Avenue, near Park Entrance" required>
-                            <button type="button" class="btn-geo btnGeoDetect" title="Use GPS Location">
-                                <i class="fa-solid fa-location-crosshairs"></i> GPS
+                            <input type="text" id="quickLocation" class="form-control" placeholder="e.g. BH-4 Mess, Law Gate Lane 1" required>
+                            <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
+                                Location
                             </button>
                         </div>
                     </div>
@@ -1602,21 +1257,21 @@
                     <div class="form-group">
                         <label for="quickUrgency" class="form-label">Urgency Level</label>
                         <select id="quickUrgency" class="form-select">
-                            <option value="Standard">Standard Response (24-48 hrs)</option>
+                            <option value="Standard">Standard (Within 24-48 hrs)</option>
                             <option value="High Priority">High Priority (Within 4 hrs)</option>
-                            <option value="Emergency">Emergency (Immediate Biohazard)</option>
+                            <option value="Emergency">Urgent</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="quickNotes" class="form-label">Description / Details</label>
-                        <textarea id="quickNotes" class="form-textarea" placeholder="Provide any additional landmarks, gate codes, or details..."></textarea>
+                        <textarea id="quickNotes" class="form-textarea" placeholder="Provide any additional landmarks or details..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-paper-plane"></i> Submit Ticket
+                        Submit Ticket
                     </button>
                 </div>
             </form>
@@ -1629,23 +1284,22 @@
         <div class="modal-dialog">
             <div class="modal-header">
                 <h3 class="modal-title" id="reminderModalTitle">
-                    <i class="fa-solid fa-bell" style="color: var(--primary);"></i>
-                    Pickup Reminders & Alerts
+                    Pickup Reminders &amp; Alerts
                 </h3>
                 <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
-                    <i class="fa-solid fa-xmark"></i>
+                    &times;
                 </button>
             </div>
             <form id="reminderForm">
                 <div class="modal-body">
                     <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 1.25rem;">
-                        Never miss bin collection day. Configure automated reminders for your neighborhood zone.
+                        Never miss hostel or area bin collection day. Configure reminders for your zone.
                     </p>
 
                     <div class="reminder-switch-row">
                         <div>
                             <strong>Evening-Before Reminder (08:00 PM)</strong>
-                            <p>Get notified the night before so you can place bins curbside.</p>
+                            <p>Get notified the night before so you can place bins outside.</p>
                         </div>
                         <input type="checkbox" id="checkEveningReminder" class="v0-switch" checked>
                     </div>
@@ -1653,15 +1307,15 @@
                     <div class="reminder-switch-row">
                         <div>
                             <strong>Morning-Of Reminder (06:30 AM)</strong>
-                            <p>Last-minute alert 30 minutes before truck route begins.</p>
+                            <p>Reminder 30 minutes before truck route begins.</p>
                         </div>
                         <input type="checkbox" id="checkMorningReminder" class="v0-switch" checked>
                     </div>
 
                     <div class="reminder-switch-row">
                         <div>
-                            <strong>Severe Weather & Schedule Delay Alerts</strong>
-                            <p>Instant SMS/Push if trucks are rerouted or delayed.</p>
+                            <strong>Schedule Delay Alerts</strong>
+                            <p>Alert if trucks are delayed.</p>
                         </div>
                         <input type="checkbox" id="checkWeatherAlerts" class="v0-switch" checked>
                     </div>
@@ -1670,18 +1324,18 @@
 
                     <div class="form-group">
                         <label for="reminderEmail" class="form-label">Email Address for Notifications</label>
-                        <input type="email" id="reminderEmail" class="form-control" placeholder="resident@neighborhood.com" value="citizen@ecotrack.local">
+                        <input type="email" id="reminderEmail" class="form-control" placeholder="student@lpu.in" value="student@lpu.in">
                     </div>
 
                     <div class="form-group">
-                        <label for="reminderPhone" class="form-label">SMS Phone Number (Optional)</label>
+                        <label for="reminderPhone" class="form-label">Phone Number (Optional)</label>
                         <input type="tel" id="reminderPhone" class="form-control" placeholder="+91 98765 43210">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fa-solid fa-check"></i> Save Preferences
+                        Save Preferences
                     </button>
                 </div>
             </form>
@@ -1693,27 +1347,21 @@
 
     <!-- Local Locations Datalist for Fast Autocomplete Entry -->
     <datalist id="localLocationsList">
-        <option value="LPU Main Campus — Lovely Professional University">
-        <option value="LPU Uni-Mall & Central Food Court">
-        <option value="LPU Block 34 (Academic Building)">
-        <option value="LPU Boys Hostel BH-4 (Near Mess)">
-        <option value="LPU Boys Hostel BH-1">
-        <option value="LPU Girls Hostel GH-2">
-        <option value="LPU Service Gate Road">
-        <option value="Law Gate Main Street (Food Hub & Cafes)">
-        <option value="Law Gate Lane 1 (Student PGs & Rentals)">
-        <option value="Law Gate Lane 2 (Market & Grocery)">
-        <option value="Law Gate Outer Highway Link">
-        <option value="Phagwara GT Road Near Bus Stand">
-        <option value="Phagwara Urban Estate Phase 2">
-        <option value="Phagwara Model Town Market">
-        <option value="Phagwara Railway Station Road">
-        <option value="Jalandhar Model Town Gol Market">
-        <option value="Jalandhar Cantt Railway Station Road">
-        <option value="Jalandhar Civil Lines & BMC Chowk">
-        <option value="Jalandhar Rama Mandi">
-        <option value="Green Valley Central Park (Zone A)">
-        <option value="Green Valley Sector 4 Eco Heights">
+        <option value="LPU Boys Hostel BH-1"></option>
+        <option value="LPU Boys Hostel BH-2"></option>
+        <option value="LPU Boys Hostel BH-3"></option>
+        <option value="LPU Boys Hostel BH-4"></option>
+        <option value="LPU Girls Hostel GH-1"></option>
+        <option value="LPU Girls Hostel GH-2"></option>
+        <option value="LPU Girls Hostel GH-3"></option>
+        <option value="LPU Uni-Mall &amp; Central Food Court"></option>
+        <option value="LPU Block 34 (Academic Building)"></option>
+        <option value="Law Gate Main Street"></option>
+        <option value="Law Gate Lane 1 (Student PGs)"></option>
+        <option value="Law Gate Lane 2 (Market &amp; Grocery)"></option>
+        <option value="Phagwara GT Road Near Bus Stand"></option>
+        <option value="Phagwara Urban Estate Phase 2"></option>
+        <option value="Phagwara Railway Station Road"></option>
     </datalist>
 
 </body>
