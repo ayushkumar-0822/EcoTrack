@@ -83,12 +83,13 @@
                 </a>
             </div>
 
-            <!-- Clean Student Navigation: Logo + 4 Essential Links -->
+            <!-- Clean Student Navigation: Logo + 4 Essential Links + Admin Button -->
             <nav class="nav-links" id="mainNavLinks">
                 <a href="#calendar" class="nav-link">Calendar</a>
-                <a href="#dashboard" class="nav-link" id="navLinkDashboard">Dashboard</a>
-                <a href="#report" class="nav-link" data-modal-open="reportModal">Report Issue</a>
+                <a href="#routes" class="nav-link">Routes</a>
+                <a href="#report" class="nav-link">Report Issue</a>
                 <a href="#track" class="nav-link">Track Status</a>
+                <button type="button" class="btn btn-primary" id="btnNavAdminDashboard" style="padding: 7px 16px; font-size: 0.88rem; border-radius: 6px;">Admin Dashboard</button>
             </nav>
 
         </div>
@@ -110,10 +111,10 @@
 
                 <!-- LEFT CONTENT -->
                 <div class="hero-content">
-                    <h1>LPU & Phagwara Waste Collection Portal</h1>
+                    <h1>LPU &amp; Phagwara Waste Collection Portal</h1>
 
                     <p class="hero-description">
-                        A student-led portal to track daily hostel waste collection schedules, submit pickup complaints for LPU campus and nearby areas, and view active cleaning trucks.
+                        Check daily hostel and local waste pickup timings, report overflowing bins, and track complaint status.
                     </p>
 
                     <!-- Active Zone Overview Banner -->
@@ -181,7 +182,7 @@
                 <!-- RIGHT VISUAL -->
                 <div class="hero-visual">
                     <div class="hero-image-block">
-                        <div class="hero-image-wrapper">
+                        <div class="hero-image-wrapper" style="border-radius: 6px; overflow: hidden; border: 1px solid #d1d5db;">
                             <img
                                 src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=85"
                                 alt="Local waste collection and recycling bins"
@@ -189,13 +190,10 @@
                                 loading="eager"
                                 decoding="async"
                                 width="1000"
-                                height="667">
+                                height="667"
+                                style="border-radius: 6px;">
                         </div>
                     </div>
-
-                    <button type="button" class="btn btn-secondary" id="btnGatewayLaunchDashboard" style="margin-top: 1rem; width: 100%;">
-                        View Waste Collection Dashboard &rarr;
-                    </button>
                 </div>
 
             </div>
@@ -222,10 +220,10 @@
                                 Select Area / Hostel:
                             </label>
                             <select id="calendarAreaSelect" class="form-select inline-select">
-                                <option value="zone-lpu-bh" selected>LPU Boys Hostels (BH-1 to BH-8)</option>
-                                <option value="zone-lpu-gh">LPU Girls Hostels (GH-1 to GH-3)</option>
-                                <option value="zone-unimall">Uni-Mall (Campus Commercial)</option>
-                                <option value="zone-law-gate">Law Gate (PG & Student Hub)</option>
+                                <option value="zone-lpu-bh" selected>LPU Boys Hostels</option>
+                                <option value="zone-lpu-gh">LPU Girls Hostels</option>
+                                <option value="zone-unimall">Uni-Mall</option>
+                                <option value="zone-law-gate">Law Gate</option>
                                 <option value="zone-phagwara">Phagwara GT Road</option>
                             </select>
                         </div>
@@ -240,11 +238,6 @@
                                 &rarr;
                             </button>
                         </div>
-
-                        <!-- Reminders Shortcut Button -->
-                        <button type="button" class="btn btn-outline" data-modal-open="reminderModal">
-                            Notification Settings
-                        </button>
                     </div>
 
                     <!-- Category Filter Chips -->
@@ -310,12 +303,12 @@
         </section>
 
 
-        <!-- 3. SERVICE DASHBOARD SECTION -->
-        <section class="dashboard-section section-padding" id="dashboard">
+        <!-- 3. SERVICE DASHBOARD / ROUTES SECTION -->
+        <section class="dashboard-section section-padding" id="routes">
             <div class="container">
                 <div class="section-heading">
                     <div>
-                        <h2>Hostel & Campus Waste Dashboard</h2>
+                        <h2>Hostel & Campus Waste Routes</h2>
                     </div>
                     <p>
                         Daily tracking of campus cleaning trucks, route completion, and resolved complaints across hostels and local zones.
@@ -337,12 +330,12 @@
 
                     <div class="v0-card kpi-card">
                         <div class="kpi-body">
-                            <div class="kpi-value" id="kpiActiveFleet">8 / 8</div>
+                            <div class="kpi-value" id="kpiActiveFleet">6 / 8</div>
                             <div class="kpi-label">Active Cleaning Trucks</div>
                             <div class="progress-bar-container">
-                                <div class="progress-bar-fill" style="width: 100%; background: #2563eb;"></div>
+                                <div class="progress-bar-fill" style="width: 75%; background: #2563eb;"></div>
                             </div>
-                            <span class="kpi-footnote">All 8 trucks on route</span>
+                            <span class="kpi-footnote">6 / 8 Active Trucks (2 in maintenance)</span>
                         </div>
                     </div>
 
@@ -376,9 +369,6 @@
                             <h3>Active Route Operations</h3>
                             <p>Current schedule and route progress across campus and city sectors</p>
                         </div>
-                        <button type="button" class="btn btn-secondary btn-sm" id="btnRefreshDashboard">
-                            Refresh Data
-                        </button>
                     </div>
 
                     <div class="table-responsive">
@@ -395,9 +385,9 @@
                             </thead>
                             <tbody id="fleetTableBody">
                                 <tr>
-                                    <td><strong>Truck-01</strong></td>
+                                    <td><strong>TRK-101</strong></td>
                                     <td>LPU Boys Hostels (BH-1 to BH-4)</td>
-                                    <td><span class="tag tag-organic">Mess Food Waste</span></td>
+                                    <td><span class="tag tag-organic">Hostel Mess Food Waste</span></td>
                                     <td>Ram Singh &amp; Team</td>
                                     <td>
                                         <div class="table-progress">
@@ -408,10 +398,10 @@
                                     <td><span class="status-pill status-active">On Route</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-02</strong></td>
-                                    <td>LPU Girls Hostels (GH-1 to GH-3)</td>
-                                    <td><span class="tag tag-recyclable">Dry Recyclables</span></td>
-                                    <td>Gurpreet Singh</td>
+                                    <td><strong>TRK-102</strong></td>
+                                    <td>Law Gate</td>
+                                    <td><span class="tag tag-hazardous">Street Bins &amp; Plastic</span></td>
+                                    <td>Harpreet &amp; Team</td>
                                     <td>
                                         <div class="table-progress">
                                             <div class="bar" style="width: 70%;"></div>
@@ -421,8 +411,8 @@
                                     <td><span class="status-pill status-active">On Route</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-03</strong></td>
-                                    <td>Uni-Mall &amp; Commercial Blocks</td>
+                                    <td><strong>TRK-103</strong></td>
+                                    <td>Uni-Mall</td>
                                     <td><span class="tag tag-organic">Mixed Waste</span></td>
                                     <td>Sukhwinder</td>
                                     <td>
@@ -434,10 +424,10 @@
                                     <td><span class="status-pill status-done">Completed</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Truck-04</strong></td>
-                                    <td>Law Gate &amp; Student PGs</td>
-                                    <td><span class="tag tag-hazardous">Street Bins &amp; Plastic</span></td>
-                                    <td>Harpreet &amp; Team</td>
+                                    <td><strong>TRK-104</strong></td>
+                                    <td>Phagwara GT Road</td>
+                                    <td><span class="tag tag-recyclable">Packaging &amp; Dry</span></td>
+                                    <td>Gurpreet Singh</td>
                                     <td>
                                         <div class="table-progress">
                                             <div class="bar" style="width: 55%;"></div>
@@ -489,22 +479,17 @@
                             <div class="form-group">
                                 <label for="missedArea" class="form-label">Area / Hostel *</label>
                                 <select id="missedArea" class="form-select" required>
-                                    <option value="LPU Boys Hostels" selected>LPU Boys Hostels (BH-1 to BH-8)</option>
-                                    <option value="LPU Girls Hostels">LPU Girls Hostels (GH-1 to GH-3)</option>
-                                    <option value="Uni-Mall">Uni-Mall (Campus Commercial)</option>
-                                    <option value="Law Gate">Law Gate (PG & Student Hub)</option>
+                                    <option value="LPU Boys Hostels" selected>LPU Boys Hostels</option>
+                                    <option value="LPU Girls Hostels">LPU Girls Hostels</option>
+                                    <option value="Uni-Mall">Uni-Mall</option>
+                                    <option value="Law Gate">Law Gate</option>
                                     <option value="Phagwara GT Road">Phagwara GT Road</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
                                 <label for="missedAddress" class="form-label">Block / Room or Street Details *</label>
-                                <div class="input-with-action">
-                                    <input type="text" id="missedAddress" list="localLocationsList" class="form-control" placeholder="e.g. BH-4 Mess Gate, Law Gate Lane 1..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
-                                        Location
-                                    </button>
-                                </div>
+                                <input type="text" id="missedAddress" list="localLocationsList" class="form-control" placeholder="e.g. BH-4 Mess Gate, Law Gate Lane 1..." required>
                             </div>
 
                             <div class="form-group">
@@ -524,7 +509,7 @@
 
                             <div class="form-group full-width">
                                 <label for="missedNotes" class="form-label">Additional Details</label>
-                                <textarea id="missedNotes" class="form-textarea" placeholder="e.g. Dustbins near block entrance were not cleared."></textarea>
+                                <textarea id="missedNotes" class="form-textarea" placeholder="Near BH-4 mess back gate, bin overflowing since morning."></textarea>
                             </div>
 
                             <div class="form-group full-width">
@@ -574,12 +559,7 @@
 
                             <div class="form-group">
                                 <label for="binLocation" class="form-label">Location / Landmark *</label>
-                                <div class="input-with-action">
-                                    <input type="text" id="binLocation" list="localLocationsList" class="form-control" placeholder="e.g. Uni-Mall Food Court, Law Gate Street..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
-                                        Location
-                                    </button>
-                                </div>
+                                <input type="text" id="binLocation" list="localLocationsList" class="form-control" placeholder="e.g. Uni-Mall Food Court, Law Gate Street..." required>
                             </div>
 
                             <div class="form-group">
@@ -633,12 +613,7 @@
 
                             <div class="form-group">
                                 <label for="generalLocation" class="form-label">Exact Location / Landmark *</label>
-                                <div class="input-with-action">
-                                    <input type="text" id="generalLocation" list="localLocationsList" class="form-control" placeholder="e.g. Near Law Gate transformer, LPU Block 34..." required>
-                                    <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
-                                        Location
-                                    </button>
-                                </div>
+                                <input type="text" id="generalLocation" list="localLocationsList" class="form-control" placeholder="e.g. Near Law Gate transformer, LPU Block 34..." required>
                             </div>
 
                             <div class="form-group full-width">
@@ -700,19 +675,16 @@
                     <div class="demo-pills-row">
                         <span>Sample Tickets:</span>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LPU-101">
-                            ECO-2026-LPU-101 (LPU Boys Hostels)
+                            ECO-2026-LPU-101 (BH-4 Hostel)
                         </button>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-LG-202">
                             ECO-2026-LG-202 (Law Gate)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-PH-303">
-                            ECO-2026-PH-303 (Phagwara GT Road)
-                        </button>
                         <button type="button" class="demo-ticket-pill" data-id="ECO-2026-UM-404">
                             ECO-2026-UM-404 (Uni-Mall)
                         </button>
-                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-GH-505">
-                            ECO-2026-GH-505 (LPU Girls Hostels)
+                        <button type="button" class="demo-ticket-pill" data-id="ECO-2026-PH-303">
+                            ECO-2026-PH-303 (Phagwara GT Road)
                         </button>
                     </div>
 
@@ -742,7 +714,7 @@
                     </div>
                     <div>
                         <h3 data-count="5">5</h3>
-                        <span>Coordinated Zones</span>
+                        <span>Campus &amp; Local Zones</span>
                     </div>
                 </div>
 
@@ -761,8 +733,8 @@
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div>
-                        <h3 data-count="450">450</h3>
-                        <span>Registered Students</span>
+                        <h3 data-count="450" data-suffix="+">450+</h3>
+                        <span>Students &amp; Residents</span>
                     </div>
                 </div>
 
@@ -1136,10 +1108,9 @@
                     <strong>Quick Links</strong>
                     <ul>
                         <li><a href="#calendar">Collection Calendar</a></li>
-                        <li><a href="#dashboard">Operations Dashboard</a></li>
-                        <li><a href="#report">Report Missed Pickup</a></li>
-                        <li><a href="#report">Report Bin Issue</a></li>
-                        <li><a href="#track">Track Complaint</a></li>
+                        <li><a href="#routes">Active Routes</a></li>
+                        <li><a href="#report">Report Issue</a></li>
+                        <li><a href="#track">Track Status</a></li>
                     </ul>
                 </div>
 
@@ -1180,7 +1151,7 @@
 
             <div class="footer-bottom-bar">
                 <span class="footer-copy">
-                    &copy; 2026 EcoTrack — 1st Year College Project by Ayush Kumar (LPU).
+                    Built with HTML5, CSS3, and JavaScript | B.Tech CSE Project by Ayush Kumar
                 </span>
                 <div class="footer-status-pill">
                     System Active &amp; Ready
@@ -1246,12 +1217,7 @@
 
                     <div class="form-group">
                         <label for="quickLocation" class="form-label">Location / Landmark *</label>
-                        <div class="input-with-action">
-                            <input type="text" id="quickLocation" class="form-control" placeholder="e.g. BH-4 Mess, Law Gate Lane 1" required>
-                            <button type="button" class="btn-geo btnGeoDetect" title="Use current location">
-                                Location
-                            </button>
-                        </div>
+                        <input type="text" id="quickLocation" class="form-control" placeholder="e.g. BH-4 Mess, Law Gate Lane 1" required>
                     </div>
 
                     <div class="form-group">

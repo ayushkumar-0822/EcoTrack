@@ -924,13 +924,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 resolved_tickets: resolved,
                 resolution_rate: `${rate}%`,
                 route_completion: "82%",
-                active_trucks: "8 / 8",
+                active_trucks: "6 / 8",
                 cleanliness_score: "98 / 100",
                 fleet: [
-                    { id: "Truck-01", route_id: "Route-LPU-BH", truck_name: "Truck-01", sector: "LPU Boys Hostels (BH-1 to BH-4)", assigned_sector: "LPU Boys Hostels (BH-1 to BH-4)", waste_stream: "Mess Food Waste", driver: "Ram Singh & Team", driver_crew: "Ram Singh & Team", progress: 85, progress_pct: 85, status: "On Route" },
-                    { id: "Truck-02", route_id: "Route-LPU-GH", truck_name: "Truck-02", sector: "LPU Girls Hostels (GH-1 to GH-3)", assigned_sector: "LPU Girls Hostels (GH-1 to GH-3)", waste_stream: "Dry Recyclables", driver: "Gurpreet Singh", driver_crew: "Gurpreet Singh", progress: 70, progress_pct: 70, status: "On Route" },
-                    { id: "Truck-03", route_id: "Route-UNIMALL", truck_name: "Truck-03", sector: "Uni-Mall & Commercial Blocks", assigned_sector: "Uni-Mall & Commercial Blocks", waste_stream: "Mixed Waste", driver: "Sukhwinder", driver_crew: "Sukhwinder", progress: 100, progress_pct: 100, status: "Completed" },
-                    { id: "Truck-04", route_id: "Route-LAWGATE", truck_name: "Truck-04", sector: "Law Gate & Student PGs", assigned_sector: "Law Gate & Student PGs", waste_stream: "Street Bins & Plastic", driver: "Harpreet & Team", driver_crew: "Harpreet & Team", progress: 55, progress_pct: 55, status: "On Route" }
+                    { id: "TRK-101", route_id: "Route-LPU-BH", truck_name: "TRK-101", sector: "LPU Boys Hostels (BH-1 to BH-4)", assigned_sector: "LPU Boys Hostels (BH-1 to BH-4)", waste_stream: "Hostel Mess Food Waste", driver: "Ram Singh & Team", driver_crew: "Ram Singh & Team", progress: 85, progress_pct: 85, status: "On Route" },
+                    { id: "TRK-102", route_id: "Route-LAWGATE", truck_name: "TRK-102", sector: "Law Gate", assigned_sector: "Law Gate", waste_stream: "Street Bins & Plastic", driver: "Harpreet & Team", driver_crew: "Harpreet & Team", progress: 70, progress_pct: 70, status: "On Route" },
+                    { id: "TRK-103", route_id: "Route-UNIMALL", truck_name: "TRK-103", sector: "Uni-Mall", assigned_sector: "Uni-Mall", waste_stream: "Mixed Waste", driver: "Sukhwinder", driver_crew: "Sukhwinder", progress: 100, progress_pct: 100, status: "Completed" },
+                    { id: "TRK-104", route_id: "Route-PHAGWARA", truck_name: "TRK-104", sector: "Phagwara GT Road", assigned_sector: "Phagwara GT Road", waste_stream: "Packaging & Dry", driver: "Gurpreet Singh", driver_crew: "Gurpreet Singh", progress: 55, progress_pct: 55, status: "On Route" }
                 ]
             };
         }
@@ -1710,8 +1710,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (entry.isIntersecting) {
                     const counter = entry.target;
                     const target = Number(counter.dataset.count);
+                    const suffix = counter.dataset.suffix || "";
                     if (prefersReducedMotion) {
-                        counter.textContent = target.toLocaleString("en-IN");
+                        counter.textContent = target.toLocaleString("en-IN") + suffix;
                         obs.unobserve(counter);
                         return;
                     }
@@ -1720,9 +1721,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     function step(t) {
                         if (!start) start = t;
                         const p = Math.min((t - start) / duration, 1);
-                        counter.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target).toLocaleString("en-IN");
+                        counter.textContent = Math.floor((1 - Math.pow(1 - p, 3)) * target).toLocaleString("en-IN") + suffix;
                         if (p < 1) requestAnimationFrame(step);
-                        else counter.textContent = target.toLocaleString("en-IN");
+                        else counter.textContent = target.toLocaleString("en-IN") + suffix;
                     }
                     requestAnimationFrame(step);
                     obs.unobserve(counter);
@@ -2520,7 +2521,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------------------------------------------
     const launchAuthorityPortal = (e) => {
         if (e) e.preventDefault();
-        window.location.hash = "#dashboard";
+        window.location.hash = "#authority";
         switchRole("authority", true);
     };
 
@@ -2530,13 +2531,18 @@ document.addEventListener("DOMContentLoaded", () => {
         switchRole("citizen", true);
     };
 
-    // 0. Clean Navbar Dashboard & Link Routing
+    // 0. Clean Navbar Admin Dashboard Button & Link Routing
+    const btnNavAdminDashboard = document.getElementById("btnNavAdminDashboard");
+    if (btnNavAdminDashboard) {
+        btnNavAdminDashboard.addEventListener("click", launchAuthorityPortal);
+    }
+
     const navLinkDashboard = document.getElementById("navLinkDashboard");
     if (navLinkDashboard) {
         navLinkDashboard.addEventListener("click", launchAuthorityPortal);
     }
 
-    document.querySelectorAll('#mainNavLinks a:not(#navLinkDashboard), .logo').forEach(link => {
+    document.querySelectorAll('#mainNavLinks a, .logo').forEach(link => {
         link.addEventListener("click", () => {
             if (AppState.currentRole !== "citizen") {
                 switchRole("citizen", false);
@@ -2569,8 +2575,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnSwitchToCitizen) btnSwitchToCitizen.addEventListener("click", returnToLandingPage);
     if (btnSidebarLandingLink) btnSidebarLandingLink.addEventListener("click", returnToLandingPage);
 
-    // Initial Routing: ALWAYS default to Landing Page first unless URL hash explicitly requests #dashboard
-    if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
+    // Initial Routing: ALWAYS default to Landing Page first unless URL hash explicitly requests #authority or #admin
+    if (window.location.hash === "#authority" || window.location.hash === "#admin") {
         switchRole("authority", false);
     } else {
         switchRole("citizen", false);
@@ -2578,9 +2584,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Hash change listener for browser navigation
     window.addEventListener("hashchange", () => {
-        if (window.location.hash === "#dashboard" || window.location.hash === "#authority") {
+        if (window.location.hash === "#authority" || window.location.hash === "#admin") {
             if (AppState.currentRole !== "authority") switchRole("authority", false);
-        } else if (window.location.hash === "#home" || window.location.hash === "" || window.location.hash === "#report" || window.location.hash === "#calendar") {
+        } else if (window.location.hash === "#home" || window.location.hash === "" || window.location.hash === "#report" || window.location.hash === "#calendar" || window.location.hash === "#routes" || window.location.hash === "#track" || window.location.hash === "#community") {
             if (AppState.currentRole !== "citizen") switchRole("citizen", false);
         }
     });
