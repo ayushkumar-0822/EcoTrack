@@ -1,12 +1,6 @@
 """
 EcoTrack Automated Sanity and Quality Test Suite
-Tests Phases 1 to 4 deliverables:
-1. Canonical file structure (no root duplicates)
-2. CSS syntax and brace balance
-3. JavaScript syntax and brace/paren balance
-4. Dynamic ticket ID format validation
-5. SQLite schema integrity
-6. Dynamic date and calendar logic
+Tests Phases 1 to 5 deliverables + Admin Login & Mobile Navigation
 """
 
 import os
@@ -84,6 +78,35 @@ class TestEcoTrack(unittest.TestCase):
         self.assertIn("ticket_steps", tables, "ticket_steps table must exist")
         self.assertIn("notifications", tables, "notifications table must exist")
         self.assertIn("fleet_routes", tables, "fleet_routes table must exist")
+
+    def test_07_admin_login_modal_and_nav_toggle(self):
+        """Admin Login Modal & Mobile Responsive Navbar deliverables."""
+        with open("index.html", "r", encoding="utf-8") as f:
+            html = f.read()
+
+        # 1. Admin login modal elements
+        self.assertIn('id="adminLoginModal"', html, "adminLoginModal must exist in index.html")
+        self.assertIn('id="adminUserId"', html, "adminUserId input must exist in index.html")
+        self.assertIn('id="adminPassword"', html, "adminPassword input must exist in index.html")
+        self.assertIn('id="linkForgotPassword"', html, "linkForgotPassword must exist in index.html")
+        self.assertIn('id="btnAdminLogout"', html, "btnAdminLogout must exist in index.html")
+
+        # 2. Mobile navbar hamburger toggle
+        self.assertIn('id="mobileNavToggle"', html, "mobileNavToggle button must exist in index.html")
+        self.assertIn('class="nav-hamburger-btn"', html, "nav-hamburger-btn must exist in index.html")
+
+        # 3. CSS styles
+        with open("CSS/style.css", "r", encoding="utf-8") as f:
+            css = f.read()
+        self.assertIn(".nav-hamburger-btn", css, "CSS must style .nav-hamburger-btn")
+        self.assertIn(".login-error-alert", css, "CSS must style .login-error-alert")
+
+        # 4. JS logic
+        with open("JS/main.js", "r", encoding="utf-8") as f:
+            js = f.read()
+        self.assertIn("isAdminAuthenticated", js, "JS must define isAdminAuthenticated")
+        self.assertIn("mobileNavToggle", js, "JS must handle mobileNavToggle click")
+        self.assertIn("adminLoginForm", js, "JS must handle adminLoginForm submit")
 
 if __name__ == "__main__":
     unittest.main()

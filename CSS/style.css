@@ -161,6 +161,32 @@ img {
     gap: 1.5rem;
 }
 
+.nav-right-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nav-hamburger-btn {
+    display: none;
+    width: 38px;
+    height: 38px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    color: var(--primary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.nav-hamburger-btn:hover {
+    background: #f1f5f9;
+    border-color: var(--primary);
+}
+
 .nav-link {
     font-size: 0.95rem;
     font-weight: 500;
@@ -3967,5 +3993,75 @@ img {
     }
     .saas-dashboard-wrapper {
         flex-direction: column;
+    }
+}
+
+
+/* Authority Login Error Alert */
+.login-error-alert {
+    background: #fef2f2;
+    border: 1px solid #f87171;
+    color: #991b1b;
+    padding: 0.6rem 0.85rem;
+    border-radius: 6px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    display: none;
+}
+
+/* ==========================================================================
+   RESPONSIVE NAVBAR & HAMBURGER (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .nav-hamburger-btn {
+        display: inline-flex !important;
+    }
+    .nav-links {
+        position: absolute;
+        top: 64px;
+        left: 0;
+        right: 0;
+        display: none !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.5rem 1rem 1rem;
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        z-index: 1001;
+    }
+    .nav-links.open {
+        display: flex !important;
+    }
+    .nav-link {
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: var(--text);
+        display: block;
+    }
+    .nav-link:hover {
+        background-color: #f8fafc;
+        color: var(--primary);
+    }
+}
+
+@media (max-width: 425px) {
+    .nav-brand-group .logo {
+        font-size: 18px;
+        gap: 6px;
+    }
+    .btn-nav-admin {
+        padding: 5px 10px !important;
+        font-size: 0.78rem !important;
+    }
+    .nav-hamburger-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 1rem;
     }
 }

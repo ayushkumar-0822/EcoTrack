@@ -2860,10 +2860,19 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------------------------------------------
     // Authority Dashboard & Landing Page Multi-Gateway Routing
     // -------------------------------------------------------------
+    // Simple, viva-friendly session authentication check
+    function isAdminAuthenticated() {
+        return sessionStorage.getItem("ecotrack_admin_auth") === "true";
+    }
+
     const launchAuthorityPortal = (e) => {
         if (e) e.preventDefault();
-        window.location.hash = "#authority";
-        switchRole("authority", true);
+        if (isAdminAuthenticated()) {
+            window.location.hash = "#authority";
+            switchRole("authority", true);
+        } else {
+            openModal("adminLoginModal");
+        }
     };
 
     const returnToLandingPage = (e) => {
@@ -2871,6 +2880,94 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.hash = "#home";
         switchRole("citizen", true);
     };
+
+    // -------------------------------------------------------------
+    // Mobile Responsive Hamburger Navigation Controller
+    // -------------------------------------------------------------
+    const mobileNavToggle = document.getElementById("mobileNavToggle");
+    const mainNavLinks = document.getElementById("mainNavLinks");
+    if (mobileNavToggle && mainNavLinks) {
+        mobileNavToggle.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const isOpen = mainNavLinks.classList.toggle("open");
+            mobileNavToggle.setAttribute("aria-expanded", String(isOpen));
+            const icon = mobileNavToggle.querySelector("i");
+            if (icon) {
+                icon.className = isOpen ? "fa-solid fa-xmark" : "fa-solid fa-bars";
+            }
+        });
+
+        // Close dropdown when a navigation link is clicked
+        mainNavLinks.querySelectorAll(".nav-link").forEach(link => {
+            link.addEventListener("click", () => {
+                mainNavLinks.classList.remove("open");
+                mobileNavToggle.setAttribute("aria-expanded", "false");
+                const icon = mobileNavToggle.querySelector("i");
+                if (icon) icon.className = "fa-solid fa-bars";
+            });
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+            if (!mainNavLinks.contains(e.target) && !mobileNavToggle.contains(e.target)) {
+                mainNavLinks.classList.remove("open");
+                mobileNavToggle.setAttribute("aria-expanded", "false");
+                const icon = mobileNavToggle.querySelector("i");
+                if (icon) icon.className = "fa-solid fa-bars";
+            }
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Authority Login Modal Form Controller
+    // -------------------------------------------------------------
+    const adminLoginForm = document.getElementById("adminLoginForm");
+    const adminUserId = document.getElementById("adminUserId");
+    const adminPassword = document.getElementById("adminPassword");
+    const adminLoginError = document.getElementById("adminLoginError");
+    const linkForgotPassword = document.getElementById("linkForgotPassword");
+
+    if (adminLoginForm) {
+        adminLoginForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const uid = (adminUserId ? adminUserId.value : "").trim();
+            const pwd = (adminPassword ? adminPassword.value : "").trim();
+
+            // Viva-friendly simple credential validation
+            // Default demo credentials: admin / admin123 (or officer / admin123)
+            if ((uid.toLowerCase() === "admin" || uid.toLowerCase() === "officer") && pwd === "admin123") {
+                if (adminLoginError) adminLoginError.style.display = "none";
+                sessionStorage.setItem("ecotrack_admin_auth", "true");
+                closeModal();
+                adminLoginForm.reset();
+                showToast("Welcome back, Administrator!", "success");
+                window.location.hash = "#authority";
+                switchRole("authority", true);
+            } else {
+                if (adminLoginError) {
+                    adminLoginError.textContent = "Invalid User ID or Password. Demo login is admin / admin123.";
+                    adminLoginError.style.display = "block";
+                }
+            }
+        });
+    }
+
+    if (linkForgotPassword) {
+        linkForgotPassword.addEventListener("click", (e) => {
+            e.preventDefault();
+            alert("EcoTrack Demo Credentials:\n\nUser ID: admin\nPassword: admin123\n\n(Use these credentials for college presentation & viva evaluation)");
+        });
+    }
+
+    const btnAdminLogout = document.getElementById("btnAdminLogout");
+    if (btnAdminLogout) {
+        btnAdminLogout.addEventListener("click", (e) => {
+            e.preventDefault();
+            sessionStorage.removeItem("ecotrack_admin_auth");
+            returnToLandingPage();
+            showToast("Logged out from Admin Dashboard", "info");
+        });
+    }
 
     // 0. Clean Navbar Admin Dashboard Button & Link Routing
     const btnNavAdminDashboard = document.getElementById("btnNavAdminDashboard");
@@ -2916,9 +3013,14 @@ document.addEventListener("DOMContentLoaded", () => {
     if (btnSwitchToCitizen) btnSwitchToCitizen.addEventListener("click", returnToLandingPage);
     if (btnSidebarLandingLink) btnSidebarLandingLink.addEventListener("click", returnToLandingPage);
 
-    // Initial Routing: ALWAYS default to Landing Page first unless URL hash explicitly requests #authority or #admin
+    // Initial Routing: Check authentication before loading #authority or #admin
     if (window.location.hash === "#authority" || window.location.hash === "#admin") {
-        switchRole("authority", false);
+        if (isAdminAuthenticated()) {
+            switchRole("authority", false);
+        } else {
+            switchRole("citizen", false);
+            openModal("adminLoginModal");
+        }
     } else {
         switchRole("citizen", false);
     }
@@ -2926,7 +3028,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // Hash change listener for browser navigation
     window.addEventListener("hashchange", () => {
         if (window.location.hash === "#authority" || window.location.hash === "#admin") {
-            if (AppState.currentRole !== "authority") switchRole("authority", false);
+            if (isAdminAuthenticated()) {
+                if (AppState.currentRole !== "authority") switchRole("authority", false);
+            } else {
+                window.location.hash = "#home";
+                openModal("adminLoginModal");
+            }
         } else if (window.location.hash === "#home" || window.location.hash === "" || window.location.hash === "#report" || window.location.hash === "#calendar" || window.location.hash === "#routes" || window.location.hash === "#track" || window.location.hash === "#community") {
             if (AppState.currentRole !== "citizen") switchRole("citizen", false);
         }
