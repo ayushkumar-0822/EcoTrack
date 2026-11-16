@@ -2650,7 +2650,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.85rem; margin-bottom:1rem;">
                         <div>
                             <label class="form-label" style="font-size:0.78rem;">Assign Cleaning Unit:</label>
-                            <select id="modalAssignTruck" class="form-select" style="font-size:0.82rem; padding:0.4rem 0.65rem;">
+                            <select id="modalAssignTruck" class="form-select inline-select" style="width:100%; min-width:auto;">
                                 <option value="TRK-101">TRK-101 (LPU Boys Hostels)</option>
                                 <option value="TRK-102">TRK-102 (Law Gate)</option>
                                 <option value="TRK-103">TRK-103 (Uni-Mall)</option>
