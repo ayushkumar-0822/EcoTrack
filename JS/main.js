@@ -338,18 +338,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("keydown", e => {
         if (e.key === "Escape") {
             if (activeModal) closeModal();
-            closeDropdowns();
-            closeSidebar();
         }
     });
 
     // -------------------------------------------------------------
     // 4. Area Selection Controller
     // -------------------------------------------------------------
-    const navAreaBtn = document.getElementById("navAreaBtn");
-    const navAreaDropdown = document.getElementById("navAreaDropdown");
-    const navAreaMenu = document.getElementById("navAreaMenu");
-    const navAreaLabel = document.getElementById("navAreaLabel");
     const calendarAreaSelect = document.getElementById("calendarAreaSelect");
     const heroCurrentZoneName = document.getElementById("heroCurrentZoneName");
     const heroNextPickup = document.getElementById("heroNextPickup");
@@ -361,21 +355,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const zone = ZONES[zoneKey];
 
-        if (navAreaLabel) navAreaLabel.textContent = zone.shortName;
-        const sidebarZoneLabel = document.getElementById("sidebarZoneLabel");
-        if (sidebarZoneLabel) sidebarZoneLabel.textContent = zone.shortName;
         if (heroCurrentZoneName) heroCurrentZoneName.textContent = zone.name;
         if (heroNextPickup) heroNextPickup.textContent = zone.nextPickup;
         if (calendarAreaSelect) calendarAreaSelect.value = zoneKey;
-
-        // Update active class in dropdown menu
-        if (navAreaMenu) {
-            navAreaMenu.querySelectorAll("li").forEach(li => {
-                const isActive = li.getAttribute("data-zone") === zoneKey;
-                li.classList.toggle("active", isActive);
-                li.setAttribute("aria-selected", String(isActive));
-            });
-        }
 
         // Update active chips in hero section
         document.querySelectorAll(".loc-chip").forEach(chip => {
@@ -393,42 +375,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    if (navAreaBtn && navAreaDropdown) {
-        navAreaBtn.addEventListener("click", e => {
-            e.stopPropagation();
-            const isOpen = navAreaDropdown.classList.toggle("open");
-            navAreaBtn.setAttribute("aria-expanded", String(isOpen));
-        });
-    }
-
-    if (navAreaMenu) {
-        navAreaMenu.querySelectorAll("li").forEach(item => {
-            item.addEventListener("click", () => {
-                const zoneKey = item.getAttribute("data-zone");
-                updateActiveZone(zoneKey, true);
-                if (navAreaDropdown) navAreaDropdown.classList.remove("open");
-                if (navAreaBtn) navAreaBtn.setAttribute("aria-expanded", "false");
-            });
-        });
-    }
-
     if (calendarAreaSelect) {
         calendarAreaSelect.addEventListener("change", () => {
             updateActiveZone(calendarAreaSelect.value, true);
         });
-    }
-
-    // Area Search inside Navbar Dropdown
-    const areaSearchInput = document.getElementById("areaSearchInput");
-    if (areaSearchInput && navAreaMenu) {
-        areaSearchInput.addEventListener("input", () => {
-            const term = areaSearchInput.value.toLowerCase().trim();
-            navAreaMenu.querySelectorAll("li").forEach(li => {
-                const text = li.textContent.toLowerCase();
-                li.style.display = text.includes(term) ? "block" : "none";
-            });
-        });
-        areaSearchInput.addEventListener("click", e => e.stopPropagation());
     }
 
     // Quick Location Chips & Global Hero Search
@@ -492,41 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // -------------------------------------------------------------
-    // 5. Notifications Dropdown Controller
-    // -------------------------------------------------------------
-    const notifBtn = document.getElementById("notifBtn");
-    const notifWrapper = document.getElementById("notifWrapper");
-    const notifDropdown = document.getElementById("notifDropdown");
-    const notifBadge = document.getElementById("notifBadge");
-    const btnMarkAllRead = document.getElementById("btnMarkAllRead");
-
-    if (notifBtn && notifDropdown) {
-        notifBtn.addEventListener("click", e => {
-            e.stopPropagation();
-            const isOpen = notifDropdown.classList.toggle("open");
-            notifBtn.setAttribute("aria-expanded", String(isOpen));
-            notifDropdown.setAttribute("aria-hidden", String(!isOpen));
-        });
-    }
-
-    if (btnMarkAllRead) {
-        btnMarkAllRead.addEventListener("click", () => {
-            document.querySelectorAll(".notif-item.unread").forEach(el => el.classList.remove("unread"));
-            if (notifBadge) notifBadge.style.display = "none";
-            showToast("All notifications marked as read", "info");
-        });
-    }
-
-    function closeDropdowns() {
-        if (navAreaDropdown) navAreaDropdown.classList.remove("open");
-        if (notifDropdown) notifDropdown.classList.remove("open");
-        if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
-    }
-
-    document.addEventListener("click", () => closeDropdowns());
-
-    // -------------------------------------------------------------
-    // 6. Collection Calendar Engine
+    // 5. Collection Calendar Engine
     // -------------------------------------------------------------
     const calendarGrid = document.getElementById("calendarGrid");
     const calendarMonthTitle = document.getElementById("calendarMonthTitle");
@@ -1892,147 +1808,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // -------------------------------------------------------------
-    // 11. CMS Bridge & Figma Design Tokens Export
+    // 10. Animated Metrics Counters
     // -------------------------------------------------------------
-    window.EcoTrackDesignTokens = {
-        name: "EcoTrack Design System Tokens (Figma / UiChemy)",
-        version: "2.1.0",
-        colors: {
-            primary: "#176b45",
-            primaryDark: "#104d32",
-            primaryLight: "#e8f4ec",
-            accent: "#b9e76b",
-            background: "#fbfcf8",
-            surface: "#ffffff",
-            text: "#18372a",
-            textMuted: "#718078",
-            border: "#e7ece6",
-            statusOrganic: "#10b981",
-            statusRecyclable: "#3b82f6",
-            statusHazardous: "#f59e0b"
-        },
-        typography: {
-            fontHeading: "Manrope, sans-serif",
-            fontBody: "DM Sans, sans-serif",
-            fontUi: "Inter, sans-serif"
-        },
-        radii: {
-            sm: "10px",
-            md: "18px",
-            lg: "28px",
-            pill: "9999px"
-        }
-    };
-
-    window.EcoTrackCMS = {
-        getZones: () => ZONES,
-        getReports: () => JSON.parse(localStorage.getItem("ecotrack_lpu_v1") || "{}"),
-        submitExternalReport: (report) => saveReport(report)
-    };
-
-    const btnExportTokens = document.getElementById("btnExportDesignTokens");
-    if (btnExportTokens) {
-        btnExportTokens.addEventListener("click", e => {
-            e.preventDefault();
-            const blob = new Blob([JSON.stringify(window.EcoTrackDesignTokens, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "ecotrack-figma-tokens.json";
-            a.click();
-            showToast("Exported Figma Design Tokens (ecotrack-figma-tokens.json)", "success");
-        });
-    }
-
-    const btnExportCMS = document.getElementById("btnExportCMSConfig");
-    if (btnExportCMS) {
-        btnExportCMS.addEventListener("click", e => {
-            e.preventDefault();
-            const cmsConfig = {
-                endpoint: "https://api.ecotrack.local/v1",
-                bridgeVersion: "UiChemy-CMS-Bridge-1.0",
-                zones: ZONES
-            };
-            const blob = new Blob([JSON.stringify(cmsConfig, null, 2)], { type: "application/json" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "ecotrack-cms-bridge.json";
-            a.click();
-            showToast("Exported UiChemy / CMS Bridge Configuration", "success");
-        });
-    }
-
-    // -------------------------------------------------------------
-    // 12. Expandable Sidebar Controller & Animated Counters
-    // -------------------------------------------------------------
-    const menuToggle = document.getElementById("menuToggle");
-    const appSidebar = document.getElementById("appSidebar");
-    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
-    const sidebarCloseBtn = document.getElementById("sidebarCloseBtn");
-
-    function openSidebar() {
-        if (!appSidebar) return;
-        appSidebar.classList.add("open");
-        if (sidebarBackdrop) sidebarBackdrop.classList.add("open");
-        appSidebar.setAttribute("aria-hidden", "false");
-        if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
-        document.body.style.overflow = "hidden";
-        if (sidebarCloseBtn) sidebarCloseBtn.focus();
-    }
-
-    function closeSidebar() {
-        if (!appSidebar) return;
-        appSidebar.classList.remove("open");
-        if (sidebarBackdrop) sidebarBackdrop.classList.remove("open");
-        appSidebar.setAttribute("aria-hidden", "true");
-        if (menuToggle) {
-            menuToggle.setAttribute("aria-expanded", "false");
-            menuToggle.focus();
-        }
-        document.body.style.overflow = "";
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            const isOpen = appSidebar && appSidebar.classList.contains("open");
-            if (isOpen) closeSidebar();
-            else openSidebar();
-        });
-    }
-
-    if (sidebarCloseBtn) {
-        sidebarCloseBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeSidebar();
-        });
-    }
-
-    if (sidebarBackdrop) {
-        sidebarBackdrop.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            closeSidebar();
-        });
-    }
-
-    if (appSidebar) {
-        appSidebar.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
-    }
-
-    document.querySelectorAll(".sidebar-link").forEach(link => {
-        link.addEventListener("click", () => {
-            closeSidebar();
-            document.querySelectorAll(".sidebar-link").forEach(l => l.classList.remove("active"));
-            link.classList.add("active");
-        });
-    });
-
     const counters = document.querySelectorAll("[data-count]");
     if ("IntersectionObserver" in window && counters.length > 0) {
         const obs = new IntersectionObserver(entries => {
@@ -2067,11 +1844,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // -------------------------------------------------------------
     // 13. Authority & Municipal Command Portal Controller
     // -------------------------------------------------------------
-    const roleSwitcherDropdown = document.getElementById("roleSwitcherDropdown");
-    const roleSwitcherBtn = document.getElementById("roleSwitcherBtn");
-    const roleMenu = document.getElementById("roleMenu");
-    const roleLabel = document.getElementById("roleLabel");
-    const roleIcon = document.getElementById("roleIcon");
     const citizenView = document.getElementById("citizenView");
     const authorityView = document.getElementById("authorityView");
     const btnSwitchToCitizen = document.getElementById("btnSwitchToCitizen");
@@ -2116,22 +1888,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const topNavbar = document.getElementById("topNavbar");
         const mainFooter = document.querySelector(".footer");
 
-        if (roleMenu) {
-            roleMenu.querySelectorAll("li").forEach(li => {
-                const isMatch = li.getAttribute("data-role") === newRole;
-                li.classList.toggle("active", isMatch);
-                li.setAttribute("aria-selected", String(isMatch));
-            });
-        }
-
         if (newRole === "authority") {
             if (citizenView) citizenView.style.display = "none";
             if (authorityView) authorityView.style.display = "flex";
             if (topNavbar) topNavbar.style.display = "none";
             if (mainFooter) mainFooter.style.display = "none";
-            if (roleLabel) roleLabel.textContent = "Authority";
-            if (roleIcon) roleIcon.className = "fa-solid fa-shield-halved role-icon";
-            if (roleSwitcherBtn) roleSwitcherBtn.classList.add("authority-mode");
             
             startSaasClock();
             loadAuthorityData();
@@ -2144,33 +1905,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (citizenView) citizenView.style.display = "block";
             if (topNavbar) topNavbar.style.display = "";
             if (mainFooter) mainFooter.style.display = "";
-            if (roleLabel) roleLabel.textContent = "Citizen";
-            if (roleIcon) roleIcon.className = "fa-solid fa-user-check role-icon";
-            if (roleSwitcherBtn) roleSwitcherBtn.classList.remove("authority-mode");
             window.scrollTo({ top: 0, behavior: "smooth" });
             if (showToastNotification) {
                 showToast("Switched to Student Portal", "info");
             }
         }
-
-        if (roleSwitcherDropdown) roleSwitcherDropdown.classList.remove("open");
-    }
-
-    if (roleSwitcherBtn && roleSwitcherDropdown) {
-        roleSwitcherBtn.addEventListener("click", (e) => {
-            e.stopPropagation();
-            const isOpen = roleSwitcherDropdown.classList.toggle("open");
-            roleSwitcherBtn.setAttribute("aria-expanded", String(isOpen));
-        });
-    }
-
-    if (roleMenu) {
-        roleMenu.querySelectorAll("li").forEach(item => {
-            item.addEventListener("click", () => {
-                const role = item.getAttribute("data-role");
-                switchRole(role);
-            });
-        });
     }
 
     if (btnSwitchToCitizen) {
@@ -3000,16 +2739,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnGatewayLaunchDashboard = document.getElementById("btnGatewayLaunchDashboard");
     if (btnGatewayLaunchDashboard) btnGatewayLaunchDashboard.addEventListener("click", launchAuthorityPortal);
 
-    // 4. Sidebar Drawer Launch Button
-    const btnSidebarLaunchAuthority = document.getElementById("btnSidebarLaunchAuthority");
-    if (btnSidebarLaunchAuthority) {
-        btnSidebarLaunchAuthority.addEventListener("click", (e) => {
-            closeSidebar();
-            launchAuthorityPortal(e);
-        });
-    }
-
-    // 5. Back to Landing Page Buttons
+    // 4. Back to Landing Page Buttons
     if (btnSwitchToCitizen) btnSwitchToCitizen.addEventListener("click", returnToLandingPage);
     if (btnSidebarLandingLink) btnSidebarLandingLink.addEventListener("click", returnToLandingPage);
 

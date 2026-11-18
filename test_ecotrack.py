@@ -108,5 +108,22 @@ class TestEcoTrack(unittest.TestCase):
         self.assertIn("mobileNavToggle", js, "JS must handle mobileNavToggle click")
         self.assertIn("adminLoginForm", js, "JS must handle adminLoginForm submit")
 
+    def test_08_supabase_and_cleanup_integrity(self):
+        """Verify Supabase connection config is intact and dead files/code are removed."""
+        # 1. Scratch/backup files removed
+        self.assertFalse(os.path.exists("prompt_phases.txt"), "prompt_phases.txt must be removed")
+        self.assertFalse(os.path.exists("ecotrack.db.bak"), "ecotrack.db.bak must be removed")
+
+        # 2. Supabase integration intact
+        with open("JS/main.js", "r", encoding="utf-8") as f:
+            js = f.read()
+        self.assertIn("SUPABASE_CONFIG", js, "JS must define SUPABASE_CONFIG")
+        self.assertIn("https://fbgcoulrluypogrdlgtv.supabase.co", js, "JS must have Supabase URL")
+        self.assertIn("handleSupabaseRequest", js, "JS must define handleSupabaseRequest")
+
+        # 3. Dead code removed
+        self.assertNotIn("EcoTrackDesignTokens", js, "Dead Figma tokens must be removed from JS")
+        self.assertNotIn("EcoTrackCMS", js, "Dead CMS bridge must be removed from JS")
+
 if __name__ == "__main__":
     unittest.main()
