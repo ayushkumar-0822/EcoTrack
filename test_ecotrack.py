@@ -110,9 +110,11 @@ class TestEcoTrack(unittest.TestCase):
 
     def test_08_supabase_and_cleanup_integrity(self):
         """Verify Supabase connection config is intact and dead files/code are removed."""
-        # 1. Scratch/backup files removed
+        # 1. Scratch/backup/AI plugin files removed
         self.assertFalse(os.path.exists("prompt_phases.txt"), "prompt_phases.txt must be removed")
         self.assertFalse(os.path.exists("ecotrack.db.bak"), "ecotrack.db.bak must be removed")
+        self.assertFalse(os.path.exists(".agents"), ".agents folder must be removed")
+        self.assertFalse(os.path.exists(".coderabbit.yaml"), ".coderabbit.yaml must be removed")
 
         # 2. Supabase integration intact
         with open("JS/main.js", "r", encoding="utf-8") as f:

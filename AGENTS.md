@@ -1,33 +1,17 @@
 # AGENTS.md
 
-This file provides guidance to AI coding agents and human contributors working in the **EcoTrack** repository.
+This file provides guidance to contributors working in the **EcoTrack** repository.
 
 ## Project Overview
 
-**EcoTrack** is a smart, community-driven waste management and local cleanliness tracking web platform. It enables residents to track waste collection schedules, report illegal dumping or overflowing bins in real time, view live neighborhood impact metrics, and engage in local environmental initiatives.
+**EcoTrack** is a smart, campus and local waste management tracking web platform. It enables residents and students to track waste collection schedules, report sanitation issues, view neighborhood impact metrics, and manage complaints through an authority dashboard.
 
 ## Tech Stack & Architecture
 
-- **Frontend Core**: Semantic HTML5, CSS3 Custom Properties (Design System), Vanilla JavaScript (ES6+ Modules/Classes).
-- **Backend & Database**: Python 3 HTTP REST Server & SQLite (`ecotrack.db`).
-- **Tooling & Integrations**:
-  - **CodeRabbit Antigravity Plugin** (`.agents/plugins/coderabbit`): Automated code reviews, severity preservation, quality gates, and autofix pipelines.
-  - **Configuration**: `.coderabbit.yaml` for repository-wide CodeRabbit review instructions.
-
-## Development Workflows
-
-### Code Reviews & Quality Analysis
-Code reviews run via CodeRabbit with native severity tracking (`critical`, `major`, `minor`, `trivial`, `info`):
-```bash
-# Review uncommitted changes
-coderabbit review --agent
-
-# Review against main
-coderabbit review --agent --base main
-```
-Or trigger Antigravity slash commands:
-- `/coderabbit-review`: Triggers comprehensive code review of changes.
-- `/coderabbit-autofix`: Guides safe fixes of flagged issues.
+- **Frontend Core**: Semantic HTML5, CSS3 Custom Properties, Vanilla JavaScript (ES6+).
+- **Data Persistence**: Supabase Cloud PostgreSQL REST API with resilient client-side `localStorage` fallback.
+- **Local Testing**: Python 3 HTTP Server & SQLite (`ecotrack.db`).
+- **Deployment**: Vercel Static Hosting.
 
 ## Senior Engineering Standards
 
