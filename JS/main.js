@@ -717,11 +717,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // -------------------------------------------------------------
-    // Live REST API, Photo Upload & Sync Engine
-    // -------------------------------------------------------------
-    const API_BASE = window.location.protocol.startsWith("http") ? "" : "http://localhost:5000";
-
-    // -------------------------------------------------------------
     // Supabase Cloud PostgreSQL REST Integration
     // Enables shared, multi-device complaint persistence across Vercel deployments
     // -------------------------------------------------------------
@@ -949,23 +944,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function apiFetch(endpoint, options = {}) {
-        // 1. If running locally with Python backend active, try it first
-        if (window.location.hostname === "localhost" && API_BASE) {
-            try {
-                const res = await fetch(`${API_BASE}${endpoint}`, {
-                    headers: { "Content-Type": "application/json" },
-                    ...options
-                });
-                if (res.ok) {
-                    const contentType = res.headers.get("content-type") || "";
-                    if (contentType.includes("application/json")) {
-                        return await res.json();
-                    }
-                }
-            } catch (e) {}
-        }
-
-        // 2. Try Supabase Cloud PostgreSQL REST API (primary backend on Vercel & deployed clients)
+        // 1. Try Supabase Cloud PostgreSQL REST API (Primary Cloud Backend)
         try {
             const supaResult = await handleSupabaseRequest(endpoint, options);
             if (supaResult !== null) return supaResult;

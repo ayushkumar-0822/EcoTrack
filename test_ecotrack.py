@@ -65,19 +65,17 @@ class TestEcoTrack(unittest.TestCase):
         self.assertTrue(pattern.match(sample_id), f"Sample ticket ID {sample_id} matches pattern")
 
     def test_06_database_schema(self):
-        """Phase 4 & 5 readiness: SQLite database has required tables and columns."""
-        db_path = "ecotrack.db"
-        self.assertTrue(os.path.exists(db_path), "ecotrack.db must exist")
-        conn = sqlite3.connect(db_path)
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        tables = [r[0] for r in cursor.fetchall()]
-        conn.close()
+        """Database Architecture: schema_postgres.sql defines required Cloud DB tables."""
+        schema_path = "schema_postgres.sql"
+        self.assertTrue(os.path.exists(schema_path), "schema_postgres.sql must exist")
+        with open(schema_path, "r", encoding="utf-8") as f:
+            sql = f.read()
 
-        self.assertIn("tickets", tables, "tickets table must exist")
-        self.assertIn("ticket_steps", tables, "ticket_steps table must exist")
-        self.assertIn("notifications", tables, "notifications table must exist")
-        self.assertIn("fleet_routes", tables, "fleet_routes table must exist")
+        self.assertIn("tickets", sql, "tickets table must exist in schema")
+        self.assertIn("ticket_steps", sql, "ticket_steps table must exist in schema")
+        self.assertIn("notifications", sql, "notifications table must exist in schema")
+        self.assertIn("fleet_routes", sql, "fleet_routes table must exist in schema")
+        self.assertIn("reminders", sql, "reminders table must exist in schema")
 
     def test_07_admin_login_modal_and_nav_toggle(self):
         """Admin Login Modal & Mobile Responsive Navbar deliverables."""
@@ -110,11 +108,16 @@ class TestEcoTrack(unittest.TestCase):
 
     def test_08_supabase_and_cleanup_integrity(self):
         """Verify Supabase connection config is intact and dead files/code are removed."""
-        # 1. Scratch/backup/AI plugin files removed
+        # 1. Scratch/backup/AI plugin/local server files removed
         self.assertFalse(os.path.exists("prompt_phases.txt"), "prompt_phases.txt must be removed")
         self.assertFalse(os.path.exists("ecotrack.db.bak"), "ecotrack.db.bak must be removed")
         self.assertFalse(os.path.exists(".agents"), ".agents folder must be removed")
         self.assertFalse(os.path.exists(".coderabbit.yaml"), ".coderabbit.yaml must be removed")
+        self.assertFalse(os.path.exists("server.py"), "server.py must be removed")
+        self.assertFalse(os.path.exists("ecotrack.db"), "ecotrack.db must be removed")
+        self.assertFalse(os.path.exists("start_server.bat"), "start_server.bat must be removed")
+        self.assertFalse(os.path.exists(".env"), ".env must be removed")
+        self.assertFalse(os.path.exists("node_modules"), "node_modules must be removed")
 
         # 2. Supabase integration intact
         with open("JS/main.js", "r", encoding="utf-8") as f:

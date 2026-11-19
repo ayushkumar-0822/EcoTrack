@@ -10,7 +10,7 @@ This file provides guidance to contributors working in the **EcoTrack** reposito
 
 - **Frontend Core**: Semantic HTML5, CSS3 Custom Properties, Vanilla JavaScript (ES6+).
 - **Data Persistence**: Supabase Cloud PostgreSQL REST API with resilient client-side `localStorage` fallback.
-- **Local Testing**: Python 3 HTTP Server & SQLite (`ecotrack.db`).
+- **Local Preview**: VS Code Live Server / Static Web Server.
 - **Deployment**: Vercel Static Hosting.
 
 ## Senior Engineering Standards
