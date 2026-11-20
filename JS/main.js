@@ -189,11 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Aliases for backward compatibility
-    ZONES["zone-lpu"] = ZONES["zone-lpu-bh"];
-    ZONES["zone-jalandhar"] = ZONES["zone-unimall"];
-    ZONES["zone-green-valley"] = ZONES["zone-lpu-gh"];
-
     // Preloaded Demo Tickets for Status Tracking
     const SAMPLE_REPORTS = {
         "ECO-2026-LPU-101": {
@@ -364,11 +359,6 @@ document.addEventListener("DOMContentLoaded", () => {
             chip.classList.toggle("active", chip.getAttribute("data-zone") === zoneKey);
         });
 
-        const globalSearch = document.getElementById("globalAreaSearch");
-        if (globalSearch && !globalSearch.matches(":focus")) {
-            globalSearch.value = zone.name;
-        }
-
         renderCalendar();
         if (showToastNotification) {
             showToast(`Area switched to ${zone.shortName}`, "info");
@@ -381,65 +371,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Quick Location Chips & Global Hero Search
+    // Quick Location Chips
     document.querySelectorAll(".loc-chip").forEach(chip => {
         chip.addEventListener("click", () => {
             const zKey = chip.getAttribute("data-zone");
             updateActiveZone(zKey, true);
         });
     });
-
-    const globalAreaSearch = document.getElementById("globalAreaSearch");
-    const btnSearchArea = document.getElementById("btnSearchArea");
-
-    function executeAreaSearch() {
-        if (!globalAreaSearch) return;
-        const val = globalAreaSearch.value.trim().toLowerCase();
-        if (!val) return;
-
-        // Find best matching zone
-        let matchedZoneKey = null;
-        for (const [key, z] of Object.entries(ZONES)) {
-            if (z.name.toLowerCase().includes(val) || z.shortName.toLowerCase().includes(val) || key.toLowerCase().includes(val)) {
-                matchedZoneKey = key;
-                break;
-            }
-        }
-
-        // Also check keywords: "lpu", "law gate", "phagwara", "jalandhar", "green valley"
-        if (!matchedZoneKey) {
-            if (val.includes("lpu") || val.includes("university") || val.includes("hostel")) matchedZoneKey = "zone-lpu";
-            else if (val.includes("law") || val.includes("gate") || val.includes("food street")) matchedZoneKey = "zone-law-gate";
-            else if (val.includes("phagwara") || val.includes("gt road")) matchedZoneKey = "zone-phagwara";
-            else if (val.includes("jalandhar") || val.includes("cantt") || val.includes("model town")) matchedZoneKey = "zone-jalandhar";
-            else if (val.includes("green") || val.includes("valley")) matchedZoneKey = "zone-green-valley";
-        }
-
-        if (matchedZoneKey) {
-            updateActiveZone(matchedZoneKey);
-            showToast(`Found and switched to: ${ZONES[matchedZoneKey].shortName}`, "success");
-            const calSection = document.getElementById("calendar");
-            if (calSection) calSection.scrollIntoView({ behavior: "smooth" });
-        } else {
-            showToast(`Searching records for "${globalAreaSearch.value}"...`, "info");
-            renderTrackingView(globalAreaSearch.value);
-            const trackSection = document.getElementById("track");
-            if (trackSection) trackSection.scrollIntoView({ behavior: "smooth" });
-        }
-    }
-
-    if (btnSearchArea) {
-        btnSearchArea.addEventListener("click", executeAreaSearch);
-    }
-    if (globalAreaSearch) {
-        globalAreaSearch.addEventListener("keydown", e => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                executeAreaSearch();
-            }
-        });
-    }
-
 
     // -------------------------------------------------------------
     // 5. Collection Calendar Engine
