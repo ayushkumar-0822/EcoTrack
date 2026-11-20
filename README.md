@@ -1,61 +1,50 @@
-# EcoTrack — Local Waste Collection Coordination & Municipal Service Portal
+# EcoTrack — Campus & Local Waste Management Portal
 
-EcoTrack is a smart, community-driven waste collection coordination and municipal sanitation command web application. It connects citizens and local authorities across **LPU Campus, Law Gate, Phagwara, Jalandhar, and Green Valley** to coordinate pickup schedules, automate collection reminders, report waste/bin issues in real time, and manage fleet dispatch operations.
+EcoTrack is a modern, student-driven web portal designed for tracking hostel waste pickup schedules, submitting campus cleanliness complaints, tracking ticket resolution in real-time, and managing municipal/campus sanitation fleet operations.
+
+Developed as a 1st-Year Computer Science project by **Ayush Kumar** and team (LPU).
 
 ---
 
 ## 🌟 Key Features
 
-### 1. Citizen Portal
-- **Location Selector**: Quick area switching across LPU Main Campus, Law Gate Student Hub, Phagwara GT Road, Jalandhar Cantt & Green Valley.
-- **Interactive Collection Calendar**: Color-coded waste stream calendar (Organic/Wet Waste, Dry Recyclables, Hazardous/E-Waste) with date filtering and day-before reminder setup.
+### 1. Citizen & Student Portal
+- **Area & Hostel Selector**: Switch between LPU Boys Hostels, LPU Girls Hostels, Uni-Mall, Law Gate, and Phagwara GT Road.
+- **Dynamic Collection Calendar**: Color-coded waste schedule (Organic/Mess waste, Dry Recyclables, E-Waste) dynamically generated from current date.
 - **Issue Reporting Hub**:
-  - Missed Household Pickup reporting
-  - Overflowing or Damaged Public Bin reporting
-  - Illegal Dumping & Debris cleanup reporting
-  - Real-time photo evidence attachment & GPS/address locator
-- **Live Ticket Tracker**: Search any complaint by ticket ID (e.g. `ECO-2026-LPU-101`) to view a 4-stage visual progress timeline (Logged ➔ Triaged ➔ Dispatched ➔ Resolved).
-- **Service Telemetry & KPI Cards**: Citywide cleanliness index, on-time collection rate, and recycled tonnage counters.
+  - Missed Hostel Pickup report
+  - Damaged or Full Bin report
+  - Campus Litter / Dumping report
+  - Photo preview attachment & live ticket ID generation (`ECO-2026-AREA-XXX`).
+- **Live Ticket Tracker**: Search any complaint ticket to view a 4-stage visual progress timeline (Report Logged ➔ Campus Dispatch ➔ Truck Sent ➔ Bins Cleared).
+- **Active Fleet Routes**: Live status cards for campus cleaning trucks (TRK-101 to TRK-104).
 
-### 2. Municipal Authority & Incident Command Portal
-- **Role Switcher in Navbar**: Click **`[ Citizen ▾ ]`** in the top navbar to instantly toggle between **Citizen Mode** and **Authority / Officer Mode**.
-- **Executive Metrics Row**: Live counters for Total Complaints, Due/Pending Triage, Dispatched Trucks, Resolved & Cleaned, and Municipal SLA Resolution Rate.
-- **Complaints Tabular View**:
-  - Navigation filter tabs: **All Complaints**, **Due / Pending**, **In Progress / Dispatched**, and **Resolved**.
-  - Live instant search box (filter by Ref ID, Title, Category, Location).
-  - Zone filter dropdown.
-  - Interactive table with Ref IDs, category badges, locations, timestamps, urgency indicators, mini progress bars, and status cells.
-- **"See Details" Action Dossier**:
-  - View full citizen remarks, attached inspection photos, and timestamps.
-  - Assign Municipal Sanitation Trucks (e.g. `Phagwara-MC-08`, `LPU-EcoTruck-01`, `MC-Phagwara-04`).
-  - Advance workflow stages or mark complaints as **Cleaned & Resolved** with instant live database sync.
-- **Export CSV**: One-click export of municipal complaint audit logs to `.csv`.
+### 2. Authority & Municipal Command Portal
+- **Protected Access**: Tap **Admin Dashboard** in navbar and enter credentials:
+  - **User ID**: `admin`
+  - **Password**: `admin123`
+- **Operations Dashboard**: Real-time KPI metrics, complaints count, and status tabs (All, Due/Pending, In Progress, Resolved).
+- **Analytics Charts**: Custom HTML5 Canvas donut chart (Complaints by Category) and 7-day trend chart.
+- **Complaint Management**: View citizen details, assign cleaning units, advance workflow steps, and export complaints audit log to CSV.
+
+---
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Semantic HTML5, CSS3 Custom Properties (Flexbox & CSS Grid, Mobile Responsive), Vanilla JavaScript (ES6+).
+- **Icons & Typography**: Font Awesome 6 (CDN), Google Fonts (Manrope, DM Sans).
+- **Database & Storage**:
+  - **Primary**: Supabase Cloud PostgreSQL REST API (real-time shared database across devices).
+  - **Fallback**: Browser `LocalStorage` API (offline-resilient client-side storage).
+- **Hosting & Deployment**: Vercel Static Web Hosting.
 
 ---
 
 ## 🚀 How to Run the Project
 
-### Option A: Direct Browser Preview (Zero Setup)
-1. Double-click or open `index.html` in any modern web browser (Google Chrome, Microsoft Edge, Brave, Firefox, Safari).
-2. The entire platform runs seamlessly using client-side state and offline storage.
-
-### Option B: Full-Stack Mode with Live Python/SQLite Backend (Recommended)
-1. Ensure Python 3 is installed on your computer.
-2. In the project folder, double-click **`start_server.bat`**  
-   *(or run `python server.py` from the terminal)*.
-3. Open your browser and navigate to:  
-   **`http://localhost:5000`**
-4. All tickets, updates, and dispatches will synchronize in real-time with the local `ecotrack.db` SQLite database.
-
----
-
-## 🛠️ Tech Stack & Architecture
-
-- **Frontend**: Semantic HTML5, CSS3 Custom Properties (Design System & Glassmorphism), Vanilla JavaScript (ES6+ Modules, async/await).
-- **Icons & Typography**: Font Awesome 6, Manrope & DM Sans typography.
-- **Backend**: Python 3 standard library HTTP/REST server with SQLite (`ecotrack.db`).
-- **Responsive**: 100% responsive across mobile phones, tablets, laptops, and ultra-wide desktops.
-- **Accessibility**: WCAG 2.1 AA compliant (ARIA attributes, keyboard navigation, high contrast).
+1. **Live Deployment**: Visit the live website on Vercel:  
+   `https://eco-track-pied-psi.vercel.app`
+2. **Local Preview**: Simply double-click `index.html` or open it using VS Code Live Server in any modern browser.
 
 ---
 
@@ -65,13 +54,11 @@ EcoTrack is a smart, community-driven waste collection coordination and municipa
 EcoTrack/
 ├── index.html            # Main single-page application structure
 ├── CSS/
-│   └── style.css         # Complete design system, theme variables, responsive layout
+│   └── style.css         # 12-section modular stylesheet & responsive design
 ├── JS/
-│   └── main.js           # Client-side controller, modal manager, calendar, authority portal
-├── server.py             # Python HTTP server & REST API (SQLite backend)
-├── start_server.bat      # 1-click server launch script for Windows
-├── ecotrack.db           # SQLite database storing tickets, notifications & fleet routes
-├── uploads/              # Storage directory for citizen photo evidence
-├── README.md             # Project documentation & setup instructions
-└── AGENTS.md             # Developer guidelines & architectural standards
+│   └── main.js           # Calendar engine, issue forms, ticket tracker & Supabase integration
+├── schema_postgres.sql   # Supabase PostgreSQL tables schema & RLS policies
+├── vercel.json           # Vercel deployment configuration
+├── favicon.ico / .png    # Browser tab icons
+└── README.md             # Project documentation & presentation guide
 ```
