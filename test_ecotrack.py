@@ -130,5 +130,28 @@ class TestEcoTrack(unittest.TestCase):
         self.assertNotIn("EcoTrackDesignTokens", js, "Dead Figma tokens must be removed from JS")
         self.assertNotIn("EcoTrackCMS", js, "Dead CMS bridge must be removed from JS")
 
+    def test_09_hero_blue_button_and_dynamic_calendar(self):
+        """Verify hero Report in detail blue button and dynamic calendar updates."""
+        with open("index.html", "r", encoding="utf-8") as f:
+            html = f.read()
+
+        # 1. Blue button in hero section linking to #report
+        self.assertIn('id="btnReportInDetail"', html, "btnReportInDetail must exist in index.html")
+        self.assertIn('href="#report"', html, "btnReportInDetail must link to #report")
+        self.assertIn('Report in detail', html, "Report in detail text must be in button")
+
+        # 2. CSS styles for .btn-blue
+        with open("CSS/style.css", "r", encoding="utf-8") as f:
+            css = f.read()
+        self.assertIn(".btn-blue", css, ".btn-blue class must be defined in style.css")
+
+        # 3. JS calendar dynamic date & garbage stream rendering
+        with open("JS/main.js", "r", encoding="utf-8") as f:
+            js = f.read()
+        self.assertIn("btnReportInDetail", js, "btnReportInDetail handler must exist in main.js")
+        self.assertIn("selectedDateHeading", js, "selectedDateHeading must be dynamically updated")
+        self.assertIn("garbageTypes", js, "garbageTypes must be extracted and shown below date")
+        self.assertNotIn("MONTH_NAMES[month].substring", js, "month scope bug must be resolved in updateDetailPanel")
+
 if __name__ == "__main__":
     unittest.main()

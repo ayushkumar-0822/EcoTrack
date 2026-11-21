@@ -474,7 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
             dayEl.addEventListener("click", () => {
                 AppState.selectedDay = d;
                 renderCalendar();
-                updateDetailPanel(d, dateObj, pickups);
             });
 
             calendarGrid.appendChild(dayEl);
@@ -490,11 +489,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!selectedDateHeading || !selectedDatePickups) return;
 
         const dayName = dateObj.toLocaleDateString("en-US", { weekday: "long" });
-        const monthShort = MONTH_NAMES[month].substring(0, 3);
+        const monthShort = dateObj.toLocaleDateString("en-US", { month: "short" });
         selectedDateHeading.textContent = `${dayName}, ${monthShort} ${dayNum}`;
 
-        if (pickups.length === 0) {
-            selectedDateDesc.textContent = "No collections scheduled for this date in your zone.";
+        if (!pickups || pickups.length === 0) {
+            if (selectedDateDesc) {
+                selectedDateDesc.textContent = "No collections scheduled for this date in your zone.";
+            }
             selectedDatePickups.innerHTML = `
                 <div style="padding: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.85rem;">
                     <i class="fa-solid fa-calendar-xmark" style="font-size: 1.5rem; margin-bottom: 0.5rem; color: #94a3b8; display: block;"></i>
@@ -504,7 +505,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        selectedDateDesc.textContent = `${pickups.length} scheduled waste stream collection(s) active.`;
+        // Display the specific garbage stream type(s) picked up on this day
+        const garbageTypes = pickups.map(p => p.type).join(" • ");
+        if (selectedDateDesc) {
+            selectedDateDesc.textContent = garbageTypes;
+        }
         selectedDatePickups.innerHTML = "";
 
         pickups.forEach(p => {
@@ -2643,6 +2648,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     });
+
+    // Hero "Report in detail" blue button: Jump smoothly to #report section
+    const btnReportInDetail = document.getElementById("btnReportInDetail");
+    if (btnReportInDetail) {
+        btnReportInDetail.addEventListener("click", (e) => {
+            const reportSec = document.getElementById("report");
+            if (reportSec) {
+                e.preventDefault();
+                if (AppState.currentRole !== "citizen") {
+                    switchRole("citizen", false);
+                }
+                reportSec.scrollIntoView({ behavior: "smooth" });
+            }
+        });
+    }
 
     // 1. Top Navbar Authority Button
     const btnNavAuthority = document.getElementById("btnNavAuthority");
